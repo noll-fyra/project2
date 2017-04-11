@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({extended: false}))
 if (!mongoose.connection.db) mongoose.connect(dbURI)
 
 app.use('/', function (req, res) {
-  res.send('hello heroku')
+  res.render('index')
 })
 
 app.use(function (req, res) {
