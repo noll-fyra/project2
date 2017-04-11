@@ -17,9 +17,18 @@ const isLoggedIn = require('./middleware/isLoggedIn')
 const session = require('express-session')
 const passport = require('./config/ppConfig')
 const flash = require('connect-flash')
+const MongoStore = require('connect-mongo')(session)
 
 // require the controller
 // const todosController = require('./controllers/todos_controller')
+
+// connect to the database
+if (!mongoose.connection.db) mongoose.connect(dbURI)
+var db = mongoose.connection
+db.on('error', console.error.bind(console, 'Connection error:'))
+db.once('open', function () {
+  console.log('Connected!')
+})
 
 // set the layout
 app.use(express.static('public'))
@@ -31,23 +40,21 @@ app.use(methodOverride('_method'))
 app.use(bodyParser.urlencoded({extended: false}))
 // app.use(bodyParser.json())
 
-// handle login/logout
+// handle login/logout (session comes before passport)
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+  store: new MongoStore({
+    url: process.env.PROD_MONGODB,
+    autoReconnect: true,
+    autoRemove: 'native',
+    mongooseConnection: mongoose.connection
+  })
 }))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash())
-
-// connect to the database
-if (!mongoose.connection.db) mongoose.connect(dbURI)
-var db = mongoose.connection
-db.on('error', console.error.bind(console, 'Connection error:'))
-db.once('open', function () {
-  console.log('Connected!')
-})
 
 app.use(function (req, res, next) {
   // before every route, attach the flash messages and current user to res.locals
