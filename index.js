@@ -4,7 +4,7 @@ const app = express()
 
 // set up the database
 const mongoose = require('mongoose')
-const dbURI = process.env.PROD_MONGODB || 'mongodb://localhost:27017/locavorus'
+const dbURI = process.env.PROD_MONGODB || 'mongodb://admin:admin@ds157390.mlab.com:57390/mymdb'
 const port = process.env.PORT || 4000
 mongoose.Promise = global.Promise
 
@@ -73,5 +73,3 @@ app.use(function (req, res) {
 app.listen(port, function () {
   console.log('App is running on port: ' + port)
 })
-
-console.log(process.env.PROD_MONGODB)
