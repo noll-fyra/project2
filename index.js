@@ -1,3 +1,6 @@
+// set up hidden secret
+require('dotenv').config({silent: true})
+
 // set up express
 const express = require('express')
 const app = express()
@@ -8,16 +11,15 @@ const dbURI = process.env.PROD_MONGODB || 'mongodb://admin:admin@ds157390.mlab.c
 const port = process.env.PORT || 4000
 mongoose.Promise = global.Promise
 
-// add middleware and layouts
-require('dotenv').config({silent: true})
+// add layouts, middleware, session and authentication
 const ejsLayouts = require('express-ejs-layouts')
 const methodOverride = require('method-override')
 const bodyParser = require('body-parser')
-const isLoggedIn = require('./middleware/isLoggedIn')
 const session = require('express-session')
-const passport = require('./config/ppConfig')
-const flash = require('connect-flash')
 const MongoStore = require('connect-mongo')(session)
+const passport = require('./config/ppConfig')
+const isLoggedIn = require('./middleware/isLoggedIn')
+const flash = require('connect-flash')
 
 // require the controller
 // const todosController = require('./controllers/todos_controller')
@@ -42,7 +44,7 @@ app.use(bodyParser.urlencoded({extended: false}))
 
 // handle login/logout (session comes before passport)
 app.use(session({
-  secret: 'savethecheerleadersavetheworld',
+  secret: process.env.SESSION_SECRET,
   cookie: {},
   resave: false,
   saveUninitialized: true,
