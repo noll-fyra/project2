@@ -27,6 +27,14 @@ var UserSchema = new mongoose.Schema({
   },
   creditCard: {
     type: String
+  },
+  isBusiness: {
+    type: Boolean
+  },
+  allergies: {
+    type: ({
+      type: String
+    })
   }
 })
 
