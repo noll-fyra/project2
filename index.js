@@ -1,5 +1,5 @@
 // set up hidden secret
-require('dotenv').config()
+// require('dotenv').config()
 
 // set up express
 const express = require('express')
@@ -44,7 +44,7 @@ app.use(bodyParser.urlencoded({extended: false}))
 
 // handle login/logout (session comes before passport)
 app.use(session({
-  secret: process.env.SECRET,
+  secret: 'savethecheerleadersavetheworld',
   cookie: {},
   resave: false,
   saveUninitialized: true,
