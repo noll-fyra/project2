@@ -42,8 +42,7 @@ app.use(bodyParser.urlencoded({extended: false}))
 
 // handle login/logout (session comes before passport)
 app.use(session({
-  // process.env.SESSION_SECRET
-  secret: 'secretsessionsecretssh',
+  secret: process.env.SESSION_SECRET,
   cookie: {},
   resave: false,
   saveUninitialized: true,
