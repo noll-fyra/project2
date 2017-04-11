@@ -1,5 +1,5 @@
 // set up hidden secret
-// require('dotenv').config()
+require('dotenv').config()
 
 // set up express
 const express = require('express')
@@ -7,7 +7,7 @@ const app = express()
 
 // set up the database
 const mongoose = require('mongoose')
-const dbURI = process.env.PROD_MONGODB
+const dbURI = process.env.PROD_MONGODB || 'mongodb://admin:admin@ds157390.mlab.com:57390/mymdb'
 const port = process.env.PORT || 4000
 mongoose.Promise = global.Promise
 
@@ -20,9 +20,6 @@ const MongoStore = require('connect-mongo')(session)
 const passport = require('./config/ppConfig')
 const isLoggedIn = require('./middleware/isLoggedIn')
 const flash = require('connect-flash')
-
-// require the controller
-// const todosController = require('./controllers/todos_controller')
 
 // connect to the database
 if (!mongoose.connection.db) mongoose.connect(dbURI)
