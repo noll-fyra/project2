@@ -7,7 +7,7 @@ const app = express()
 
 // set up the database
 const mongoose = require('mongoose')
-const dbURI = process.env.PROD_MONGODB || 'mongodb://admin:admin@ds157390.mlab.com:57390/mymdb'
+const dbURI = process.env.PROD_MONGODB || 'mongodb://localhost:27017/locavorus'
 const port = process.env.PORT || 4000
 mongoose.Promise = global.Promise
 
@@ -73,7 +73,11 @@ app.get('/profile', isLoggedIn, function (req, res) {
 app.use('/auth', require('./controllers/auth'))
 
 app.use('/', function (req, res) {
-  res.render('index')
+  var User = require('./models/user')
+  User.find({}, function (err, data) {
+    if (err) res.send('error')
+    res.render('index', {allProfiles: data})
+  })
 })
 
 app.use(function (req, res) {
