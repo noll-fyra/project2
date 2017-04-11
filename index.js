@@ -1,5 +1,5 @@
 // set up hidden secret
-require('dotenv').config({silent: true})
+require('dotenv').config()
 
 // set up express
 const express = require('express')
