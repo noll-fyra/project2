@@ -1,29 +1,66 @@
+// set up express
 const express = require('express')
 const app = express()
-const port = process.env.PORT || 4000
-const path = require('path')
-const methodOverride = require('method-override')
 
-// connect to db
+// set up the database
 const mongoose = require('mongoose')
-const dbURI = 'mongodb://admin:admin@ds157390.mlab.com:57390/mymdb'
+const dbURI = process.env.PROD_MONGODB || 'mongodb://localhost:27017/locavorus'
+const port = process.env.PORT || 4000
 mongoose.Promise = global.Promise
+
+// add middleware and layouts
+require('dotenv').config({silent: true})
+const ejsLayouts = require('express-ejs-layouts')
+const methodOverride = require('method-override')
+const bodyParser = require('body-parser')
+const isLoggedIn = require('./middleware/isLoggedIn')
+const session = require('express-session')
+const passport = require('./config/ppConfig')
+const flash = require('connect-flash')
 
 // require the controller
 // const todosController = require('./controllers/todos_controller')
 
-// setting the layout
+// set the layout
+app.use(express.static('public'))
 app.set('view engine', 'ejs')
-const ejsLayouts = require('express-ejs-layouts')
 app.use(ejsLayouts)
-app.use(express.static(path.join(__dirname, '/public')))
+
+// handle requests
 app.use(methodOverride('_method'))
-
-// handle the post request
-const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({extended: false}))
+// app.use(bodyParser.json())
 
+// handle login/logout
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true
+}))
+app.use(passport.initialize())
+app.use(passport.session())
+app.use(flash())
+
+// connect to the database
 if (!mongoose.connection.db) mongoose.connect(dbURI)
+var db = mongoose.connection
+db.on('error', console.error.bind(console, 'Connection error:'))
+db.once('open', function () {
+  console.log('Connected!')
+})
+
+app.use(function (req, res, next) {
+  // before every route, attach the flash messages and current user to res.locals
+  res.locals.alerts = req.flash()
+  res.locals.currentUser = req.user
+  next()
+})
+
+app.get('/profile', isLoggedIn, function (req, res) {
+  res.render('profile')
+})
+
+app.use('/auth', require('./controllers/auth'))
 
 app.use('/', function (req, res) {
   res.render('index')
@@ -34,5 +71,7 @@ app.use(function (req, res) {
 })
 
 app.listen(port, function () {
-  console.log('listening on ' + port)
+  console.log('App is running on port: ' + port)
 })
+
+console.log(process.env.PROD_MONGODB)
