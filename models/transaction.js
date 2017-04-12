@@ -1,6 +1,4 @@
 var mongoose = require('mongoose')
-var MenuItem = require('./menuItem')
-var User = require('./user')
 
 var TransactionSchema = new mongoose.Schema({
   dateFrom: {
@@ -12,13 +10,13 @@ var TransactionSchema = new mongoose.Schema({
   orderedItems: {
     type: [{
       type: mongoose.Schema.ObjectId,
-      ref: MenuItem
+      ref: 'MenuItem'
     }]
   },
   customers: {
     type: [{
       type: mongoose.Schema.ObjectId,
-      ref: User
+      ref: 'User'
     }]
   },
   table: {

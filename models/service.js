@@ -1,12 +1,10 @@
 var mongoose = require('mongoose')
-var MenuItem = require('./menuItem')
-var User = require('./user')
 
 var ServiceSchema = new mongoose.Schema({
   customer: {
     type: [{
       type: mongoose.Schema.ObjectId,
-      ref: User
+      ref: 'User'
     }]
   },
   askForMenu: {
@@ -24,7 +22,7 @@ var ServiceSchema = new mongoose.Schema({
   orderedItems: {
     type: [{
       type: mongoose.Schema.ObjectId,
-      ref: MenuItem
+      ref: 'MenuItem'
     }]
   },
   askForBill: {

@@ -1,5 +1,4 @@
 var mongoose = require('mongoose')
-var User = require('./user')
 
 var MenuItemSchema = new mongoose.Schema({
   name: {
@@ -42,7 +41,7 @@ var MenuItemSchema = new mongoose.Schema({
   orderedBy: {
     type: [{
       type: mongoose.Schema.ObjectId,
-      ref: User
+      ref: 'User'
     }]
   },
   orderedAt: {

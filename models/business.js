@@ -1,6 +1,4 @@
 var mongoose = require('mongoose')
-var MenuItem = require('./menuItem')
-var Day = require('./day')
 
 var emailRegex = /^([\w-.]+@([\w-]+\.)+[\w-]{2,4})?$/
 
@@ -15,7 +13,7 @@ var BusinessSchema = new mongoose.Schema({
   menu: {
     type: [{
       type: mongoose.Schema.ObjectId,
-      ref: MenuItem
+      ref: 'MenuItem'
     }]
   },
   email: {
@@ -29,7 +27,7 @@ var BusinessSchema = new mongoose.Schema({
   hours: {
     type: [{
       type: mongoose.Schema.ObjectId,
-      ref: Day
+      ref: 'Day'
     }]
   },
   description: {

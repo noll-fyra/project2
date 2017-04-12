@@ -4,6 +4,8 @@ require('dotenv').config()
 // set up express
 const express = require('express')
 const app = express()
+const http = require('http').Server(app)
+const io = require('socket.io')(http)
 
 // set up the database
 const mongoose = require('mongoose')
@@ -63,6 +65,10 @@ app.use(function (req, res, next) {
   next()
 })
 
+app.get('/', function (req, res) {
+  res.sendFile(__dirname + '/socket.html')
+})
+
 app.get('/profile', isLoggedIn, function (req, res) {
   res.render('profile')
 })
@@ -81,6 +87,16 @@ app.use(function (req, res) {
   res.send('404')
 })
 
-app.listen(port, function () {
+io.on('connection', function (socket) {
+  console.log('socket.io - a user connected')
+  socket.on('chat message', function (msg) {
+    io.emit('chat message', msg)
+  })
+  socket.on('disconnect', function () {
+    console.log('user disconnected')
+  })
+})
+
+http.listen(port, function () {
   console.log('App is running on port: ' + port)
 })
