@@ -1,0 +1,25 @@
+<ul id="messages"></ul>
+<form action="">
+    <input id="m" autocomplete="off"/>
+    <button>Send</button>
+</form>
+
+<script>
+    var socket = io.connect()
+    var room = "<%= chat %>"
+    socket.on('connect', function() {
+        socket.emit('join', room)
+        console.log('joinED!!!')
+    })
+    socket.on('order', function(data) {
+        console.log(data)
+        $('#messages').append($('<li>').text(data.message))
+    })
+    $('form').submit(function() {
+        console.log('submitting form')
+        socket.emit('message', {
+            room: room,
+            message: $('#m').val()
+        })
+    })
+</script>

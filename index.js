@@ -1,11 +1,12 @@
 // set up hidden secret
-require('dotenv').config()
+require('dotenv').config({silent: true})
 
 // set up express
 const express = require('express')
 const app = express()
-const http = require('http').Server(app)
+const http = require('http').createServer(app)
 const io = require('socket.io')(http)
+global.io = io
 
 // set up the database
 const mongoose = require('mongoose')
@@ -65,15 +66,13 @@ app.use(function (req, res, next) {
   next()
 })
 
-app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/socket.html')
-})
-
 app.get('/profile', isLoggedIn, function (req, res) {
   res.render('profile')
 })
 
 app.use('/auth', require('./controllers/auth'))
+
+app.use('/test', require('./controllers/orderController'))
 
 app.use('/', function (req, res) {
   var User = require('./models/user')
@@ -88,12 +87,15 @@ app.use(function (req, res) {
 })
 
 io.on('connection', function (socket) {
-  console.log('socket.io - a user connected')
-  socket.on('chat message', function (msg) {
-    io.emit('chat message', msg)
+  socket.on('join', function (room) {
+    console.log('joining ' + room)
+    socket.join(room)
   })
-  socket.on('disconnect', function () {
-    console.log('user disconnected')
+
+  socket.on('message', function (data) {
+    console.log('sending message to: ' + data.room)
+    io.sockets.in(data.room).emit('order', {message: data.message})
+    console.log(' message is: ' + data.message)
   })
 })
 

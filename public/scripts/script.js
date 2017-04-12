@@ -1,11 +1,12 @@
 $(function () {
   var socket = io()
+  // var comp = '45'
   $('form').submit(function () {
-    socket.emit('chat message', $('#m').val())
+    socket.emit('messageRestaurant', $('#m').val())
     $('#m').val('')
     return false
   })
-  socket.on('chat message', function(msg){
-      $('#messages').append($('<li>').text(msg))
-    })
+  socket.on('messageRestaurant', function (msg) {
+    $('#messages').append($('<li>').text(msg))
+  })
 })
