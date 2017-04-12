@@ -1,6 +1,6 @@
 html {
-  /*background-image: url('/images/starfall.jpg');
-  background-size: cover;*/
+  background-image: url('/images/starfall.jpg');
+  background-size: cover;
 }
 
 body {
@@ -53,7 +53,7 @@ li {
 }
 
 .name {
-  background-color: red;
+  background-color: black;
   justify-content: center;
 }
 
