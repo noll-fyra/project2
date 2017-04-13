@@ -21,7 +21,7 @@ var BusinessSchema = new mongoose.Schema({
     lowercase: true,
     match: emailRegex
   },
-  contact: {
+  phone: {
     type: String
   },
   hours: {

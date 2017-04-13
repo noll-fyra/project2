@@ -1,0 +1,16 @@
+<h2><%= business.name %></h2>
+
+<p>Address:
+    <%= business.address %></p>
+<p>Email:
+    <%= business.email %></p>
+<p>Phone:
+    <%= business.phone %></p>
+<p>Opening Hours:
+    <%= business.hours %></p>
+<p>Menu:
+    <%= business.menu %></p>
+
+<% var dashName = business.name.toLowerCase().split(' ').join('-') %>
+<a href="/business/<%- dashName %>/<%- business.id%>/receive">Receive</a>
+<a href="/business/<%- dashName %>/<%- business.id%>/send">Send</a>

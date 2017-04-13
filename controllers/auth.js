@@ -29,15 +29,30 @@ router.post('/signup', function (req, res) {
 })
 
 router.get('/login', function (req, res) {
+  if (req.isAuthenticated()) {
+    req.flash('error', 'you have logged in already')
+    return res.redirect('/account')
+  }
   res.render('auth/login')
 })
+
+router.get('/facebook/callback',
+passport.authenticate('facebook', { failureRedirect: '/auth/login/',
+  successRedirect: '/',
+  successFlash: 'connected to fb' }),
+  function (res, req) {
+    res.redirect('/')
+  }
+)
+
+router.get('/login/facebook', passport.authenticate('facebook'))
 
 // FLASH
 router.post('/login', passport.authenticate('local', {
   successRedirect: '/',
   failureRedirect: '/auth/login',
-  failureFLASH: 'Invalid username and/or password',
-  successFLASH: 'You have logged in. Welcome to the Matrix.'
+  failureFlash: 'Invalid username and/or password',
+  successFlash: 'You have logged in. Welcome to the Matrix.'
 }))
 
 router.get('/logout', function (req, res) {

@@ -1,0 +1,22 @@
+<form action="">
+    <input id="send" autocomplete="off"/>
+    <button>Send</button>
+</form>
+
+<script>
+    var socket = io.connect()
+    var room = "<%= chat %>"
+    socket.on('connect', function() {
+        socket.emit('join', room)
+        console.log('joining ' + room)
+    })
+    $('form').submit(function(event) {
+        event.preventDefault()
+        console.log('submitting form')
+        socket.emit('message', {
+            room: room,
+            message: $('#send').val()
+        })
+        $('#send').val('')
+    })
+</script>

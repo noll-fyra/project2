@@ -10,13 +10,26 @@
 
     </head>
     <body>
-        <div class="name">
-            <h1>Locavorus</h1>
-        </div>
+        <header>
+            <div class="top">
+                <h1>
+                    <a href="/">
+                        Locavorus
+                    </a>
+                </h1>
+                <div>
+                    <a href="/auth/signup">Sign Up</a>
+                    <a href="/auth/login">Login</a>
+                    <a href="/auth/logout">Log Out</a>
+                    <a href="/auth/login/facebook">Facebook Login</a>
+                    <a href="/account">Account</a>
+                    <a href="/business">Businesses</a>
+                </div>
+            </div>
+        </header>
+
         <% include partials/alerts %>
-        <a href="/">Home</a>
-        <a href="/auth/signup">Sign Up</a>
-        <a href="/auth/login">Login</a>
+
         <%# <div class="nav">
             <ul>
                 <li class="logo">LOGO</li>
@@ -29,6 +42,6 @@
 
         <%- body %>
 
-        <script src="/scripts/script.js" charset="utf-8"></script>
+        <%# <script src="/scripts/script.js" charset="utf-8"></script>%>
     </body>
 </html>

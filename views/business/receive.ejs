@@ -1,0 +1,14 @@
+<ul id="receive"></ul>
+
+<script>
+    var socket = io.connect()
+    var room = "<%= chat %>"
+    socket.on('connect', function() {
+        socket.emit('join', room)
+        console.log('joining ' + room)
+    })
+    socket.on('order', function(data) {
+        console.log('receiving message ' + data.message)
+        $('#receive').append($('<li>').text(data.message))
+    })
+</script>

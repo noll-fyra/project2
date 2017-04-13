@@ -9,17 +9,19 @@
     var room = "<%= chat %>"
     socket.on('connect', function() {
         socket.emit('join', room)
-        console.log('joinED!!!')
+        console.log('joining ' + room)
     })
     socket.on('order', function(data) {
-        console.log(data)
+        console.log('receiving message ' + data.message)
         $('#messages').append($('<li>').text(data.message))
     })
-    $('form').submit(function() {
+    $('form').submit(function(event) {
+        event.preventDefault()
         console.log('submitting form')
         socket.emit('message', {
             room: room,
             message: $('#m').val()
         })
+        $('#m').val('')
     })
 </script>

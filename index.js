@@ -66,13 +66,17 @@ app.use(function (req, res, next) {
   next()
 })
 
-app.get('/profile', isLoggedIn, function (req, res) {
-  res.render('profile')
-})
-
 app.use('/auth', require('./controllers/auth'))
 
-app.use('/test', require('./controllers/orderController'))
+app.get('/account', isLoggedIn, function (req, res) {
+  if (!req.isAuthenticated()) {
+    req.flash('error', 'you must log in to view this page')
+    return res.redirect('/auth/login')
+  }
+  res.render('account/account')
+})
+
+app.use('/business', require('./controllers/businessController'))
 
 app.use('/', function (req, res) {
   var User = require('./models/user')
@@ -88,7 +92,7 @@ app.use(function (req, res) {
 
 io.on('connection', function (socket) {
   socket.on('join', function (room) {
-    console.log('joining ' + room)
+    console.log('socket joining ' + room)
     socket.join(room)
   })
 

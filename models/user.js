@@ -4,11 +4,6 @@ var bcrypt = require('bcrypt')
 var emailRegex = /^([\w-.]+@([\w-]+\.)+[\w-]{2,4})?$/
 
 var UserSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    minlength: [3, 'Name must be between 3 and 99 characters'],
-    maxlength: [99, 'Name must be between 3 and 99 characters']
-  },
   email: {
     type: String,
     required: true,
@@ -22,19 +17,20 @@ var UserSchema = new mongoose.Schema({
     minlength: [8, 'Password must be between 8 and 99 characters'],
     maxlength: [99, 'Password must be between 8 and 99 characters']
   },
-  contact: {
-    type: String
+  name: {
+    type: String,
+    minlength: [3, 'Name must be between 3 and 99 characters'],
+    maxlength: [99, 'Name must be between 3 and 99 characters']
   },
-  creditCard: {
-    type: String
-  },
-  isBusiness: {
-    type: Boolean
-  },
-  allergies: {
-    type: ({
-      type: String
-    })
+  phone: String,
+  restrictions: [String],
+  creditCards: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'CreditCard'
+  }],
+  business: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Business'
   }
 })
 
@@ -53,7 +49,7 @@ UserSchema.methods.validPassword = function (password) {
   return bcrypt.compareSync(password, this.password)
 }
 
-// return the user profile sans password and creditCard
+// return the user details sans password and creditCard
 UserSchema.options.toJSON = {
   transform: function (doc, ret, options) {
     delete ret.password

@@ -1,1 +1,10 @@
-<h5><%- allProfiles %></h5>
+<h2>Users:</h2>
+
+<% allProfiles.forEach((profile) => { %>
+    <p><%= profile.name %>
+        :
+        <%= profile.email %>
+        :
+        <%= profile.id %></p>
+
+<% }) %>
