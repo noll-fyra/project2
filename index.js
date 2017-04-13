@@ -11,7 +11,7 @@ global.io = io
 // set up the database
 const mongoose = require('mongoose')
 const dbURI = process.env.PROD_MONGODB || 'mongodb://admin:admin@ds157390.mlab.com:57390/mymdb'
-const port = process.env.PORT || 4000
+const port = process.env.PORT || 3000
 mongoose.Promise = global.Promise
 
 // add layouts, middleware, session and authentication
@@ -44,7 +44,7 @@ app.use(bodyParser.urlencoded({extended: false}))
 
 // handle login/logout (session comes before passport)
 app.use(session({
-  secret: 'savethecheerleadersavetheworld',
+  secret: process.env.SESSION_SECRET,
   cookie: {},
   resave: false,
   saveUninitialized: true,
