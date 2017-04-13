@@ -35,11 +35,11 @@ router.get('/:name/:id', function (req, res) {
 })
 
 router.get('/:name/:id/receive', function (req, res) {
-  res.render('business/receive', {chat: req.params.id})
+  res.render('business/receive', {chat: req.params.id, name: req.params.name})
 })
 
 router.get('/:name/:id/send', function (req, res) {
-  res.render('business/send', {chat: req.params.id})
+  res.render('business/send', {chat: req.params.id, name: req.params.name})
 })
 
 module.exports = router
