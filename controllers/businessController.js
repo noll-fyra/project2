@@ -14,6 +14,14 @@ router.get('/', function (req, res) {
   })
 })
 
+// find specific business
+router.get('/:name/:id', function (req, res) {
+  Business.findById(req.params.id).populate('menu').exec((err, data) => {
+    if (err) return console.log(err)
+    res.render('business/business', {business: data})
+  })
+})
+
 // for users to send
 router.get('/:name/:id/send', function (req, res) {
   Business.findById(req.params.id).populate('menu').exec((err, data) => {
@@ -90,14 +98,6 @@ router.post('/menu', (req, res) => {
         res.redirect('/business/menu')
       })
     })
-  })
-})
-
-// find specific business
-router.get('/:name/:id', function (req, res) {
-  Business.findById(req.params.id).populate('menu').exec((err, data) => {
-    if (err) return console.log(err)
-    res.render('business/business', {business: data})
   })
 })
 
