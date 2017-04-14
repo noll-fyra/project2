@@ -121,9 +121,15 @@
     </div>
 </div>
 
+<% var register = currentUser.business ? 'none' : 'inline-block'  %>
+<% var manage = currentUser.business ? 'inline-block' : 'none'  %>
+
 <div class="advanced">
-    <form class="registerBusiness" action="/business/register" method="GET">
-        <button type="submit">Register as a business</button>
+    <form class="registerBusiness" style="display: <%-register%>" action="/business/register" method="GET">
+        <button type="submit">Register a business</button>
+    </form>
+    <form class="manageBusiness" style="display: <%-manage%>" action="/business/account" method="GET">
+        <button type="submit">Manage your business account</button>
     </form>
 </div>
 

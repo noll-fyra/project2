@@ -4,8 +4,10 @@
     <% var dashName = business.name.toLowerCase().split(' ').join('-') %>
     <p>
         <a href="/business/<%- dashName %>/<%- business.id %>"><%= business.name %>
-            :
-            <%= business.id %></a>
+            : Id :
+            <%= business.id %>
+            : Users :
+            <%= business.users %></a>
     </p>
 
 <% }) %>

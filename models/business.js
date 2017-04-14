@@ -3,6 +3,10 @@ var mongoose = require('mongoose')
 var emailRegex = /^([\w-.]+@([\w-]+\.)+[\w-]{2,4})?$/
 
 var BusinessSchema = new mongoose.Schema({
+  users: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'User'
+  }],
   name: {
     type: String,
     required: true

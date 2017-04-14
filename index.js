@@ -21,7 +21,7 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const passport = require('./config/ppConfig')
-const isLoggedIn = require('./middleware/isLoggedIn')
+// const isLoggedIn = require('./middleware/isLoggedIn')
 const flash = require('connect-flash')
 
 // connect to the database
@@ -66,21 +66,13 @@ app.use(function (req, res, next) {
   next()
 })
 
-app.use('/auth', require('./controllers/auth'))
-
-app.get('/account', isLoggedIn, function (req, res) {
-  if (!req.isAuthenticated()) {
-    req.flash('error', 'you must log in to view this page')
-    return res.redirect('/auth/login')
-  }
-  res.render('account/account')
-})
-
+app.use('/auth', require('./controllers/authController'))
+app.use('/account', require('./controllers/accountController'))
 app.use('/business', require('./controllers/businessController'))
 
 app.use('/', function (req, res) {
   var User = require('./models/user')
-  User.find({}, function (err, data) {
+  User.find({}).populate('business').exec(function (err, data) {
     if (err) res.send('error')
     res.render('index', {allProfiles: data})
   })
