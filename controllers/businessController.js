@@ -6,12 +6,6 @@ var Business = require('../models/business')
 var User = require('../models/user')
 var MenuItem = require('../models/menuItem')
 
-// check that the user is logged in to access their account
-router.use(isLoggedIn)
-
-// check that the user has registered a business
-router.use(hasRegisteredBusiness)
-
 // list all businesses
 router.get('/', function (req, res) {
   Business.find({}, (err, data) => {
@@ -19,6 +13,20 @@ router.get('/', function (req, res) {
     res.render('business/index', {allBusinesses: data})
   })
 })
+
+// for users to send
+router.get('/:name/:id/send', function (req, res) {
+  Business.findById(req.params.id).populate('menu').exec((err, data) => {
+    if (err) return console.log(err)
+    res.render('business/send', {chat: req.params.id, name: data.name, menu: data.menu})
+  })
+})
+
+// check that the user is logged in to access their account
+router.use(isLoggedIn)
+
+// check that the user has registered a business
+router.use(hasRegisteredBusiness)
 
 // display the user's business account
 router.get('/account', (req, res) => {
@@ -96,14 +104,6 @@ router.get('/:name/:id', function (req, res) {
 // for business to receive
 router.get('/:name/:id/receive', function (req, res) {
   res.render('business/receive', {chat: req.params.id, name: req.params.name})
-})
-
-// for users to send
-router.get('/:name/:id/send', function (req, res) {
-  Business.findById(req.params.id).populate('menu').exec((err, data) => {
-    if (err) return console.log(err)
-    res.render('business/send', {chat: req.params.id, name: data.name, menu: data.menu})
-  })
 })
 
 module.exports = router
