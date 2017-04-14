@@ -1,9 +1,40 @@
 <h2><%= name %></h2>
 
-<form action="">
-    <input id="send" autocomplete="off"/>
-    <button>Send</button>
-</form>
+<table id="menuOrder">
+    <thead>
+        <tr>
+            <td>
+                Name
+            </td>
+            <td>
+                Description
+            </td>
+            <td>
+                Price
+            </td>
+        </tr>
+    </thead>
+    <tbody>
+        <% menu.forEach((item) => { %>
+            <tr>
+                <td>
+                    <%= item.name %>
+                </td>
+                <td>
+                    <%= item.description %>
+                </td>
+                <td>
+                    <%= item.price %>
+                </td>
+                <td>
+                    <form action="">
+                        <button value="<%- item.name %>">Order</button>
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>
 
 <script>
     var socket = io.connect()
@@ -12,13 +43,16 @@
         socket.emit('join', room)
         console.log('joining ' + room)
     })
-    $('form').submit(function(event) {
-        event.preventDefault()
-        console.log('submitting form')
-        socket.emit('message', {
-            room: room,
-            message: $('#send').val()
+
+    $('#menuOrder').on('click', 'button', function() {
+        console.log($(this).val())
+        $(this).parent().submit(function(event) {
+            event.preventDefault()
+            console.log('submitting form')
+            socket.emit('message', {
+                room: room,
+                message: $(this).children().val()
+            })
         })
-        $('#send').val('')
     })
 </script>

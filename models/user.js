@@ -53,7 +53,7 @@ UserSchema.methods.validPassword = function (password) {
 UserSchema.options.toJSON = {
   transform: function (doc, ret, options) {
     delete ret.password
-    delete ret.creditCard
+    delete ret.creditCards
     return ret
   }
 }

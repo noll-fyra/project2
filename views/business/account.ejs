@@ -6,101 +6,111 @@
             <button type="button" class="account-button" id="profile">Profile</button>
         </li>
         <li>
-            <button type="button" class="account-button" id="password">Password</password>
+            <button type="button" class="account-button" id="menu">Menu</button>
         </li>
         <li>
-            <button type="button" class="account-button" id="creditCards">credit Cards</password>
+            <button type="button" class="account-button" id="users">Users</button>
         </li>
         <li>
-            <button type="button" class="account-button" id="history">History</password>
+            <button type="button" class="account-button" id="transactions">Transactions</button>
         </li>
         <li>
-            <button type="button" class="account-button" id="advanced">Advanced</password>
+            <button type="button" class="account-button" id="advanced">Advanced</button>
         </li>
     </ul>
 </div>
 
-<div class="profile">
-    <form class="profile-form" action="/profile?_method=PUT" method="POST">
+<div class="business-profile">
+    <form class="profile-form" action="/business/account?_method=PUT" method="POST">
         <div class="form-group">
             <label for="name">Name:</label>
-            <input type="text" name="name" value="<%- currentUser.name %>" placeholder="Name">
+            <input type="text" name="name" value="<%- currentUser.name %>" placeholder="name">
+        </div>
+        <div class="form-group">
+            <label for="address">Address:</label>
+            <input type="text" name="address" value="<%- currentUser.address %>" placeholder="address">
         </div>
         <div class="form-group">
             <label for="email">Email:</label>
-            <input type="text" name="email" value="<%- currentUser.email %>" placeholder="Email">
+            <input type="text" name="email" value="<%- currentUser.email %>" placeholder="email">
         </div>
         <div class="form-group">
             <label for="phone">Phone:</label>
-            <input type="text" name="phone" value="<%- currentUser.phone %>" placeholder="Phone">
+            <input type="text" name="phone" value="<%- currentUser.phone %>" placeholder="phone">
         </div>
         <div class="form-group">
-            <label for="restrictions">Restrictions/Allergies:</label>
-            <input type="text" name="restrictions" value="<%- currentUser.restrictions %>" placeholder="Dietary restrictions and/or allergies">
+            <label for="website">Website:</label>
+            <input type="text" name="website" value="<%- currentUser.website %>" placeholder="website">
+        </div>
+        <div class="form-group">
+            <label for="website">Description:</label>
+            <input type="text" name="description" value="<%- currentUser.description %>" placeholder="description">
         </div>
         <button type="submit">Save Changes</button>
     </form>
 </div>
 
-<div class="password">
+<div class="menu">
     <div class="form-group">
-        <label for="old-password">Old Password:</label>
-        <input type="text" name="old-password" placeholder="Enter your old password">
-    </div>
-    <div class="form-group">
-        <label for="new-password">New Password:</label>
-        <input type="text" name="new-password" placeholder="Enter your new password">
-    </div>
-    <form class="password-form" action="/profile?_method=PUT" method="POST">
-        <button type="submit">Update Password</button>
-    </form>
-</div>
-
-<div class="creditCards">
-    <div class="form-group">
-        <label>Credit Cards:</label>
-        <% currentUser.creditCards.forEach(function(card) { %>
-            <div class="creditCard">
-                <h4><%- card %></h4>
-                <form class="creditCard-form" action="/profile?_method=DELETE" method="POST">
-                    <button type="submit" value="<%- card %>">Remove Card</button>
+        <label>Menu Items:</label>
+        <% currentUser.menu.forEach(function(item) { %>
+            <div class="menuItem">
+                <h4><%- item %></h4>
+                <form class="menuItem-form" action="/business/menu?_method=DELETE" method="POST">
+                    <button type="submit" value="<%- item %>">Remove Menu Item</button>
                 </form>
-                <form class="creditCard-form" action="/profile/updateCreditCard" method="GET">
-                    <button type="submit" value="<%- card %>">Update Card</button>
+                <form class="menuItem-form" action="/business/updateMenuItem" method="GET">
+                    <button type="submit" value="<%- item %>">Update Menu Item</button>
                 </form>
             </div>
         <% }) %>
-        <div class="addCreditCard">
-            <form class="creditCard-form" action="/profile?_method=PUT" method="POST">
-                <div class="form-group">
-                    <label for="number">Number:</label>
-                    <input type="text" name="number" placeholder="0000 0000 0000 0000">
-                </div>
+        <div class="addMenuItem">
+            <form class="menuItem-form" action="/business/menu" method="POST">
                 <div class="form-group">
                     <label for="name">Name:</label>
-                    <input type="text" name="name" placeholder="John Smith">
+                    <input type="text" name="name" placeholder="chicken a la láme">
                 </div>
                 <div class="form-group">
-                    <label for="type">Type:</label>
-                    <input type="text" name="type" placeholder="VISA">
+                    <label for="name">Description:</label>
+                    <input type="text" name="description" placeholder="sous vide chicken on pureed potato with confit rutabaga and crispy sesame tuile">
                 </div>
                 <div class="form-group">
-                    <label for="month">Expiry Month:</label>
-                    <input type="text" name="month" placeholder="04">
+                    <label for="price">Price:</label>
+                    <input type="text" name="price" placeholder="18.90">
                 </div>
+                <button type="submit">Add Menu Item</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="users">
+    <div class="form-group">
+        <label>Users:</label>
+        <% currentUser.users.forEach(function(user) { %>
+            <div class="user">
+                <label><%- user.name %></label>
+                <form class="user-form" action="/account/users?_method=DELETE" method="POST">
+                    <button type="submit" value="<%- user %>">Remove User</button>
+                </form>
+                <form class="user-form" action="/profile/updateUsers" method="GET">
+                    <button type="submit" value="<%- user %>">Update User</button>
+                </form>
+            </div>
+        <% }) %>
+        <div class="addUser">
+            <form class="user-form" action="/account/users" method="POST">
                 <div class="form-group">
-                    <label for="year">Expiry Year:</label>
-                    <input type="text" name="year" placeholder="22">
-                </div>
-                <div class="form-group">
-                    <button type="submit">Add Card</button>
+                    <label for="email">Email:</label>
+                    <input type="text" name="email" placeholder="employee@company.com">
+                    <button type="submit">Add User</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<div class="history">
+<div class="transactions">
     <div class="form-group">
         <table>
             <thead>
@@ -122,15 +132,14 @@
 </div>
 
 <div class="advanced">
-    <form class="registerBusiness" action="/business/register" method="GET">
-        <button type="submit">Register a business</button>
+    <form class="deregisterBusiness" action="/business/deregister?_method=DELETE" method="POST">
+        <button type="submit">Deregister your business</button>
     </form>
-
 </div>
 
 <script>
-    var accountButtons = [$('#profile'), $('#password'), $('#history'), $('#creditCards'), $('#advanced')]
-    var accountDivs = [$('.profile'), $('.password'), $('.history'), $('.creditCards'), $('.advanced')]
+    var accountButtons = [$('#profile'), $('#menu'), $('#users'), $('#transactions'), $('#advanced')]
+    var accountDivs = [$('.business-profile'), $('.menu'), $('.users'), $('.transactions'), $('.advanced')]
     accountButtons.forEach((button, index) => {
         button.on('click', () => {
             accountDivs.forEach((div) => {
@@ -142,5 +151,5 @@
     accountDivs.forEach((div) => {
         div.hide()
     })
-    $('.profile').show()
+    $('.business-profile').show()
 </script>

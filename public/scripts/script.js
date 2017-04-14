@@ -10,3 +10,8 @@
 //     $('#messages').append($('<li>').text(msg))
 //   })
 // })
+
+// <form action="">
+//     <input id="send" autocomplete="off"/>
+//     <button>Send</button>
+// </form>

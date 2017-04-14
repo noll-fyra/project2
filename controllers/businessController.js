@@ -1,8 +1,18 @@
 var express = require('express')
 var router = express.Router()
+var isLoggedIn = require('../middleware/isLoggedIn')
+var hasRegisteredBusiness = require('../middleware/hasRegisteredBusiness')
 var Business = require('../models/business')
 var User = require('../models/user')
+var MenuItem = require('../models/menuItem')
 
+// check that the user is logged in to access their account
+router.use(isLoggedIn)
+
+// check that the user has registered a business
+router.use(hasRegisteredBusiness)
+
+// list all businesses
 router.get('/', function (req, res) {
   Business.find({}, (err, data) => {
     if (err) return console.log(err)
@@ -10,19 +20,15 @@ router.get('/', function (req, res) {
   })
 })
 
+// display the user's business account
 router.get('/account', (req, res) => {
-  console.log(req.user.business)
-  if (!req.isAuthenticated()) {
-    req.flash('error', 'You must log in to view your business account')
-    return res.redirect('/auth/login')
-  }
-  if (!req.user.business) {
-    req.flash('error', 'You must register a business first (Account > Advanced > Register a business)')
-    return res.redirect('/account')
-  }
-  res.render('business/account', {currentUser: req.user})
+  Business.findById(req.user.business).populate('users').exec((err, data) => {
+    if (err) return console.log(err)
+    res.render('business/account', {currentUser: data})
+  })
 })
 
+// register for a business
 router.route('/register')
 .get((req, res) => {
   res.render('business/register', {currentUserId: req.user.id})
@@ -45,26 +51,59 @@ router.route('/register')
         if (err) return console.log(err)
         User.findByIdAndUpdate(req.body.userId, {business: newBusiness.id}, (err, data) => {
           if (err) return console.log(err)
-          res.redirect('/business')
+          res.redirect('/business/account')
         })
       })
     }
   })
 })
 
+router.get('/menu', (req, res) => {
+  Business.findById(req.user.business).populate('menu').exec((err, data) => {
+    if (err) return console.log(err)
+    res.render('business/menu', {menu: data.menu, name: data.name})
+  })
+})
+
+router.post('/menu', (req, res) => {
+  Business.findById(req.user.business, (err, data) => {
+    if (err) return console.log(err)
+    var newMenuItem = new MenuItem({
+      name: req.body.name,
+      description: req.body.description,
+      price: req.body.price,
+      business: req.user.business
+    })
+    newMenuItem.save((err) => {
+      if (err) return console.log(err)
+      var id = newMenuItem.id
+      Business.findByIdAndUpdate(req.user.business, {$push: {menu: id}}, (err, data) => {
+        if (err) return console.log(err)
+        res.redirect('/business/menu')
+      })
+    })
+  })
+})
+
+// find specific business
 router.get('/:name/:id', function (req, res) {
-  Business.findById(req.params.id, (err, data) => {
+  Business.findById(req.params.id).populate('menu').exec((err, data) => {
     if (err) return console.log(err)
     res.render('business/business', {business: data})
   })
 })
 
+// for business to receive
 router.get('/:name/:id/receive', function (req, res) {
   res.render('business/receive', {chat: req.params.id, name: req.params.name})
 })
 
+// for users to send
 router.get('/:name/:id/send', function (req, res) {
-  res.render('business/send', {chat: req.params.id, name: req.params.name})
+  Business.findById(req.params.id).populate('menu').exec((err, data) => {
+    if (err) return console.log(err)
+    res.render('business/send', {chat: req.params.id, name: data.name, menu: data.menu})
+  })
 })
 
 module.exports = router

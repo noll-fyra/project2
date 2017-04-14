@@ -1,6 +1,10 @@
 var mongoose = require('mongoose')
 
 var MenuItemSchema = new mongoose.Schema({
+  business: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Business'
+  },
   name: {
     type: String,
     required: true
