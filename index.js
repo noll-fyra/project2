@@ -65,6 +65,10 @@ app.use((req, res, next) => {
   next()
 })
 
+app.get('/test', (req,res) => {
+  res.send('test')
+})
+
 app.use('/', require('./controllers/homeController'))
 app.use('/auth', require('./controllers/authController'))
 app.use('/account', require('./controllers/accountController'))
