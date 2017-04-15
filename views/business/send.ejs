@@ -1,17 +1,20 @@
+<script src="/socket.io/socket.io.js"></script>
+
 <h2><%= name %></h2>
 
 <table id="menuOrder">
     <thead>
         <tr>
-            <td>
+            <th>
                 Name
-            </td>
-            <td>
+            </th>
+            <th>
                 Description
-            </td>
-            <td>
+            </th>
+            <th>
                 Price
-            </td>
+            </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -41,11 +44,9 @@
         socket.emit('join', room)
         console.log('joining ' + room)
     })
-    $('#menuOrder').on('click', 'button', function() {
-        var menuId = $(this).val().split('/')[0]
-        var menuName = $(this).val().split('/')[1]
+    document.getElementById('menuOrder').addEventListener('click', function(event) {
         function send() {
-            console.log('submitting order')
+            console.log('submitting remove order')
             socket.emit('message', {
                 room: room,
                 menuId: menuId,
@@ -53,6 +54,11 @@
                 customer: "<%- currentUser.id %>"
             })
         }
-        send()
+        var clickedElement = event.target
+        if (clickedElement.tagName === 'BUTTON') {
+            var menuId = clickedElement.value.split('/')[0]
+            var menuName = clickedElement.value.split('/')[1]
+            send()
+        }
     })
 </script>

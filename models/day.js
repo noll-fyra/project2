@@ -1,6 +1,6 @@
 var mongoose = require('mongoose')
 
-var DaySchema = new mongoose.Schema({
+var dayObject = {
   name: {
     type: String,
     required: true
@@ -8,11 +8,12 @@ var DaySchema = new mongoose.Schema({
   inOperation: {
     type: Boolean
   },
-  hours: {
-    type: [{
-      type: Date
-    }]
-  }
-})
+  hours: [{
+    type: Date
+  }]
+}
 
-module.exports = mongoose.model('Day', DaySchema)
+var DaySchema = new mongoose.Schema(dayObject)
+
+module.exports.dayObject = dayObject
+module.exports.model = mongoose.model('Day', DaySchema)

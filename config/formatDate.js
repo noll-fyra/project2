@@ -1,3 +1,4 @@
+// returns dates and times in a usable form
 module.exports = function (date) {
   function month (monthNumber) {
     switch (monthNumber) {

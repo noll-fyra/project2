@@ -43,7 +43,7 @@ router.route('/login')
   successFlash: 'You have logged in. Welcome back!'
 }))
 
-// check if the user is logged in
+// check if the user is logged in so they can log out
 router.use(isLoggedIn)
 
 // log the user out

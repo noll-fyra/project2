@@ -24,19 +24,19 @@
     <form class="profile-form" action="/account?_method=PUT" method="POST">
         <div class="form-group">
             <label for="name">Name:</label>
-            <input type="text" name="name" value="<%- currentUser.name %>" placeholder="Name">
+            <input type="text" name="name" value="<%- currentUser.name %>" placeholder="name">
         </div>
         <div class="form-group">
             <label for="email">Email:</label>
-            <input type="text" name="email" value="<%- currentUser.email %>" placeholder="Email">
+            <input type="text" name="email" value="<%- currentUser.email %>" placeholder="email">
         </div>
         <div class="form-group">
             <label for="phone">Phone:</label>
-            <input type="text" name="phone" value="<%- currentUser.phone %>" placeholder="Phone">
+            <input type="text" name="phone" value="<%- currentUser.phone %>" placeholder="phone">
         </div>
         <div class="form-group">
             <label for="restrictions">Restrictions/Allergies:</label>
-            <input type="text" name="restrictions" value="<%- currentUser.restrictions %>" placeholder="Dietary restrictions and/or allergies">
+            <input type="text" name="restrictions" value="<%- currentUser.restrictions %>" placeholder="dietary restrictions and/or allergies">
         </div>
         <button type="submit">Save Changes</button>
     </form>
@@ -134,18 +134,18 @@
 </div>
 
 <script>
-    var accountButtons = [$('#profile'), $('#password'), $('#history'), $('#creditCards'), $('#advanced')]
-    var accountDivs = [$('.profile'), $('.password'), $('.history'), $('.creditCards'), $('.advanced')]
-    accountButtons.forEach((button, index) => {
-        button.on('click', () => {
+    var accountButtons = [document.getElementById('profile'), document.getElementById('password'), document.getElementById('history'), document.getElementById('creditCards'), document.getElementById('advanced')]
+    var accountDivs = [document.querySelector('.profile'), document.querySelector('.password'), document.querySelector('.history'), document.querySelector('.creditCards'), document.querySelector('.advanced')]
+    accountButtons.forEach(function(button, index) {
+        button.addEventListener('click', () => {
             accountDivs.forEach((div) => {
-                div.hide()
+                div.style.display = 'none'
             })
-            accountDivs[index].show()
+            accountDivs[index].style.display = 'block'
         })
     })
     accountDivs.forEach((div) => {
-        div.hide()
+        div.style.display = 'none'
     })
-    $('.profile').show()
+    document.querySelector('.profile').style.display = 'block'
 </script>

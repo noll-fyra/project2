@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const formatDate = require('../config/date')
+const formatDate = require('../config/formatDate')
 const isLoggedIn = require('../middleware/isLoggedIn')
 const hasRegisteredBusiness = require('../middleware/hasRegisteredBusiness')
 const Business = require('../models/business')
@@ -30,6 +30,9 @@ router.get('/:name/:id', (req, res) => {
   })
 })
 
+// check that the user is logged in to access the following pages
+router.use(isLoggedIn)
+
 // for users to send orders
 router.get('/:name/:id/send', (req, res) => {
   Business.findById(req.params.id).populate('menu').exec((err, data) => {
@@ -38,23 +41,6 @@ router.get('/:name/:id/send', (req, res) => {
       return res.redirect('back')
     }
     res.render('business/send', {chat: req.params.id, name: data.name, menu: data.menu})
-  })
-})
-
-// check that the user is logged in to access their account
-router.use(isLoggedIn)
-
-// check that the user has registered a business
-router.use(hasRegisteredBusiness)
-
-// display the user's business account
-router.get('/account', (req, res) => {
-  Business.findById(req.user.business).populate('users').exec((err, data) => {
-    if (err) {
-      req.flash('error', 'There was an error fetching your business account. Please try again.')
-      return res.redirect('back')
-    }
-    res.render('business/account', {currentUser: data})
   })
 })
 
@@ -94,6 +80,20 @@ router.route('/register')
         })
       })
     }
+  })
+})
+
+// check that the user has registered a business
+router.use(hasRegisteredBusiness)
+
+// display the user's business account
+router.get('/account', (req, res) => {
+  Business.findById(req.user.business).populate('users').exec((err, data) => {
+    if (err) {
+      req.flash('error', 'There was an error fetching your business account. Please try again.')
+      return res.redirect('back')
+    }
+    res.render('business/account', {currentUser: data})
   })
 })
 
@@ -148,7 +148,7 @@ router.get('/:name/:id/receive', (req, res) => {
       req.flash('error', 'There was an error finding your business. Please try again')
       res.redirect('back')
     }
-    Order.find({}).populate('menuItem').populate('customer').populate('business').sort({date: 'asc'}).exec((err, data) => {
+    Order.find({business: req.params.id}).populate('menuItem').populate('customer').populate('business').sort({date: 'asc'}).exec((err, data) => {
       if (err) {
         req.flash('error', 'There was an error finding your orders. Please try again')
         res.redirect('back')

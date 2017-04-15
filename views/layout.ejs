@@ -5,25 +5,37 @@
         <title>Locavorus</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css" type="text/css">
         <link rel="stylesheet" href="/css/style.css" type='text/css'>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-        <script src="/socket.io/socket.io.js"></script>
-
+        <link rel="icon" href="/images/favicon.png" sizes="16x16" type="image/png">
     </head>
     <body>
         <header>
             <div class="top">
-                <h1>
-                    <a href="/">
-                        Locavorus
-                    </a>
-                </h1>
-                <div>
-                    <a href="/auth/signup">Sign Up</a>
-                    <a href="/auth/login">Login</a>
-                    <a href="/auth/logout">Log Out</a>
-                    <a href="/account">User Account</a>
-                    <a href="/business">All Businesses</a>
-                    <a href="/business/account">Business Account</a>
+                <div class="logo">
+                    <h1>
+                        <a href="/">Locavorus</a>
+                    </h1>
+                </div>
+                <div class="main-nav">
+                    <ul>
+                        <li>
+                            <a href="/auth/signup">Sign Up</a>
+                        </li>
+                        <li>
+                            <a href="/auth/login">Login</a>
+                        </li>
+                        <li>
+                            <a href="/auth/logout">Log Out</a>
+                        </li>
+                        <li>
+                            <a href="/account">User Account</a>
+                        </li>
+                        <li>
+                            <a href="/business">All Businesses</a>
+                        </li>
+                        <li>
+                            <a href="/business/account">Business Account</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </header>
@@ -32,6 +44,5 @@
 
         <%- body %>
 
-        <%# <script src="/scripts/script.js" charset="utf-8"></script>%>
     </body>
 </html>

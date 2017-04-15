@@ -1,3 +1,5 @@
+<script src="/socket.io/socket.io.js"></script>
+
 <h2><%= name %>
     -
     <%= formatDate(new Date())[0] %></h2>
@@ -5,15 +7,16 @@
 <table id="menuOrder">
     <thead>
         <tr>
-            <td>
+            <th>
                 Time
-            </td>
-            <td>
+            </th>
+            <th>
                 Menu Item
-            </td>
-            <td>
+            </th>
+            <th>
                 Customer
-            </td>
+            </th>
+            <th></th>
         </tr>
     </thead>
     <tbody id="orders">
@@ -45,16 +48,21 @@
     })
     socket.on('order', function(data) {
         console.log('receiving message ')
-        $('#orders').append("<tr><td>" + data.date + "</td><td>" + data.menuItem + "</td><td>" + data.customer + "</td><td><button type='button' value=" + data.orderId + ">Done</button></td></tr>")
+        var newRow = document.createElement('tr')
+        newRow.innerHTML = "<td>" + data.date + "</td><td>" + data.menuItem + "</td><td>" + data.customer + "</td><td><button type='button' value=" + data.orderId + ">Done</button></td>"
+        document.getElementById('orders').appendChild(newRow)
     })
-    $('#orders').on('click', 'button', function() {
-        var orderId = $(this).val()
-        $(this).parent().parent().remove()
-        send()
+    document.getElementById('orders').addEventListener('click', function(event) {
         function send() {
             console.log('submitting remove order')
             socket.emit('remove', orderId)
         }
-
+        var clickedElement = event.target
+        if (clickedElement.tagName === 'BUTTON') {
+            var orderId = clickedElement.value
+            var tr = clickedElement.parentNode.parentNode
+            tr.parentNode.removeChild(tr)
+            send()
+        }
     })
 </script>

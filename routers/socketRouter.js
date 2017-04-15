@@ -1,13 +1,16 @@
+// listen for connections and route orders
 const Order = require('../models/order')
 const User = require('../models/user')
-const formatDate = require('../config/date')
+const formatDate = require('../config/formatDate')
 
 module.exports = function (socket) {
+  // make sockets join only the room of the business they are ordering from
   socket.on('join', (room) => {
     console.log('socket joining ' + room)
     socket.join(room)
   })
 
+  // redirect orders to the socket of the relevant business
   socket.on('message', (data) => {
     console.log('sending message to: ' + data.room)
     var newOrder = new Order({
@@ -26,6 +29,7 @@ module.exports = function (socket) {
     })
   })
 
+  // remove orders
   socket.on('remove', (data) => {
     console.log('removing order: ' + data)
     Order.findByIdAndRemove(data, (err) => {

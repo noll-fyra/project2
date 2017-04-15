@@ -1,44 +1,24 @@
 var mongoose = require('mongoose')
 
 var ServiceSchema = new mongoose.Schema({
-  customer: {
-    type: [{
-      type: mongoose.Schema.ObjectId,
-      ref: 'User'
-    }]
-  },
-  askForMenu: {
-    type: Boolean
-  },
-  askforWater: {
-    type: Boolean
-  },
-  askForCutleryCrockery: {
-    type: Boolean
-  },
-  askForTableClear: {
-    type: Boolean
-  },
-  orderedItems: {
-    type: [{
-      type: mongoose.Schema.ObjectId,
-      ref: 'MenuItem'
-    }]
-  },
-  askForBill: {
-    type: Boolean
-  },
-  specialRequest: {
-    type: String
-  },
-  requestTimes: {
-    type: [{
-      type: Date
-    }]
-  },
-  feedback: {
-    type: String
-  }
+  customer: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'User'
+  }],
+  askForMenu: Boolean,
+  askforWater: Boolean,
+  askForCutleryCrockery: Boolean,
+  askForTableClear: Boolean,
+  orderedItems: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'MenuItem'
+  }],
+  askForBill: Boolean,
+  specialRequest: String,
+  requestTimes: [{
+    type: Date
+  }],
+  feedback: String
 })
 
 module.exports = mongoose.model('Service', ServiceSchema)

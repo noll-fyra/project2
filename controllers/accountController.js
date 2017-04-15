@@ -6,12 +6,12 @@ var User = require('../models/user')
 // check that the user is logged in to access their account
 router.use(isLoggedIn)
 
-// display user account
+// display the user's account
 router.route('/')
 .get((req, res) => {
   res.render('account/account', {currentUser: req.user})
 })
-// update user profile
+// update the user's profile
 .put((req, res) => {
   var update = {
     name: req.body.name,
@@ -29,7 +29,7 @@ router.route('/')
   })
 })
 
-// update user password
+// update the user's password
 router.put('/password', (req, res) => {
   User.findById(req.user.id, (err, data) => {
     if (err) {
