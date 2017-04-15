@@ -1,31 +1,42 @@
-var express = require('express')
-var router = express.Router()
-var isLoggedIn = require('../middleware/isLoggedIn')
-var hasRegisteredBusiness = require('../middleware/hasRegisteredBusiness')
-var Business = require('../models/business')
-var User = require('../models/user')
-var MenuItem = require('../models/menuItem')
+const express = require('express')
+const router = express.Router()
+const formatDate = require('../config/date')
+const isLoggedIn = require('../middleware/isLoggedIn')
+const hasRegisteredBusiness = require('../middleware/hasRegisteredBusiness')
+const Business = require('../models/business')
+const User = require('../models/user')
+const MenuItem = require('../models/menuItem')
+const Order = require('../models/order')
 
 // list all businesses
-router.get('/', function (req, res) {
+router.get('/', (req, res) => {
   Business.find({}, (err, data) => {
-    if (err) return console.log(err)
+    if (err) {
+      req.flash('error', 'There was an error fetching the businesses. Please try again.')
+      return res.redirect('/business')
+    }
     res.render('business/index', {allBusinesses: data})
   })
 })
 
 // find specific business
-router.get('/:name/:id', function (req, res) {
+router.get('/:name/:id', (req, res) => {
   Business.findById(req.params.id).populate('menu').exec((err, data) => {
-    if (err) return console.log(err)
-    res.render('business/business', {business: data})
+    if (err) {
+      req.flash('error', 'There was an error fetching the business. Please try again.')
+      return res.redirect('back')
+    }
+    res.render('business/show', {business: data})
   })
 })
 
-// for users to send
-router.get('/:name/:id/send', function (req, res) {
+// for users to send orders
+router.get('/:name/:id/send', (req, res) => {
   Business.findById(req.params.id).populate('menu').exec((err, data) => {
-    if (err) return console.log(err)
+    if (err) {
+      req.flash('error', 'There was an error fetching the business. Please try again.')
+      return res.redirect('back')
+    }
     res.render('business/send', {chat: req.params.id, name: data.name, menu: data.menu})
   })
 })
@@ -39,7 +50,10 @@ router.use(hasRegisteredBusiness)
 // display the user's business account
 router.get('/account', (req, res) => {
   Business.findById(req.user.business).populate('users').exec((err, data) => {
-    if (err) return console.log(err)
+    if (err) {
+      req.flash('error', 'There was an error fetching your business account. Please try again.')
+      return res.redirect('back')
+    }
     res.render('business/account', {currentUser: data})
   })
 })
@@ -51,7 +65,10 @@ router.route('/register')
 })
 .post((req, res) => {
   User.findById(req.body.userId, (err, data) => {
-    if (err) return console.log(err)
+    if (err) {
+      req.flash('error', 'There was an error registering your business. Please try again.')
+      return res.redirect('back')
+    }
     if (data.business) {
       req.flash('error', 'You have already registered a business. Please create another account to register a new one.')
       res.redirect('/auth/signup')
@@ -64,9 +81,15 @@ router.route('/register')
       newBusiness.description = req.body.description
       newBusiness.users.push(req.body.userId)
       newBusiness.save((err) => {
-        if (err) return console.log(err)
+        if (err) {
+          req.flash('error', 'There was an error registering your business. Please try again.')
+          return res.redirect('back')
+        }
         User.findByIdAndUpdate(req.body.userId, {business: newBusiness.id}, (err, data) => {
-          if (err) return console.log(err)
+          if (err) {
+            req.flash('error', 'There was an error registering your business. Please try again.')
+            return res.redirect('back')
+          }
           res.redirect('/business/account')
         })
       })
@@ -74,16 +97,23 @@ router.route('/register')
   })
 })
 
-router.get('/menu', (req, res) => {
+// view and create menu items
+router.route('/menu')
+.get((req, res) => {
   Business.findById(req.user.business).populate('menu').exec((err, data) => {
-    if (err) return console.log(err)
+    if (err) {
+      req.flash('error', 'There was an error fetching your menu. Please try again.')
+      return res.redirect('back')
+    }
     res.render('business/menu', {menu: data.menu, name: data.name})
   })
 })
-
-router.post('/menu', (req, res) => {
+.post((req, res) => {
   Business.findById(req.user.business, (err, data) => {
-    if (err) return console.log(err)
+    if (err) {
+      req.flash('error', 'There was an error finding your businessController. Please try again.')
+      return res.redirect('back')
+    }
     var newMenuItem = new MenuItem({
       name: req.body.name,
       description: req.body.description,
@@ -91,19 +121,41 @@ router.post('/menu', (req, res) => {
       business: req.user.business
     })
     newMenuItem.save((err) => {
-      if (err) return console.log(err)
+      if (err) {
+        req.flash('error', 'There was an error adding your menu item. Please try again.')
+        return res.redirect('back')
+      }
       var id = newMenuItem.id
       Business.findByIdAndUpdate(req.user.business, {$push: {menu: id}}, (err, data) => {
-        if (err) return console.log(err)
+        if (err) {
+          req.flash('error', 'There was an error adding your menu item. Please try again.')
+          return res.redirect('back')
+        }
         res.redirect('/business/menu')
       })
     })
   })
 })
 
-// for business to receive
-router.get('/:name/:id/receive', function (req, res) {
-  res.render('business/receive', {chat: req.params.id, name: req.params.name})
+// businesses receive orders here
+router.get('/:name/:id/receive', (req, res) => {
+  if (req.user.business.toString() !== req.params.id) {
+    req.flash('error', 'You can only receive orders for your own business.')
+    return res.redirect('back')
+  }
+  Business.findById(req.params.id, (err, business) => {
+    if (err) {
+      req.flash('error', 'There was an error finding your business. Please try again')
+      res.redirect('back')
+    }
+    Order.find({}).populate('menuItem').populate('customer').populate('business').sort({date: 'asc'}).exec((err, data) => {
+      if (err) {
+        req.flash('error', 'There was an error finding your orders. Please try again')
+        res.redirect('back')
+      }
+      res.render('business/receive', {chat: req.params.id, name: business.name, orders: data, formatDate: formatDate})
+    })
+  })
 })
 
 module.exports = router

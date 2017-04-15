@@ -41,18 +41,6 @@ var MenuItemSchema = new mongoose.Schema({
   },
   index: {
     type: Number
-  },
-  orderedBy: {
-    type: [{
-      type: mongoose.Schema.ObjectId,
-      ref: 'User'
-    }]
-  },
-  orderedAt: {
-    type: Date
-  },
-  orderCompletedAt: {
-    type: Date
   }
 })
 

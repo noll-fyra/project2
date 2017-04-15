@@ -2,26 +2,19 @@ const mongoose = require('mongoose')
 
 let orderSchema = new mongoose.Schema({
   menuItem: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Schema.ObjectId,
     ref: 'MenuItem',
     require: true
   },
   business: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Business',
-    require: true
+    type: mongoose.Schema.ObjectId,
+    ref: 'Business'
   },
   customer: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    require: true
+    type: mongoose.Schema.ObjectId,
+    ref: 'User'
   },
-  date: {
-    type: Date
-  },
-  table: {
-    type: Number
-  }
+  date: Date
 })
 
 let Order = mongoose.model('Order', orderSchema)

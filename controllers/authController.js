@@ -1,25 +1,24 @@
 var express = require('express')
 var router = express.Router()
-
+var passport = require('../config/passport')
+var isLoggedIn = require('../middleware/isLoggedIn')
 var User = require('../models/user')
-var passport = require('../config/ppConfig')
 
-router.get('/signup', function (req, res) {
+// send the user to the sign up page and create their account
+router.route('/signup')
+.get((req, res) => {
   res.render('auth/signup')
 })
-
-router.post('/signup', function (req, res) {
+.post((req, res) => {
   User.create({
-    email: req.body.email,
     name: req.body.name,
+    email: req.body.email,
     password: req.body.password
-  }, function (err, createdUser) {
+  }, (err, createdUser) => {
     if (err) {
-      // FLASH
-      req.flash('error', 'Could not create user account =(')
+      req.flash('error', 'Could not create user account. Please try again.')
       res.redirect('/auth/signup')
     } else {
-      // FLASH
       passport.authenticate('local', {
         successRedirect: '/',
         successFlash: 'Account created and logged in. You are now a Locavore!'
@@ -28,38 +27,41 @@ router.post('/signup', function (req, res) {
   })
 })
 
-router.get('/login', function (req, res) {
+// send the user to the login page
+router.route('/login')
+.get((req, res) => {
   if (req.isAuthenticated()) {
-    req.flash('error', 'you have logged in already')
+    req.flash('error', 'You are already logged in.')
     return res.redirect('/account')
   }
   res.render('auth/login')
 })
-
-router.get('/facebook/callback',
-passport.authenticate('facebook', { failureRedirect: '/auth/login/',
-  successRedirect: '/',
-  successFlash: 'connected to fb' }),
-  function (res, req) {
-    res.redirect('/')
-  }
-)
-
-router.get('/login/facebook', passport.authenticate('facebook'))
-
-// FLASH
-router.post('/login', passport.authenticate('local', {
+.post(passport.authenticate('local', {
   successRedirect: '/',
   failureRedirect: '/auth/login',
-  failureFlash: 'Invalid username and/or password',
-  successFlash: 'You have logged in. Welcome to the Matrix.'
+  failureFlash: 'Invalid username and/or password.',
+  successFlash: 'You have logged in. Welcome back!'
 }))
 
-router.get('/logout', function (req, res) {
+// check if the user is logged in
+router.use(isLoggedIn)
+
+// log the user out
+router.get('/logout', (req, res) => {
   req.logout()
-  // FLASH
-  req.flash('success', 'You have logged out. Come back soon!')
+  req.flash('success', 'You have successfully logged out. Come back soon!')
   res.redirect('/')
 })
+
+// router.get('/facebook/callback',
+// passport.authenticate('facebook', { failureRedirect: '/auth/login/',
+//   successRedirect: '/',
+//   successFlash: 'connected to fb' }),
+//   (res, req) => {
+//     res.redirect('/')
+//   }
+// )
+//
+// router.get('/login/facebook', passport.authenticate('facebook'))
 
 module.exports = router

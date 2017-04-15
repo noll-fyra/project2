@@ -1,6 +1,40 @@
-<h2><%= name %></h2>
+<h2><%= name %>
+    -
+    <%= formatDate(new Date())[0] %></h2>
 
-<ul id="receive"></ul>
+<table id="menuOrder">
+    <thead>
+        <tr>
+            <td>
+                Time
+            </td>
+            <td>
+                Menu Item
+            </td>
+            <td>
+                Customer
+            </td>
+        </tr>
+    </thead>
+    <tbody id="orders">
+        <% orders.forEach((order) => { %>
+            <tr>
+                <td>
+                    <%= formatDate(order.date)[1] %>
+                </td>
+                <td>
+                    <%= order.menuItem.name %>
+                </td>
+                <td>
+                    <%= order.customer.name %>
+                </td>
+                <td>
+                    <button type="button" value="<%- order.id %>">Done</button>
+                </td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>
 
 <script>
     var socket = io.connect()
@@ -10,7 +44,17 @@
         console.log('joining ' + room)
     })
     socket.on('order', function(data) {
-        console.log('receiving message ' + data.message)
-        $('#receive').append($('<li>').text(data.message))
+        console.log('receiving message ')
+        $('#orders').append("<tr><td>" + data.date + "</td><td>" + data.menuItem + "</td><td>" + data.customer + "</td><td><button type='button' value=" + data.orderId + ">Done</button></td></tr>")
+    })
+    $('#orders').on('click', 'button', function() {
+        var orderId = $(this).val()
+        $(this).parent().parent().remove()
+        send()
+        function send() {
+            console.log('submitting remove order')
+            socket.emit('remove', orderId)
+        }
+
     })
 </script>

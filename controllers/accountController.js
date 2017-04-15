@@ -7,12 +7,12 @@ var User = require('../models/user')
 router.use(isLoggedIn)
 
 // display user account
-router.get('/', (req, res) => {
+router.route('/')
+.get((req, res) => {
   res.render('account/account', {currentUser: req.user})
 })
-
 // update user profile
-router.put('/', (req, res) => {
+.put((req, res) => {
   var update = {
     name: req.body.name,
     email: req.body.email,
@@ -22,32 +22,27 @@ router.put('/', (req, res) => {
   User.findByIdAndUpdate(req.user.id, update, (err, data) => {
     if (err) {
       req.flash('error', 'There was an error updating your profile. Please try again.')
-      return res.redirect('/account')
+      return res.redirect('back')
     }
     req.flash('success', 'Your profile was successfully updated.')
     res.redirect('/account')
   })
 })
 
-// router.get('/password', (req, res) => {
-//   res.send('passwordpage')
-// })
-
 // update user password
 router.put('/password', (req, res) => {
-  User.findById(req.user.id, function (err, data) {
+  User.findById(req.user.id, (err, data) => {
     if (err) {
       req.flash('error', 'There was an error updating your account. Please try again.')
-      return res.redirect('/account')
+      return res.redirect('back')
     }
     if (!req.body.oldPassword || !req.body.newPassword) {
       req.flash('error', 'Both password fields must be filled in.')
-      return res.redirect('/account')
+      return res.redirect('back')
     }
     if (!data.validPassword(req.body.oldPassword)) {
-      console.log('bad password')
       req.flash('error', 'Your old password is incorrect. Please try again.')
-      return res.redirect('/account')
+      return res.redirect('back')
     }
     var update = {
       password: req.body.newPassword
@@ -55,7 +50,7 @@ router.put('/password', (req, res) => {
     User.findByIdAndUpdate(req.user.id, update, (err, data) => {
       if (err) {
         req.flash('error', 'There was an error updating your password. Please try again.')
-        return res.redirect('/account')
+        return res.redirect('back')
       }
       req.flash('success', 'Your password was successfully updated.')
       res.redirect('/account')

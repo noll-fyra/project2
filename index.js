@@ -7,28 +7,28 @@ const app = express()
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
 global.io = io
+const socketRouter = require('./routers/socketRouter')
 
 // set up the database
 const mongoose = require('mongoose')
-const dbURI = process.env.PROD_MONGODB || 'mongodb://admin:admin@ds157390.mlab.com:57390/mymdb'
+const dbURI = process.env.PROD_MONGODB
 const port = process.env.PORT || 3000
 mongoose.Promise = global.Promise
 
-// add layouts, middleware, session and authentication
+// add layouts, middleware, session, authentication and flash
 const ejsLayouts = require('express-ejs-layouts')
 const methodOverride = require('method-override')
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
-const passport = require('./config/ppConfig')
-// const isLoggedIn = require('./middleware/isLoggedIn')
+const passport = require('./config/passport')
 const flash = require('connect-flash')
 
 // connect to the database
 if (!mongoose.connection.db) mongoose.connect(dbURI)
 var db = mongoose.connection
 db.on('error', console.error.bind(console, 'Connection error:'))
-db.once('open', function () {
+db.once('open', () => {
   console.log('Connected!')
 })
 
@@ -40,9 +40,8 @@ app.use(ejsLayouts)
 // handle requests
 app.use(methodOverride('_method'))
 app.use(bodyParser.urlencoded({extended: false}))
-// app.use(bodyParser.json())
 
-// handle login/logout (session comes before passport)
+// handle login/logout (session comes before passport and flash)
 app.use(session({
   secret: process.env.SESSION_SECRET,
   cookie: {},
@@ -59,42 +58,28 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash())
 
-app.use(function (req, res, next) {
-  // before every route, attach the flash messages and current user to res.locals
+// before every route, attach the flash messages and current user to res.locals
+app.use((req, res, next) => {
   res.locals.alerts = req.flash()
   res.locals.currentUser = req.user
   next()
 })
 
+app.use('/', require('./controllers/homeController'))
 app.use('/auth', require('./controllers/authController'))
 app.use('/account', require('./controllers/accountController'))
 app.use('/business', require('./controllers/businessController'))
 
-app.use('/', function (req, res) {
-  var User = require('./models/user')
-  User.find({}).populate('business').exec(function (err, data) {
-    if (err) res.send('error')
-    res.render('index', {allProfiles: data})
-  })
+// send all failing routes to 404
+app.use((req, res) => {
+  res.render('404')
 })
 
-app.use(function (req, res) {
-  res.send('404')
+// start the server listening for connections by client sockets
+io.on('connection', (socket) => {
+  socketRouter(socket)
 })
 
-io.on('connection', function (socket) {
-  socket.on('join', function (room) {
-    console.log('socket joining ' + room)
-    socket.join(room)
-  })
-
-  socket.on('message', function (data) {
-    console.log('sending message to: ' + data.room)
-    io.sockets.in(data.room).emit('order', {message: data.message})
-    console.log(' message is: ' + data.message)
-  })
-})
-
-http.listen(port, function () {
+http.listen(port, () => {
   console.log('App is running on port: ' + port)
 })

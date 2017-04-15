@@ -27,9 +27,7 @@
                     <%= item.price %>
                 </td>
                 <td>
-                    <form action="">
-                        <button value="<%- item.name %>">Order</button>
-                    </form>
+                    <button type="button" value="<%- item.id %>/<%- item.name%>">Order</button>
                 </td>
             </tr>
         <% }) %>
@@ -43,16 +41,18 @@
         socket.emit('join', room)
         console.log('joining ' + room)
     })
-
     $('#menuOrder').on('click', 'button', function() {
-        console.log($(this).val())
-        $(this).parent().submit(function(event) {
-            event.preventDefault()
-            console.log('submitting form')
+        var menuId = $(this).val().split('/')[0]
+        var menuName = $(this).val().split('/')[1]
+        function send() {
+            console.log('submitting order')
             socket.emit('message', {
                 room: room,
-                message: $(this).children().val()
+                menuId: menuId,
+                menuName: menuName,
+                customer: "<%- currentUser.id %>"
             })
-        })
+        }
+        send()
     })
 </script>
