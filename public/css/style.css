@@ -65,6 +65,10 @@ body {
   /*background-color: white;*/
 }
 
+.receive-nav li {
+  display: inline-block;
+}
+
 label, input {
   display: inline-block;
 }

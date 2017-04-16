@@ -14,7 +14,9 @@ let orderSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'User'
   },
-  date: Date
+  orderedAt: Date,
+  completed: Boolean,
+  completedAt: Date
 })
 
 let Order = mongoose.model('Order', orderSchema)

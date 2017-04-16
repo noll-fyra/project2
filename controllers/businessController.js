@@ -7,6 +7,7 @@ const Business = require('../models/business')
 const User = require('../models/user')
 const MenuItem = require('../models/menuItem')
 const Order = require('../models/order')
+const Transaction = require('../models/transaction')
 
 // list all businesses
 router.get('/', (req, res) => {
@@ -33,14 +34,33 @@ router.get('/:name/:id', (req, res) => {
 // check that the user is logged in to access the following pages
 router.use(isLoggedIn)
 
-// for users to send orders
+router.get('/transcheck', (req, res) => {
+  Transaction.find({customer: req.user}).populate({path:'orderedItems', populate: {path:'menuItem', model: 'MenuItem'}}).exec((err,data) => {
+    console.log(data)
+    res.send(data)
+  })
+})
+
+// for users to send orders and view their transaction
 router.get('/:name/:id/send', (req, res) => {
   Business.findById(req.params.id).populate('menu').exec((err, data) => {
     if (err) {
       req.flash('error', 'There was an error fetching the business. Please try again.')
       return res.redirect('back')
     }
-    res.render('business/send', {chat: req.params.id, name: data.name, menu: data.menu})
+    Transaction.find({customer: req.user}).exec((err, transactionData) => {
+      if (err) {
+        req.flash('error', 'There was an error fetching your details. Please try again.')
+        return res.redirect('back')
+      }
+      console.log(transactionData)
+      if (transactionData) {
+
+        res.render('business/send', {chat: req.params.id, name: data.name, menu: data.menu, transaction: transactionData})
+      } else {
+        res.render('business/send', {chat: req.params.id, name: data.name, menu: data.menu})
+      }
+    })
   })
 })
 

@@ -39,8 +39,10 @@ module.exports = function (date) {
     return hour < 12 ? 'AM' : 'PM'
   }
 
-  var dateString = date.getDate() + ' ' + month(date.getMonth()) + ' ' + date.getFullYear()
-  var timeString = padding(date.getHours()) + ':' + padding(date.getMinutes()) + ' ' + ampm(date.getHours())
+  if (date) {
+    var dateString = date.getDate() + ' ' + month(date.getMonth()) + ' ' + date.getFullYear()
+    var timeString = padding(date.getHours()) + ':' + padding(date.getMinutes()) + ' ' + ampm(date.getHours())
 
-  return [dateString, timeString]
+    return [dateString, timeString]
+  }
 }

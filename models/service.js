@@ -15,9 +15,7 @@ var ServiceSchema = new mongoose.Schema({
   }],
   askForBill: Boolean,
   specialRequest: String,
-  requestTimes: [{
-    type: Date
-  }],
+  requestTimes: Date,
   feedback: String
 })
 

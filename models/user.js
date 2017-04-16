@@ -31,6 +31,10 @@ var UserSchema = new mongoose.Schema({
   business: {
     type: mongoose.Schema.ObjectId,
     ref: 'Business'
+  },
+  transaction: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Transaction'
   }
 })
 

@@ -3,16 +3,17 @@ var mongoose = require('mongoose')
 var TransactionSchema = new mongoose.Schema({
   dateFrom: Date,
   dateTo: Date,
-  orderedItems: [{
-    type: mongoose.Schema.ObjectId,
-    ref: 'MenuItem'
-  }],
-  customers: [{
+  customer: {
     type: mongoose.Schema.ObjectId,
     ref: 'User'
-  }],
-  table: [{
-    type: Number
+  },
+  business: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Business'
+  },
+  orderedItems: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'Order'
   }]
 })
 

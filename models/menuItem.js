@@ -9,9 +9,7 @@ var MenuItemSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  subname: {
-    type: String
-  },
+  subname: String,
   description: {
     type: String
   },

@@ -1,42 +1,46 @@
-<script src="/socket.io/socket.io.js"></script>
-
 <h2><%= name %></h2>
 
-<table id="menuOrder">
-    <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Description
-            </th>
-            <th>
-                Price
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        <% menu.forEach((item) => { %>
+<div>
+    <table id="menuOrder">
+        <thead>
             <tr>
-                <td>
-                    <%= item.name %>
-                </td>
-                <td>
-                    <%= item.description %>
-                </td>
-                <td>
-                    <%= item.price %>
-                </td>
-                <td>
-                    <button type="button" value="<%- item.id %>/<%- item.name%>">Order</button>
-                </td>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Price
+                </th>
+                <th></th>
             </tr>
-        <% }) %>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <% menu.forEach((item) => { %>
+                <tr>
+                    <td>
+                        <%= item.name %>
+                    </td>
+                    <td>
+                        <%= item.description %>
+                    </td>
+                    <td>
+                        <%= item.price %>
+                    </td>
+                    <td>
+                        <button type="button" value="<%- item.id %>/<%- item.name%>">Add to Order</button>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+<div>
+    <%= transaction %>
 
+</div>
+<script src="/socket.io/socket.io.js"></script>
 <script>
     var socket = io.connect()
     var room = "<%= chat %>"
