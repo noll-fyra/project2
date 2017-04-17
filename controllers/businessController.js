@@ -10,8 +10,20 @@ const Order = require('../models/order')
 const Transaction = require('../models/transaction')
 
 // list all businesses
-router.get('/', (req, res) => {
+router.route('/')
+.get((req, res) => {
   Business.find({}, (err, data) => {
+    if (err) {
+      req.flash('error', 'There was an error fetching the businesses. Please try again.')
+      return res.redirect('/business')
+    }
+    res.render('business/index', {allBusinesses: data})
+  })
+})
+// find specific businesses
+.post((req, res) => {
+  var search = new RegExp('^(.*(' + req.body.search + ').*)$', 'i')
+  Business.find().or([{name: { $regex: search }}, {description: { $regex: search }}]).exec((err, data) => {
     if (err) {
       req.flash('error', 'There was an error fetching the businesses. Please try again.')
       return res.redirect('/business')

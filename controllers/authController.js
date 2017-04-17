@@ -38,7 +38,7 @@ router.route('/login')
 })
 .post(passport.authenticate('local', {
   successRedirect: '/',
-  failureRedirect: '/auth/login',
+  failureRedirect: '/auth/signup',
   failureFlash: 'Invalid username and/or password.',
   successFlash: 'You have logged in. Welcome back!'
 }))

@@ -8,6 +8,9 @@
 </aside>
 
 <main>
+    <% if (!allBusinesses.length) { %>
+        <h3>There were no businesses matching your search.</h3>
+    <% } %>
     <% allBusinesses.forEach((business) => { %>
         <% var dashName = business.name.toLowerCase().split(' ').join('-') %>
         <a href="/business/find/<%- dashName %>/<%- business.id %>">
