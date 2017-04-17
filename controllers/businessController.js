@@ -42,7 +42,7 @@ router.get('/transcheck', (req, res) => {
 })
 
 // for users to send orders and view their transaction
-router.get('/find/:name/:id/send', (req, res) => {
+router.get('/find/:name/:id/order', (req, res) => {
   Business.findById(req.params.id).populate('menu').exec((err, data) => {
     if (err) {
       req.flash('error', 'There was an error fetching the business. Please try again.')
@@ -55,9 +55,9 @@ router.get('/find/:name/:id/send', (req, res) => {
       }
       console.log(transactionData)
       if (transactionData) {
-        res.render('business/send', {chat: req.params.id, name: data.name, menu: data.menu, transaction: transactionData})
+        res.render('business/order', {chat: req.params.id, name: data.name, menu: data.menu, transaction: transactionData})
       } else {
-        res.render('business/send', {chat: req.params.id, name: data.name, menu: data.menu})
+        res.render('business/order', {chat: req.params.id, name: data.name, menu: data.menu})
       }
     })
   })
@@ -137,6 +137,7 @@ router.route('/menu')
       name: req.body.name,
       description: req.body.description,
       price: req.body.price,
+      section: req.body.section,
       business: req.user.business
     })
     newMenuItem.save((err) => {

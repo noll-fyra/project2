@@ -2,19 +2,13 @@
     <h4>Orders</h4>
     <ul>
         <li>
-            <button type="button" class="account-button" id="allOrdersButton">All</button>
+            <button type="button" class="aside-button" id="allOrdersButton">Orders</button>
         </li>
         <li>
-            <button type="button" class="account-button" id="kitchenOrdersButton">Kitchen</button>
+            <button type="button" class="aside-button" id="serviceRequestsButton">Service Requests</button>
         </li>
         <li>
-            <button type="button" class="account-button" id="barOrdersButton">Bar</button>
-        </li>
-        <li>
-            <button type="button" class="account-button" id="serviceOrdersButton">Service</button>
-        </li>
-        <li>
-            <button type="button" class="account-button" id="completedOrdersButton">Completed</button>
+            <button type="button" class="aside-button" id="completedOrdersButton">Completed</button>
         </li>
     </ul>
     <h6>Sort</h6>
@@ -42,48 +36,8 @@
         <% }) %>
     </section>
 
-    <section class="kitchenOrders">
-        <h3>Kitchen Orders</h3>
-        <% orders.filter((order) => { return order.completed === false && order.section === "kitchen"}).forEach((order) => { %>
-            <article class="order-item">
-                <div class="order-date">
-                    <%= formatDate(order.orderedAt)[1] %>
-                </div>
-                <div class="order-customer">
-                    <%= order.customer.name %>
-                </div>
-                <div class="order-name">
-                    <%= order.menuItem.name %>
-                </div>
-                <div class="order-button">
-                    <button type="button" class="done-button" value="<%- order.id %>">Done</button>
-                </div>
-            </article>
-        <% }) %>
-    </section>
-
-    <section class="barOrders">
-        <h2>hello2</h2>
-    </section>
-
-    <section class="serviceOrders">
-        <h3>Service Orders</h3>
-        <% orders.filter((order) => { return order.completed === false && order.section === "service"}).forEach((order) => { %>
-            <article class="order-item">
-                <div class="order-date">
-                    <%= formatDate(order.orderedAt)[1] %>
-                </div>
-                <div class="order-customer">
-                    <%= order.customer.name %>
-                </div>
-                <div class="order-name">
-                    <%= order.menuItem.name %>
-                </div>
-                <div class="order-button">
-                    <button type="button" class="done-button" value="<%- order.id %>">Done</button>
-                </div>
-            </article>
-        <% }) %>
+    <section class="serviceRequests">
+        <h3>Service Requests</h3>
     </section>
 
     <section class="completedOrders">
@@ -100,59 +54,74 @@
                 <div class="order-item">
                     <%= order.menuItem.name %>
                 </div>
-            </div>
-        </article>
-    <% }) %>
-</section>
+            </article>
+        <% }) %>
+    </section>
 </main>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
-// connect to the business' room
-var socket = io.connect()
-var room = "<%= chat %>"
-socket.on('connect', function() {
-    socket.emit('join', room)
-    console.log('joining ' + room)
-})
-// add the new order to the new orders table
-socket.on('order', function(data) {
-    console.log('receiving message ')
-    var newArticle = document.createElement('article')
-    newArticle.innerHTML = "<article class='order-item'><div class='order-date'>" + data.date + "</div><div class='order-customer'>" + data.customer + "</div><div class='order-name'>" + data.menuItem + "</div><div class='order-item'><button type='button' class='done-button' value=" + data.orderId + ">DONE</button></div></article>"
-    document.querySelector('.allOrders').appendChild(newArticle)
-})
-// move the completed order to the completed orders table
-document.querySelector('.allOrders').addEventListener('click', function(event) {
-    function send(orderId) {
-        console.log('submitting remove order')
-        socket.emit('remove', orderId)
-    }
-    var clickedElement = event.target
-    if (clickedElement.className === 'done-button') {
-        var orderId = clickedElement.value
-        var article = clickedElement.parentNode.parentNode
-        console.log(article)
-        clickedElement.parentNode.parentNode.removeChild(clickedElement.parentNode)
-        // change completed date !!!!
-        var completedOrders = document.querySelector('.completedOrders')
-        completedOrders.insertBefore(article, completedOrders.childNodes[2])
-        send(orderId)
-    }
-})
-
-var orderButtons = [document.getElementById('allOrdersButton'), document.getElementById('kitchenOrdersButton'), document.getElementById('barOrdersButton'), document.getElementById('serviceOrdersButton'), document.getElementById('completedOrdersButton')]
-var orderDivs = [document.querySelector('.allOrders'), document.querySelector('.kitchenOrders'), document.querySelector('.barOrders'), document.querySelector('.serviceOrders'), document.querySelector('.completedOrders')]
-orderButtons.forEach((button, index) => {
-    button.addEventListener('click', () => {
-        orderDivs.forEach((div) => {
-            div.style.display = 'none'
-        })
-        orderDivs[index].style.display = 'block'
+    // connect to the business' room
+    var socket = io.connect()
+    var room = "<%= chat %>"
+    socket.on('connect', function() {
+        socket.emit('join', room)
+        console.log('joining ' + room)
     })
-})
-orderDivs.forEach((div) => {
-    div.style.display = 'none'
-})
-document.querySelector('.allOrders').style.display = 'block'
+    // add the new menu order to the orders section
+    socket.on('order', function(data) {
+        console.log('receiving new order')
+        var newArticle = document.createElement('article')
+        newArticle.innerHTML = "<article class='order-item'><div class='order-date'>" + data.date + "</div><div class='order-customer'>" + data.customer + "</div><div class='order-name'>" + data.menuItem + "</div><div class='order-item'><button type='button' class='done-button' value=" + data.orderId + ">DONE</button></div></article>"
+        document.querySelector('.allOrders').appendChild(newArticle)
+    })
+    // add the new service order to the service section
+    socket.on('serviceRequest', function(data) {
+        console.log('receiving new service request')
+        var newArticle = document.createElement('article')
+        newArticle.innerHTML = "<article class='order-item'><div class='order-date'>" + data.date + "</div><div class='order-customer'>" + data.customer + "</div><div class='order-name'>" + data.serviceItem + "</div><div class='order-item'><button type='button' class='done-button'>DONE</button></div></article>"
+        document.querySelector('.serviceRequests').appendChild(newArticle)
+    })
+    // move the completed order to the completed orders table and change the status of the order to completed
+    document.querySelector('.allOrders').addEventListener('click', function(event) {
+        function send(orderId) {
+            console.log('submitting remove order')
+            socket.emit('remove', orderId)
+        }
+        var clickedElement = event.target
+        if (clickedElement.className === 'done-button') {
+            var orderId = clickedElement.value
+            // remove the DONE button before moving it to completed
+            var article = clickedElement.parentNode.parentNode
+            console.log(article)
+            clickedElement.parentNode.parentNode.removeChild(clickedElement.parentNode)
+            // change completed date !!!!
+            var completedOrders = document.querySelector('.completedOrders')
+            completedOrders.insertBefore(article, completedOrders.childNodes[2])
+            send(orderId)
+        }
+    })
+    // remove the completed service order
+    document.querySelector('.serviceRequests').addEventListener('click', function(event) {
+        var clickedElement = event.target
+        if (clickedElement.className === 'done-button') {
+            clickedElement.parentNode.parentNode.parentNode.parentNode.removeChild(clickedElement.parentNode.parentNode.parentNode)
+        }
+    })
+
+    // show and hide the sections
+    var orderButtons = [document.getElementById('allOrdersButton'), document.getElementById('serviceRequestsButton'), document.getElementById('completedOrdersButton')]
+    var orderDivs = [document.querySelector('.allOrders'), document.querySelector('.serviceRequests'), document.querySelector('.completedOrders')]
+    orderButtons.forEach((button, index) => {
+        button.addEventListener('click', () => {
+            orderDivs.forEach((div) => {
+                div.style.display = 'none'
+            })
+            orderDivs[index].style.display = 'block'
+        })
+    })
+    orderDivs.forEach((div) => {
+        div.style.display = 'none'
+    })
+    document.querySelector('.allOrders').style.display = 'block'
 </script>

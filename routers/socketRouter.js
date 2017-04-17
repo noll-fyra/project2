@@ -11,8 +11,8 @@ module.exports = function (socket) {
     socket.join(room)
   })
 
-  // redirect orders to the socket of the relevant business
-  socket.on('message', (data) => {
+  // redirect menu orders to the socket of the relevant business
+  socket.on('menuOrder', (data) => {
     console.log('sending message to: ' + data.room)
     User.findById(data.customer, (err, user) => {
       if (err) return console.log('There was an error finding the customer. Please try again')
@@ -30,7 +30,7 @@ module.exports = function (socket) {
         console.log(newOrderData)
         if (err) return console.log('There was an error creating the order. Please try again')
         // send the order to the business
-        io.sockets.in(data.room).emit('order', {section: data.type, menuItem: data.menuName, customer: user.name, date: formatDate(newOrder.orderedAt)[1], orderId: newOrder.id})
+        io.sockets.in(data.room).emit('order', {section: data.section, menuItem: data.menuName, customer: user.name, date: formatDate(newOrder.orderedAt)[1], orderId: newOrder.id})
         console.log(' message is: ' + data.menuName + ' ' + data.customer + ' ' + newOrder.orderedAt)
         // create transaction if it's the first order
         if (!user.transaction) {
@@ -54,6 +54,17 @@ module.exports = function (socket) {
           })
         }
       })
+    })
+  })
+
+  // redirect service orders to the socket of the relevant business
+  socket.on('service', (data) => {
+    console.log('asking for service by: ' + data.room)
+        // send the service request to the business
+    User.findById(data.customer, (err, customer) => {
+      if (err) return console.log('There was an error finding the customer. Please try again')
+      io.sockets.in(data.room).emit('serviceRequest', {section: data.section, serviceItem: data.serviceItem, customer: customer.name, date: formatDate(new Date())[1]})
+      console.log(' message is: ' + formatDate(new Date())[1] + ' ' + customer.name + ' ' + data.serviceItem)
     })
   })
 

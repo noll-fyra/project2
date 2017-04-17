@@ -1,17 +1,17 @@
-var accountButtons = [document.getElementById('profile'), document.getElementById('users'), document.getElementById('transactions'), document.getElementById('advanced')]
-var accountDivs = [document.querySelector('.profile'), document.querySelector('.users'), document.querySelector('.transactions'), document.querySelector('.advanced')]
+var buttons = [document.getElementById('profile'), document.getElementById('users'), document.getElementById('advanced')]
+var sections = [document.querySelector('.profile'), document.querySelector('.users'), document.querySelector('.advanced')]
 
-accountButtons.forEach((button, index) => {
+buttons.forEach((button, index) => {
   button.addEventListener('click', () => {
-    accountDivs.forEach((div) => {
-      div.style.display = 'none'
+    sections.forEach((section) => {
+      section.style.display = 'none'
     })
-    accountDivs[index].style.display = 'block'
+    sections[index].style.display = 'block'
   })
 })
 
-accountDivs.forEach((div) => {
-  div.style.display = 'none'
+sections.forEach((section) => {
+  section.style.display = 'none'
 })
 
 document.querySelector('.profile').style.display = 'block'

@@ -5,16 +5,16 @@
 <aside class="left-aside">
     <ul class="aside-nav">
         <li>
-            <button type="button" class="account-button" id="profile">About</button>
+            <button type="button" class="aside-button" id="profile">About</button>
         </li>
         <li>
-            <button type="button" class="account-button" id="password">Menu</button>
+            <button type="button" class="aside-button" id="password">Menu</button>
         </li>
         <li>
-            <button type="button" class="account-button" id="creditCards">Reviews</button>
+            <button type="button" class="aside-button" id="creditCards">Reviews</button>
         </li>
         <li>
-            <button type="button" class="account-button" id="history">Photos</button>
+            <button type="button" class="aside-button" id="history">Photos</button>
         </li>
     </ul>
 </aside>
@@ -32,7 +32,11 @@
         <%= business.menu %></p>
 
     <% var dashName = business.name.toLowerCase().split(' ').join('-') %>
-    <a href="/business/find/<%- dashName %>/<%- business.id%>/send">Eat Here</a>
+
 </main>
 
-<aside class="right-aside"></aside>
+<aside class="right-aside">
+    <h3>
+        <a href="/business/find/<%- dashName %>/<%- business.id%>/order">Eat Here</a>
+    </h3>
+</aside>

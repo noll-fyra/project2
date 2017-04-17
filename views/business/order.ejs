@@ -1,0 +1,183 @@
+<nav>
+    <h3><%= name %></h3>
+</nav>
+
+<aside class="left-aside">
+    <h4>Service</h4>
+    <ul>
+        <li>
+            <button type="button" class="aside-button" id="orderMenuButton">Menu</button>
+        </li>
+        <li>
+            <button type="button" class="aside-button" id="orderServiceButton">Ask for Service</button>
+        </li>
+        <li>
+            <button type="button" class="aside-button" id="orderBillButton">View Bill</button>
+        </li>
+    </ul>
+</aside>
+
+<main class="order-main">
+    <section class="orderMenu">
+        <aside class="left-aside">
+            <h6>Course</h6>
+            <h6>Sort</h6>
+            <h6>Filter</h6>
+        </aside>
+        <section>
+            <% menu.forEach((item) => { %>
+                <article class="menu-item">
+                    <div class="placeholder-image"></div>
+                    <div class="menu-main">
+                        <p>
+                            <%= item.name %>
+                        </p>
+                        <p>
+                            <%= item.description %>
+                        </p>
+                        <p>
+                            <%= item.price %>
+                        </p>
+                    </div>
+                    <div class="order-buttons">
+                        <button class="add-to-order-button" type="button" value="<%- item.id %>/<%- item.name%>/<%- item.price %>">Add to Order</button>
+                    </div>
+                </article>
+            <% }) %>
+        </section>
+    </section>
+
+    <section class="orderService">
+        <div class="order-buttons">
+            <button class="order-service-button" type="button" value="Water">Ask for water</button>
+        </div>
+        <div class="order-buttons">
+            <button class="order-service-button" type="button" value="Clear the table">Clear the table</button>
+        </div>
+        <div class="order-buttons">
+            <button class="order-service-button" type="button" value="Cutlery/crockery">Cutlery/crockery</button>
+        </div>
+        <div class="order-buttons">
+            <button class="order-service-button" type="button" value="Ask for assistance">Ask for assistance</button>
+        </div>
+        <div class="order-buttons">
+            <form class="form-group" method="" action="POST">
+                <input type="text" name="specialRequest" placeholder="Ask for a special request">
+                <button class="order-special-request" type="button">Special request</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="orderBill">
+        <h3>bill items</h3>
+        <button class="order-pay-bill" type="button">Pay bill</button>
+    </section>
+</main>
+
+<aside class="right-aside pending-orders">
+    <h3>Your Order</h3>
+    <button class="order-submit" type="button">Submit your order</button>
+</aside>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+
+    var socket = io.connect()
+    var room = "<%= chat %>"
+    socket.on('connect', function() {
+        socket.emit('join', room)
+        console.log('joining ' + room)
+    })
+
+    var orderArray = []
+
+    // create and temporarily save orders
+    document.querySelector('.orderMenu').addEventListener('click', function(event) {
+        var clickedElement = event.target
+        if (clickedElement.className === 'add-to-order-button') {
+            orderArray.push(clickedElement.value)
+            var menuName = clickedElement.value.split('/')[1]
+            var menuPrice = clickedElement.value.split('/')[2]
+            var newArticle = document.createElement('article')
+            newArticle.className = 'new-order-item'
+            newArticle.innerHTML = "<div class='new-order-name'>" + menuName + "</div><div class='new-order-price'>" + menuPrice + "</div><div><button type='button' class='remove-button' value=" + clickedElement.value + ">RMV</button></div>"
+            document.querySelector('.pending-orders').appendChild(newArticle)
+        }
+    })
+    // remove or submit orders
+    document.querySelector('.pending-orders').addEventListener('click', function(event) {
+        var clickedElement = event.target
+        // remove order from list if remove-button clicked
+        if (clickedElement.className === 'remove-button') {
+            var index = orderArray.indexOf(clickedElement.value)
+            orderArray.splice(index, 1)
+            var article = clickedElement.parentNode.parentNode
+            article.parentNode.removeChild(article)
+        }
+        // submit order if order-submit button clicked
+        if (clickedElement.className === 'order-submit') {
+
+            function send(menuId, menuName) {
+                console.log('submitting menu order')
+                socket.emit('menuOrder', {
+                    room: room,
+                    menuId: menuId,
+                    menuName: menuName,
+                    customer: "<%- currentUser.id %>"
+                })
+            }
+            // submit each order and create a new article in the orderBill section
+            orderArray.forEach((order) => {
+                send(order.split('/')[0], order.split('/')[1])
+                var newArticle = document.createElement('article')
+                newArticle.className = 'ordered-item'
+                newArticle.innerHTML = "<div class='new-order-name'>" + order.split('/')[1] + "</div><div class='new-order-price'>" + order.split('/')[2] + "</div>"
+                document.querySelector('.orderBill').appendChild(newArticle)
+            })
+            orderArray = []
+            // remove all articles from the pending-orders aside
+            var allArticles = document.querySelectorAll('.new-order-item')
+            Array.prototype.forEach.call(allArticles, function(article) {
+                article.parentNode.removeChild(article)
+            })
+        }
+    })
+
+    // create and emit service request
+    document.querySelector('.orderService').addEventListener('click', function(event) {
+        function send(serviceItem) {
+            console.log('submitting service order')
+            socket.emit('service', {
+                section: "service",
+                room: room,
+                serviceItem: serviceItem,
+                customer: "<%- currentUser.id %>"
+            })
+        }
+        var clickedElement = event.target
+        if (clickedElement.className === 'order-service-button') {
+            var serviceItem = clickedElement.value
+            send(serviceItem)
+        }
+        if (clickedElement.className === 'order-special-request') {
+            var serviceItem = 'Special request: ' + clickedElement.parentNode.childNodes[1].value
+            send(serviceItem)
+        }
+    })
+
+    // hide and show sections
+    var buttons = [document.getElementById('orderMenuButton'), document.getElementById('orderServiceButton'), document.getElementById('orderBillButton')]
+    var sections = [document.querySelector('.orderMenu'), document.querySelector('.orderService'), document.querySelector('.orderBill')]
+    buttons.forEach(function(button, index) {
+        button.addEventListener('click', () => {
+            sections.forEach((section) => {
+                section.style.display = 'none'
+            })
+            sections[index].style.display = 'block'
+        })
+    })
+    sections.forEach((section) => {
+        section.style.display = 'none'
+    })
+    document.querySelector('.orderMenu').style.display = 'block'
+</script>

@@ -8,18 +8,35 @@ body {
   height: 100vh;
   margin: 0 auto;
   padding: 0;
+  flex-flow: column;
   /*background-color: red;*/
 }
+
+
+/*.content {
+  width: 90%;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0;
+}*/
 
 header {
   width: 100%;
   display: flex;
   flex-flow: row;
   margin: 0 auto;
+  /*position: fixed;*/
 }
 
-.logo {
+.top {
+  margin: 8px auto;
+}
+
+.locavorus {
   width: 20%;
+  align-items: center;
+  /*display: flex;
+  flex-flow: row;*/
 }
 
 .main-search {
@@ -138,4 +155,13 @@ label {
 
 .order-item div {
   margin: 0 16px;
+}
+
+
+/* Orders */
+
+.order-main {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
 }
