@@ -34,13 +34,6 @@ router.get('/find/:name/:id', (req, res) => {
 // check that the user is logged in to access the following pages
 router.use(isLoggedIn)
 
-router.get('/transcheck', (req, res) => {
-  Transaction.find({customer: req.user}).populate({path: 'orderedItems', populate: {path: 'menuItem', model: 'MenuItem'}}).exec((err, data) => {
-    console.log(data)
-    res.send(data)
-  })
-})
-
 // for users to send orders and view their transaction
 router.get('/find/:name/:id/order', (req, res) => {
   Business.findById(req.params.id).populate('menu').exec((err, data) => {
@@ -48,17 +41,43 @@ router.get('/find/:name/:id/order', (req, res) => {
       req.flash('error', 'There was an error fetching the business. Please try again.')
       return res.redirect('back')
     }
-    Transaction.find({customer: req.user}).exec((err, transactionData) => {
+
+    User.findById(req.user).populate({path: 'transaction', populate: {path: 'orderedItems', populate: {path: 'menuItem', model: 'MenuItem'}}})
+
+    User.findById(req.user).populate({path: 'transaction', populate: {path: 'orderedItems', populate: {path: 'menuItem', model: 'MenuItem'}}}).exec((err, user) => {
       if (err) {
         req.flash('error', 'There was an error fetching your details. Please try again.')
         return res.redirect('back')
       }
-      console.log(transactionData)
-      if (transactionData) {
-        res.render('business/order', {chat: req.params.id, name: data.name, menu: data.menu, transaction: transactionData})
+      console.log(user)
+      if (user.transaction) {
+        res.render('business/order', {chat: req.params.id, name: data.name, menu: data.menu, transaction: user.transaction})
       } else {
         res.render('business/order', {chat: req.params.id, name: data.name, menu: data.menu})
       }
+    })
+  })
+})
+
+// thank you screen for paying the bill
+router.post('/bill/:id', (req, res) => {
+  User.findById(req.params.id).populate('transaction').exec((err, user) => {
+    if (err) {
+      req.flash('error', 'There was an error fetching the user. Please try again.')
+      return res.redirect('back')
+    }
+    Transaction.findByIdAndUpdate(user.transaction, {$set: {isActive: false, dateTo: new Date()}}, (err, transaction) => {
+      if (err) {
+        req.flash('error', 'There was an error fetching the transaction. Please try again.')
+        return res.redirect('back')
+      }
+      User.findByIdAndUpdate(user.id, {transaction: null}, (err, user) => {
+        if (err) {
+          req.flash('error', 'There was an error fetching the user. Please try again.')
+          return res.redirect('back')
+        }
+        res.render('business/bill', {user: user})
+      })
     })
   })
 })
@@ -157,6 +176,7 @@ router.route('/menu')
   })
 })
 
+// form to create new menu items
 router.get('/menu/new', (req, res) => {
   Business.findById(req.user.business).exec((err, data) => {
     if (err) {
@@ -181,6 +201,17 @@ router.get('/service', (req, res) => {
       }
       res.render('business/service', {chat: business.id, name: business.name, orders: data, formatDate: formatDate})
     })
+  })
+})
+
+// check transaction history
+router.get('/transactions', (req, res) => {
+  Transaction.find({business: req.user.business}).exec((err, transactions) => {
+    if (err) {
+      req.flash('error', 'There was an error finding your business. Please try again')
+      res.redirect('back')
+    }
+    res.render('business/transactions', {transactions: transactions})
   })
 })
 

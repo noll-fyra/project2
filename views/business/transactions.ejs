@@ -1,0 +1,39 @@
+<nav>
+    <h3>Transactions</h3>
+</nav>
+
+<aside class="transaction-nav left-aside">
+    <ul>
+        <li>
+            <button type="button" class="aside-button" id="active-transactions-button">Active</button>
+        </li>
+        <li>
+            <button type="button" class="aside-button" id="completed-transactions-button">Completed</button>
+        </li>
+    </ul>
+</aside>
+
+<main>
+    <section class="active-transactions">
+        <h5>Active</h5>
+        <% transactions.filter((item) => {return item.isActive === true}).forEach((item) => { %>
+            <p>
+                <%= item %>
+            </p>
+        <% }) %>
+    </section>
+
+    <section class="completed-transactions">
+        <h5>Completed</h5>
+        <% transactions.filter((item) => {return item.isActive === false}).forEach((item) => { %>
+            <p>
+                <%= item %>
+            </p>
+        <% }) %>
+    </section>
+
+</main>
+
+<% include ../partials/business-quick-links %>
+
+<script src="/scripts/business/transactions.js" charset="utf-8"></script>

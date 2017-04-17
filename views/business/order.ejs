@@ -69,13 +69,27 @@
     </section>
 
     <section class="orderBill">
-        <h3>bill items</h3>
-        <button class="order-pay-bill" type="button">Pay bill</button>
+        <h4>Your Bill</h4>
+        <div class="bill-list">
+            <% var transaction = transaction ? transaction : {orderedItems: []} %>
+            <% transaction.orderedItems.forEach((item) => { %>
+                <div class="bill-item">
+                    <%= item.menuItem.name %>
+                </div>
+                <div class="bill-price">
+                    <%= item.menuItem.price %>
+                </div>
+            <% }) %>
+        </div>
+        <button class="order-ask-bill" type="button" value="Ask for bill">Ask for bill</button>
+        <form action="/business/bill/<%= currentUser.id %>" method="POST">
+            <button class="order-pay-bill" type="submit">Pay bill</button>
+        </form>
     </section>
 </main>
 
 <aside class="right-aside pending-orders">
-    <h3>Your Order</h3>
+    <h4>Your Order</h4>
     <button class="order-submit" type="button">Submit your order</button>
 </aside>
 
@@ -90,6 +104,27 @@
     })
 
     var orderArray = []
+
+    // send service request
+    function sendServiceRequest(serviceItem) {
+        console.log('submitting service order')
+        socket.emit('service', {
+            section: "service",
+            room: room,
+            serviceItem: serviceItem,
+            customer: "<%- currentUser.id %>"
+        })
+    }
+    // send order
+    function sendOrder(menuId, menuName) {
+        console.log('submitting menu order')
+        socket.emit('menuOrder', {
+            room: room,
+            menuId: menuId,
+            menuName: menuName,
+            customer: "<%- currentUser.id %>"
+        })
+    }
 
     // create and temporarily save orders
     document.querySelector('.orderMenu').addEventListener('click', function(event) {
@@ -117,22 +152,13 @@
         // submit order if order-submit button clicked
         if (clickedElement.className === 'order-submit') {
 
-            function send(menuId, menuName) {
-                console.log('submitting menu order')
-                socket.emit('menuOrder', {
-                    room: room,
-                    menuId: menuId,
-                    menuName: menuName,
-                    customer: "<%- currentUser.id %>"
-                })
-            }
             // submit each order and create a new article in the orderBill section
             orderArray.forEach((order) => {
-                send(order.split('/')[0], order.split('/')[1])
+                sendOrder(order.split('/')[0], order.split('/')[1])
                 var newArticle = document.createElement('article')
                 newArticle.className = 'ordered-item'
                 newArticle.innerHTML = "<div class='new-order-name'>" + order.split('/')[1] + "</div><div class='new-order-price'>" + order.split('/')[2] + "</div>"
-                document.querySelector('.orderBill').appendChild(newArticle)
+                document.querySelector('.bill-list').appendChild(newArticle)
             })
             orderArray = []
             // remove all articles from the pending-orders aside
@@ -145,30 +171,30 @@
 
     // create and emit service request
     document.querySelector('.orderService').addEventListener('click', function(event) {
-        function send(serviceItem) {
-            console.log('submitting service order')
-            socket.emit('service', {
-                section: "service",
-                room: room,
-                serviceItem: serviceItem,
-                customer: "<%- currentUser.id %>"
-            })
-        }
         var clickedElement = event.target
         if (clickedElement.className === 'order-service-button') {
             var serviceItem = clickedElement.value
-            send(serviceItem)
+            sendServiceRequest(serviceItem)
         }
         if (clickedElement.className === 'order-special-request') {
             var serviceItem = 'Special request: ' + clickedElement.parentNode.childNodes[1].value
-            send(serviceItem)
+            sendServiceRequest(serviceItem)
+        }
+    })
+
+    // ask for bill
+    document.querySelector('.orderBill').addEventListener('click', function(event) {
+        var clickedElement = event.target
+        if (clickedElement.className === 'order-ask-bill') {
+            var serviceItem = clickedElement.value
+            sendServiceRequest(serviceItem)
         }
     })
 
     // hide and show sections
     var buttons = [document.getElementById('orderMenuButton'), document.getElementById('orderServiceButton'), document.getElementById('orderBillButton')]
     var sections = [document.querySelector('.orderMenu'), document.querySelector('.orderService'), document.querySelector('.orderBill')]
-    buttons.forEach(function(button, index) {
+    buttons.forEach((button, index) => {
         button.addEventListener('click', () => {
             sections.forEach((section) => {
                 section.style.display = 'none'

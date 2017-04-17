@@ -14,7 +14,8 @@ var TransactionSchema = new mongoose.Schema({
   orderedItems: [{
     type: mongoose.Schema.ObjectId,
     ref: 'Order'
-  }]
+  }],
+  isActive: Boolean
 })
 
 module.exports = mongoose.model('Transaction', TransactionSchema)

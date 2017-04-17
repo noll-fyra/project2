@@ -14,7 +14,7 @@ module.exports = function (socket) {
   // redirect menu orders to the socket of the relevant business
   socket.on('menuOrder', (data) => {
     console.log('sending message to: ' + data.room)
-    User.findById(data.customer, (err, user) => {
+    User.findById(data.customer).populate('transaction').exec((err, user) => {
       if (err) return console.log('There was an error finding the customer. Please try again')
       // create the order
       var newOrder = new Order({
@@ -39,6 +39,7 @@ module.exports = function (socket) {
           transaction.customer = user.id
           transaction.business = data.room
           transaction.orderedItems.push(newOrderData.id)
+          transaction.isActive = true
           // save the transaction and update the user model as well
           transaction.save((err, newTransactionData) => {
             console.log(newTransactionData)

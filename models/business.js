@@ -28,7 +28,11 @@ var BusinessSchema = new mongoose.Schema({
     ref: 'Day'
   }],
   description: String,
-  image: String
+  image: String,
+  transactions: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'Transaction'
+  }]
 })
 
 module.exports = mongoose.model('Business', BusinessSchema)
