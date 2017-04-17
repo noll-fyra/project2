@@ -1,4 +1,6 @@
-<h2><%= name %></h2>
+<nav>
+    <h3><%= name %></h3>
+</nav>
 
 <div>
     <table id="menuOrder">
@@ -37,32 +39,87 @@
     </table>
 </div>
 <div>
-    <%= transaction %>
 
-</div>
-<script src="/socket.io/socket.io.js"></script>
-<script>
-    var socket = io.connect()
-    var room = "<%= chat %>"
-    socket.on('connect', function() {
-        socket.emit('join', room)
-        console.log('joining ' + room)
-    })
-    document.getElementById('menuOrder').addEventListener('click', function(event) {
-        function send() {
-            console.log('submitting remove order')
-            socket.emit('message', {
-                room: room,
-                menuId: menuId,
-                menuName: menuName,
-                customer: "<%- currentUser.id %>"
-            })
-        }
-        var clickedElement = event.target
-        if (clickedElement.tagName === 'BUTTON') {
-            var menuId = clickedElement.value.split('/')[0]
-            var menuName = clickedElement.value.split('/')[1]
-            send()
-        }
-    })
-</script>
+    <div>
+        <table id="serviceOrder">
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th>
+                        Price
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <% menu.forEach((item) => { %>
+                    <tr>
+                        <td>
+                            <%= item.name %>
+                        </td>
+                        <td>
+                            <%= item.description %>
+                        </td>
+                        <td>
+                            <%= item.price %>
+                        </td>
+                        <td>
+                            <button type="button" value="<%- item.id %>/<%- item.name%>">Add to Order</button>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+    <div></div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io.connect()
+        var room = "<%= chat %>"
+        socket.on('connect', function() {
+            socket.emit('join', room)
+            console.log('joining ' + room)
+        })
+        document.getElementById('menuOrder').addEventListener('click', function(event) {
+            function send() {
+                console.log('submitting remove order')
+                socket.emit('message', {
+                    section: "kitchen",
+                    room: room,
+                    menuId: menuId,
+                    menuName: menuName,
+                    customer: "<%- currentUser.id %>"
+                })
+            }
+            var clickedElement = event.target
+            if (clickedElement.tagName === 'BUTTON') {
+                var menuId = clickedElement.value.split('/')[0]
+                var menuName = clickedElement.value.split('/')[1]
+                send()
+            }
+        })
+
+        document.getElementById('serviceOrder').addEventListener('click', function(event) {
+            function send() {
+                console.log('submitting remove order')
+                socket.emit('message', {
+                    section: "service",
+                    room: room,
+                    menuId: menuId,
+                    menuName: menuName,
+                    customer: "<%- currentUser.id %>"
+                })
+            }
+            var clickedElement = event.target
+            if (clickedElement.tagName === 'BUTTON') {
+                var menuId = clickedElement.value.split('/')[0]
+                var menuName = clickedElement.value.split('/')[1]
+                send()
+            }
+        })
+    </script>

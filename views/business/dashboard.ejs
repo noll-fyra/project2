@@ -1,0 +1,109 @@
+<nav class="dashboard-links">
+    <h3>Dashboard</h3>
+</nav>
+
+<aside class="dashboard-nav left-aside">
+    <ul>
+        <li>
+            <button type="button" class="account-button" id="profile">Profile</button>
+        </li>
+        <li>
+            <button type="button" class="account-button" id="users">Users</button>
+        </li>
+        <li>
+            <button type="button" class="account-button" id="transactions">Transactions</button>
+        </li>
+        <li>
+            <button type="button" class="account-button" id="advanced">Advanced</button>
+        </li>
+    </ul>
+</aside>
+
+<main class="business-options">
+    <section class="profile">
+        <form class="profile-form" action="/business/account?_method=PUT" method="POST">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" name="name" value="<%- business.name %>" placeholder="name">
+            </div>
+            <div class="form-group">
+                <label for="address">Address:</label>
+                <input type="text" name="address" value="<%- business.address %>" placeholder="address">
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="text" name="email" value="<%- business.email %>" placeholder="email">
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone:</label>
+                <input type="text" name="phone" value="<%- business.phone %>" placeholder="phone">
+            </div>
+            <div class="form-group">
+                <label for="website">Website:</label>
+                <input type="text" name="website" value="<%- business.website %>" placeholder="website">
+            </div>
+            <div class="form-group">
+                <label for="website">Description:</label>
+                <input type="text" name="description" value="<%- business.description %>" placeholder="description">
+            </div>
+            <button type="submit">Save Changes</button>
+        </form>
+    </section>
+
+    <section class="users">
+        <div class="form-group">
+            <label>Users:</label>
+            <% business.users.forEach(function(user) { %>
+                <div class="user">
+                    <label><%- user.name %></label>
+                    <form class="user-form" action="/account/users?_method=DELETE" method="POST">
+                        <button type="submit" value="<%- user %>">Remove User</button>
+                    </form>
+                    <form class="user-form" action="/profile/updateUsers" method="GET">
+                        <button type="submit" value="<%- user %>">Update User</button>
+                    </form>
+                </div>
+            <% }) %>
+            <div class="addUser">
+                <form class="user-form" action="/account/users" method="POST">
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="text" name="email" placeholder="employee@company.com">
+                        <button type="submit">Add User</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section class="transactions">
+        <div class="form-group">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Business</th>
+                        <th>Spent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>17/4/17</td>
+                        <td>Chinese Restaurant</td>
+                        <td>$19.95</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="advanced">
+        <form class="deregisterBusiness" action="/business/deregister?_method=DELETE" method="POST">
+            <button type="submit">Deregister your business</button>
+        </form>
+    </section>
+</main>
+
+<% include ../partials/business-quick-links %>
+
+<script src="/scripts/business/dashboard.js" charset="utf-8"></script>

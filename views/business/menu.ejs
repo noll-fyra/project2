@@ -1,33 +1,46 @@
-<h2><%= name %></h2>
+<nav>
+    <h3>Menu</h3>
+</nav>
 
-<table>
-    <thead>
-        <tr>
-            <td>
-                Name
-            </td>
-            <td>
-                Description
-            </td>
-            <td>
-                Price
-            </td>
-        </tr>
-    </thead>
-    <tbody>
+<aside class="left-aside">
+    <h5>
+        <a href="/business/menu/new">Add Menu Item</a>
+    </h5>
+    <h6>Options</h6>
+    <h6>Sort</h6>
+    <h6>Filter</h6>
+</aside>
 
-        <% menu.forEach((item) => { %>
-            <tr>
-                <td>
+<main>
+    <% menu.forEach((item) => { %>
+        <article class="menu-item">
+            <div class="placeholder-image"></div>
+            <div class="menu-main">
+                <p>
                     <%= item.name %>
-                </td>
-                <td>
+                </p>
+                <p>
                     <%= item.description %>
-                </td>
-                <td>
+                </p>
+                <p>
                     <%= item.price %>
-                </td>
-            </tr>
-        <% }) %>
-    </tbody>
-</table>
+                </p>
+            </div>
+            <div class="menu-buttons">
+                <ul>
+                    <li>
+                        <button type="button" name="update-menu">Update</button>
+                    </li>
+                    <li>
+                        <button type="button" name="archive-menu">Archive</button>
+                    </li>
+                    <li>
+                        <button type="button" name="remove-menu">Remove</button>
+                    </li>
+                </ul>
+            </div>
+        </article>
+    <% }) %>
+</main>
+
+<% include ../partials/business-quick-links %>

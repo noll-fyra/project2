@@ -21,7 +21,7 @@ router.get('/', (req, res) => {
 })
 
 // find specific business
-router.get('/:name/:id', (req, res) => {
+router.get('/find/:name/:id', (req, res) => {
   Business.findById(req.params.id).populate('menu').exec((err, data) => {
     if (err) {
       req.flash('error', 'There was an error fetching the business. Please try again.')
@@ -35,14 +35,14 @@ router.get('/:name/:id', (req, res) => {
 router.use(isLoggedIn)
 
 router.get('/transcheck', (req, res) => {
-  Transaction.find({customer: req.user}).populate({path:'orderedItems', populate: {path:'menuItem', model: 'MenuItem'}}).exec((err,data) => {
+  Transaction.find({customer: req.user}).populate({path: 'orderedItems', populate: {path: 'menuItem', model: 'MenuItem'}}).exec((err, data) => {
     console.log(data)
     res.send(data)
   })
 })
 
 // for users to send orders and view their transaction
-router.get('/:name/:id/send', (req, res) => {
+router.get('/find/:name/:id/send', (req, res) => {
   Business.findById(req.params.id).populate('menu').exec((err, data) => {
     if (err) {
       req.flash('error', 'There was an error fetching the business. Please try again.')
@@ -55,7 +55,6 @@ router.get('/:name/:id/send', (req, res) => {
       }
       console.log(transactionData)
       if (transactionData) {
-
         res.render('business/send', {chat: req.params.id, name: data.name, menu: data.menu, transaction: transactionData})
       } else {
         res.render('business/send', {chat: req.params.id, name: data.name, menu: data.menu})
@@ -96,7 +95,7 @@ router.route('/register')
             req.flash('error', 'There was an error registering your business. Please try again.')
             return res.redirect('back')
           }
-          res.redirect('/business/account')
+          res.redirect('/business/dashboard')
         })
       })
     }
@@ -106,14 +105,14 @@ router.route('/register')
 // check that the user has registered a business
 router.use(hasRegisteredBusiness)
 
-// display the user's business account
-router.get('/account', (req, res) => {
+// display the user's business dashboard
+router.get('/dashboard', (req, res) => {
   Business.findById(req.user.business).populate('users').exec((err, data) => {
     if (err) {
-      req.flash('error', 'There was an error fetching your business account. Please try again.')
+      req.flash('error', 'There was an error fetching your business dashboard. Please try again.')
       return res.redirect('back')
     }
-    res.render('business/account', {currentUser: data})
+    res.render('business/dashboard', {business: data})
   })
 })
 
@@ -157,23 +156,29 @@ router.route('/menu')
   })
 })
 
+router.get('/menu/new', (req, res) => {
+  Business.findById(req.user.business).exec((err, data) => {
+    if (err) {
+      req.flash('error', 'There was an error fetching your business. Please try again.')
+      return res.redirect('back')
+    }
+    res.render('business/newMenu', {name: data.name})
+  })
+})
+
 // businesses receive orders here
-router.get('/:name/:id/receive', (req, res) => {
-  if (req.user.business.toString() !== req.params.id) {
-    req.flash('error', 'You can only receive orders for your own business.')
-    return res.redirect('back')
-  }
-  Business.findById(req.params.id, (err, business) => {
+router.get('/service', (req, res) => {
+  Business.findById(req.user.business, (err, business) => {
     if (err) {
       req.flash('error', 'There was an error finding your business. Please try again')
       res.redirect('back')
     }
-    Order.find({business: req.params.id}).populate('menuItem').populate('customer').populate('business').sort({date: 'asc'}).exec((err, data) => {
+    Order.find({business: business.id}).populate('menuItem').populate('customer').populate('business').sort({date: 'asc'}).exec((err, data) => {
       if (err) {
         req.flash('error', 'There was an error finding your orders. Please try again')
         res.redirect('back')
       }
-      res.render('business/receive', {chat: req.params.id, name: business.name, orders: data, formatDate: formatDate})
+      res.render('business/service', {chat: business.id, name: business.name, orders: data, formatDate: formatDate})
     })
   })
 })

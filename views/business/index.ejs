@@ -1,13 +1,32 @@
-<h2>Businesses</h2>
+<nav>
+    <h3>Businesses</h3>
+</nav>
 
-<% allBusinesses.forEach((business) => { %>
-    <% var dashName = business.name.toLowerCase().split(' ').join('-') %>
-    <p>
-        <a href="/business/<%- dashName %>/<%- business.id %>"><%= business.name %>
-            : Id :
-            <%= business.id %>
-            : Users :
-            <%= business.users %></a>
-    </p>
+<aside class=left-aside>
+    <h5>Sort</h5>
+    <h5>Filter</h5>
+</aside>
 
-<% }) %>
+<main>
+    <% allBusinesses.forEach((business) => { %>
+        <% var dashName = business.name.toLowerCase().split(' ').join('-') %>
+        <a href="/business/find/<%- dashName %>/<%- business.id %>">
+            <article class="business-listing">
+                <div class="placeholder-image"></div>
+                <div class="business-main">
+                    <p>
+                        <%= business.id %>
+                    </p>
+                    <p>
+                        <%= business.name %>
+                    </p>
+                    <p>
+                        <%= business.address %>
+                    </p>
+                </div>
+            </article>
+        </a>
+    <% }) %>
+</main>
+
+<aside class="right-aside"></aside>

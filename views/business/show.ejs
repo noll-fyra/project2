@@ -1,16 +1,38 @@
-<h2><%= business.name %></h2>
+<nav>
+    <h3><%= business.name %></h3>
+</nav>
 
-<p>Address:
-    <%= business.address %></p>
-<p>Email:
-    <%= business.email %></p>
-<p>Phone:
-    <%= business.phone %></p>
-<p>Opening Hours:
-    <%= business.hours %></p>
-<p>Menu:
-    <%= business.menu %></p>
+<aside class="left-aside">
+    <ul class="aside-nav">
+        <li>
+            <button type="button" class="account-button" id="profile">About</button>
+        </li>
+        <li>
+            <button type="button" class="account-button" id="password">Menu</button>
+        </li>
+        <li>
+            <button type="button" class="account-button" id="creditCards">Reviews</button>
+        </li>
+        <li>
+            <button type="button" class="account-button" id="history">Photos</button>
+        </li>
+    </ul>
+</aside>
 
-<% var dashName = business.name.toLowerCase().split(' ').join('-') %>
-<a href="/business/<%- dashName %>/<%- business.id%>/receive">Receive</a>
-<a href="/business/<%- dashName %>/<%- business.id%>/send">Send</a>
+<main>
+    <p>Address:
+        <%= business.address %></p>
+    <p>Email:
+        <%= business.email %></p>
+    <p>Phone:
+        <%= business.phone %></p>
+    <p>Opening Hours:
+        <%= business.hours %></p>
+    <p>Menu:
+        <%= business.menu %></p>
+
+    <% var dashName = business.name.toLowerCase().split(' ').join('-') %>
+    <a href="/business/find/<%- dashName %>/<%- business.id%>/send">Eat Here</a>
+</main>
+
+<aside class="right-aside"></aside>

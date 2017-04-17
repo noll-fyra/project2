@@ -18,6 +18,7 @@ module.exports = function (socket) {
       if (err) return console.log('There was an error finding the customer. Please try again')
       // create the order
       var newOrder = new Order({
+        section: data.type,
         business: data.room,
         menuItem: data.menuId,
         customer: data.customer,
@@ -29,7 +30,7 @@ module.exports = function (socket) {
         console.log(newOrderData)
         if (err) return console.log('There was an error creating the order. Please try again')
         // send the order to the business
-        io.sockets.in(data.room).emit('order', {menuItem: data.menuName, customer: user.name, date: formatDate(newOrder.orderedAt)[1], orderId: newOrder.id})
+        io.sockets.in(data.room).emit('order', {section: data.type, menuItem: data.menuName, customer: user.name, date: formatDate(newOrder.orderedAt)[1], orderId: newOrder.id})
         console.log(' message is: ' + data.menuName + ' ' + data.customer + ' ' + newOrder.orderedAt)
         // create transaction if it's the first order
         if (!user.transaction) {

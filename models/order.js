@@ -6,6 +6,7 @@ let orderSchema = new mongoose.Schema({
     ref: 'MenuItem',
     require: true
   },
+  section: String,
   business: {
     type: mongoose.Schema.ObjectId,
     ref: 'Business'

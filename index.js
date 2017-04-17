@@ -64,7 +64,9 @@ app.use((req, res, next) => {
   res.locals.currentUser = req.user
   next()
 })
-
+// app.get('/business/menu/new', (req,res)=> {
+//   res.render('business/test')
+// })
 app.use('/', require('./controllers/homeController'))
 app.use('/auth', require('./controllers/authController'))
 app.use('/account', require('./controllers/accountController'))
