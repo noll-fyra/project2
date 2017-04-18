@@ -1,14 +1,17 @@
-<nav class="dashboard-links">
-    <h3>Dashboard</h3>
+<nav>
+    <span class="nav-header">Dashboard</span>
 </nav>
 
-<aside class="dashboard-nav left-aside">
+<aside class="left-aside">
     <ul>
         <li>
-            <button type="button" class="aside-button" id="profile">Profile</button>
+            <button type="button" class="aside-button" id="menu">Menu</button>
         </li>
         <li>
-            <button type="button" class="aside-button" id="users">Users</button>
+            <button type="button" class="aside-button" id="transactions">Transactions</button>
+        </li>
+        <li>
+            <button type="button" class="aside-button" id="profile">Profile</button>
         </li>
         <li>
             <button type="button" class="aside-button" id="advanced">Advanced</button>
@@ -16,9 +19,120 @@
     </ul>
 </aside>
 
-<main class="business-options">
+<main>
+    <nav class="main-nav transactions-nav">
+        <ul>
+            <li>
+                <button type="button" class="aside-button" id="active-transactions-button">Active</button>
+            </li>
+            <li>
+                <button type="button" class="aside-button" id="completed-transactions-button">Completed</button>
+            </li>
+        </ul>
+    </nav>
+
+    <section class="menu">
+        <% business.menu.forEach((item) => { %>
+            <article class="menu-item">
+                <div class="placeholder-image"></div>
+                <div class="menu-main">
+                    <p>
+                        <%= item.name %>
+                    </p>
+                    <p>
+                        <%= item.description %>
+                    </p>
+                    <p>
+                        <%= item.price %>
+                    </p>
+                </div>
+                <div class="menu-buttons">
+                    <ul>
+                        <li>
+                            <button type="button" name="update-menu">Update</button>
+                        </li>
+                        <li>
+                            <button type="button" name="archive-menu">Archive</button>
+                        </li>
+                        <li>
+                            <button type="button" name="remove-menu">Remove</button>
+                        </li>
+                    </ul>
+                </div>
+            </article>
+        <% }) %>
+    </section>
+
+    <section class="transactions">
+        <section class="active-transactions">
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            DATE
+                        </th>
+                        <th>
+                            CUSTOMER
+                        </th>
+                        <th>
+                            TOTAL
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% transactions.filter((item) => {return item.isActive === true}).forEach((transaction) => { %>
+                        <tr>
+                            <td>
+                                <%= formatDate(transaction.dateFrom)[0] %>
+                            </td>
+                            <td>
+                                <%= transaction.customer.name %>
+                            </td>
+                            <td>
+                                <%= transaction.total %>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="completed-transactions">
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            DATE
+                        </th>
+                        <th>
+                            CUSTOMER
+                        </th>
+                        <th>
+                            TOTAL
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% transactions.filter((item) => {return item.isActive === false}).sort((a, b) => {return b.date - a.date}).forEach((transaction) => { %>
+                        <tr>
+                            <td>
+                                <%= formatDate(transaction.dateTo)[0] %>
+                            </td>
+                            <td>
+                                <%= transaction.customer.name %>
+                            </td>
+                            <td>
+                                <%= transaction.total %>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </section>
+    </section>
+
     <section class="profile">
-        <form class="profile-form" action="/business/account?_method=PUT" method="POST">
+        <form class="profile-form" action="/business?_method=PUT" method="POST">
             <div class="form-group">
                 <label for="name">Name:</label>
                 <input type="text" name="name" value="<%- business.name %>" placeholder="name">
@@ -47,39 +161,34 @@
         </form>
     </section>
 
-    <section class="users">
-        <div class="form-group">
-            <label>Users:</label>
-            <% business.users.forEach(function(user) { %>
-                <div class="user">
-                    <label><%- user.name %></label>
-                    <form class="user-form" action="/account/users?_method=DELETE" method="POST">
-                        <button type="submit" value="<%- user %>">Remove User</button>
-                    </form>
-                    <form class="user-form" action="/profile/updateUsers" method="GET">
-                        <button type="submit" value="<%- user %>">Update User</button>
-                    </form>
-                </div>
-            <% }) %>
-            <div class="addUser">
-                <form class="user-form" action="/account/users" method="POST">
-                    <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="text" name="email" placeholder="employee@company.com">
-                        <button type="submit">Add User</button>
-                    </div>
+    <section class="advanced">
+        <button type="button" class="deregister-business-button">Deregister your business</button>
+        <div class="deregister-business-confirm">
+            <div>
+                Are you sure you want to deregister your business?
+            </div>
+            <div>
+                <form class="deregister-business-form" action="/business?_method=DELETE" method="POST">
+                    <button type="submit" class="deregister-business-yes">Yes</button>
                 </form>
+                <button type="button" class="deregister-business-cancel">Cancel</button>
             </div>
         </div>
     </section>
-
-    <section class="advanced">
-        <form class="deregisterBusiness" action="/business/deregister?_method=DELETE" method="POST">
-            <button type="submit">Deregister your business</button>
-        </form>
-    </section>
 </main>
 
-<% include ../partials/business-quick-links %>
+<aside class="left-aside">
+    <ul>
+        <li>
+            <button type="button" class="aside-button" id="add-menu-item-button">Add Menu Item</button>
+        </li>
+        <li>
+            Sort
+        </li>
+        <li>
+            Filter
+        </li>
+    </ul>
+</aside>
 
 <script src="/scripts/business/dashboard.js" charset="utf-8"></script>

@@ -8,22 +8,29 @@
         <link rel="icon" href="favicon.ico" sizes="32x32" type="image/png">
     </head>
     <body>
-        <header class="top">
-            <div class="locavorus">
-                <a href="/"><img src="/images/locavorus.png" alt="locavorus.png">
-                    <h6>Locavorus</h6>
-                </a>
-            </div>
-            <div class="main-search">
 
+        <header class="top">
+            <div class="header-logo">
+
+                <div class="img">
+                    <a href="/"><img src="/images/locavorus.png" alt="locavorus.png"></a>
+                </div>
+                <div class="word">
+                    <a href="/">
+                        <span class="header-name">LOCAVORUS</span>
+                    </a>
+                </div>
+
+            </div>
+            <div class="header-search">
+                <div></div>
                 <form class="search-form" action="/business" method="POST">
                     <input type="text" name="search" placeholder="Find a restaurant">
                     <button type="submit">Search</button>
                 </form>
-
+                <div></div>
             </div>
-            <div class="main-nav">
-
+            <div class="header-nav">
                 <% if (!currentUser) { %>
                     <% include partials/login %>
                 <% } else if (!currentUser.business) { %>
@@ -34,9 +41,10 @@
                 <% } %>
             </div>
         </header>
+        <div class="content">
+            <% include partials/alerts %>
 
-        <% include partials/alerts %>
-
-        <%- body %>
+            <%- body %>
+        </div>
     </body>
 </html>

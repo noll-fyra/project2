@@ -1,20 +1,14 @@
 <nav>
-    <h3>Account</h3>
-    <form class="logout-form" action="/auth/logout" method="GET">
-        <input class="button" type="submit" value="Log Out">
-    </form>
+    <span class="nav-header">Account</span>
+    <a href="/auth/logout">
+        <button>Log Out</button>
+    </a>
 </nav>
 
-<aside class="account-nav left-aside">
-    <ul class="aside-nav">
+<aside class="left-aside">
+    <ul>
         <li>
             <button type="button" class="aside-button" id="profile">Profile</button>
-        </li>
-        <li>
-            <button type="button" class="aside-button" id="password">Password</button>
-        </li>
-        <li>
-            <button type="button" class="aside-button" id="creditCards">credit Cards</button>
         </li>
         <li>
             <button type="button" class="aside-button" id="history">History</button>
@@ -48,83 +42,37 @@
         </form>
     </section>
 
-    <section class="password">
-        <form class="password-form" action="/account/password?_method=PUT" method="POST">
-            <div class="form-group">
-                <label for="oldPassword">Old Password:</label>
-                <input type="password" name="oldPassword" placeholder="Enter your old password">
-            </div>
-            <div class="form-group">
-                <label for="newPassword">New Password:</label>
-                <input type="password" name="newPassword" placeholder="Enter your new password">
-            </div>
-            <button type="submit">Update Password</button>
-        </form>
-    </section>
-
-    <section class="creditCards">
-        <div class="form-group">
-            <label>Credit Cards:</label>
-            <% currentUser.creditCards.forEach(function(card) { %>
-                <div class="creditCard">
-                    <h4><%- card %></h4>
-                    <form class="creditCard-form" action="/account?_method=DELETE" method="POST">
-                        <button type="submit" value="<%- card %>">Remove Card</button>
-                    </form>
-                    <form class="creditCard-form" action="/account/updateCreditCard" method="GET">
-                        <button type="submit" value="<%- card %>">Update Card</button>
-                    </form>
-                </div>
-            <% }) %>
-            <div class="addCreditCard">
-                <form class="creditCard-form" action="/account?_method=PUT" method="POST">
-                    <div class="form-group">
-                        <label for="number">Number:</label>
-                        <input type="text" name="number" placeholder="0000 0000 0000 0000">
-                    </div>
-                    <div class="form-group">
-                        <label for="name">Name:</label>
-                        <input type="text" name="name" placeholder="John Smith">
-                    </div>
-                    <div class="form-group">
-                        <label for="type">Type:</label>
-                        <input type="text" name="type" placeholder="VISA">
-                    </div>
-                    <div class="form-group">
-                        <label for="month">Expiry Month:</label>
-                        <input type="text" name="month" placeholder="04">
-                    </div>
-                    <div class="form-group">
-                        <label for="year">Expiry Year:</label>
-                        <input type="text" name="year" placeholder="22">
-                    </div>
-                    <div class="form-group">
-                        <button type="submit">Add Card</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </section>
-
     <section class="history">
-        <div class="form-group">
-            <table>
-                <thead>
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        DATE
+                    </th>
+                    <th>
+                        BUSINESS
+                    </th>
+                    <th>
+                        TOTAL
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <% transactions.forEach((transaction) => { %>
                     <tr>
-                        <th>Date</th>
-                        <th>Business</th>
-                        <th>Spent</th>
+                        <td>
+                            <%= formatDate(transaction.dateTo)[0] %>
+                        </td>
+                        <td>
+                            <%= transaction.business.name %>
+                        </td>
+                        <td>
+                            <%= transaction.total %>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>17/4/17</td>
-                        <td>Chinese Restaurant</td>
-                        <td>$19.95</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                <% }) %>
+            </tbody>
+        </table>
     </section>
 
     <% var register = currentUser.business ? 'none' : 'inline-block'  %>
@@ -137,9 +85,19 @@
         <form class="manageBusiness" style="display: <%-manage%>" action="/business/dashboard" method="GET">
             <button type="submit">Go to your business dashboard</button>
         </form>
+        <button type="button" class="delete-account-button">Delete your account</button>
+        <div class="delete-account-confirm">
+            <div>
+                Are you sure you want to delete your account?
+            </div>
+            <div>
+                <form class="delete-account-form" action="/account?_method=DELETE" method="POST">
+                    <button type="submit" class="delete-account-yes">Yes</button>
+                </form>
+                <button type="button" class="delete-account-cancel">Cancel</button>
+            </div>
+        </div>
     </section>
 </main>
-
-<aside class="right-aside"></aside>
 
 <script src="/scripts/account/account.js" charset="utf-8"></script>

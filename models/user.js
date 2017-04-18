@@ -24,10 +24,6 @@ var UserSchema = new mongoose.Schema({
   },
   phone: String,
   restrictions: [String],
-  creditCards: [{
-    type: mongoose.Schema.ObjectId,
-    ref: 'CreditCard'
-  }],
   business: {
     type: mongoose.Schema.ObjectId,
     ref: 'Business'

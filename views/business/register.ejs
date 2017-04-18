@@ -1,28 +1,38 @@
 <nav>
-    <h3>Register a Business</h3>
+    <span class="nav-header">Register a Business</h3>
 </nav>
 
-<form action="/business/register" method="POST">
-    <input type="hidden" name="userId" value="<%- currentUserId %>">
-    <div class="signup-group">
-        <label for="name">Name</label>
-        <input type="text" name="name" placeholder="name">
-    </div>
-    <div class="signup-group">
-        <label for="address">Address</label>
-        <input type="text" name="address" placeholder="address">
-    </div>
-    <div class="signup-group">
-        <label for="email">Email</label>
-        <input type="email" name="email" placeholder="email address">
-    </div>
-    <div class="signup-group">
-        <label for="phone">Phone</label>
-        <input type="text" name="phone" placeholder="phone">
-    </div>
-    <div class="signup-group">
-        <label for="description">Description</label>
-        <input type="text" name="description" placeholder="description">
-    </div>
-    <input class="button" type="submit">
-</form>
+<aside class="left-aside">
+    <ul></ul>
+</aside>
+
+<main>
+    <form action="/business/register" method="POST">
+        <input type="hidden" name="userId" value="<%- currentUserId %>">
+        <div class="signup-group">
+            <label for="name">Name:</label>
+            <input type="text" name="name" placeholder="French Bistro">
+        </div>
+        <div class="signup-group">
+            <label for="address">Address:</label>
+            <input type="text" name="address" placeholder="1 Eiffel Tower Lane">
+        </div>
+        <div class="signup-group">
+            <label for="email">Email:</label>
+            <input type="email" name="email" placeholder="contact@frenchbistro.com">
+        </div>
+        <div class="signup-group">
+            <label for="phone">Phone:</label>
+            <input type="text" name="phone" placeholder="63830223">
+        </div>
+        <div class="signup-group">
+            <label for="phone">Website:</label>
+            <input type="text" name="website" placeholder="www.frenchbistro.com">
+        </div>
+        <div class="signup-group">
+            <label for="description">Description:</label>
+            <input type="text" name="description" placeholder="french, bistro, amazing, voila">
+        </div>
+        <input class="button" type="submit">
+    </form>
+</main>

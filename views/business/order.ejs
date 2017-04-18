@@ -82,8 +82,8 @@
             <% }) %>
         </div>
         <button class="order-ask-bill" type="button" value="Ask for bill">Ask for bill</button>
-        <form action="/business/bill/<%= currentUser.id %>" method="POST">
-            <button class="order-pay-bill" type="submit">Pay bill</button>
+        <form action="/business/bill" method="POST">
+            <button class="order-pay-bill" name="id" type="submit" value="<%- currentUser.id %>">Pay bill</button>
         </form>
     </section>
 </main>

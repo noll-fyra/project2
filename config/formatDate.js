@@ -44,5 +44,7 @@ module.exports = function (date) {
     var timeString = padding(date.getHours()) + ':' + padding(date.getMinutes()) + ' ' + ampm(date.getHours())
 
     return [dateString, timeString]
+  } else {
+    return ['', '']
   }
 }
