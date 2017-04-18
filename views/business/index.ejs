@@ -3,11 +3,10 @@
 </nav>
 
 <aside class=left-aside>
-    <h5>Sort</h5>
-    <h5>Filter</h5>
+    <ul></ul>
 </aside>
 
-<main>
+<main class="business-index">
     <% if (!allBusinesses.length) { %>
         <h3>There were no businesses matching your search.</h3>
     <% } %>
@@ -18,10 +17,10 @@
                 <div class="placeholder-image"></div>
                 <div class="business-main">
                     <p>
-                        <%= business.id %>
+                        <%= business.cuisine %>
                     </p>
                     <p>
-                        <%= business.name %>
+                        <b><%= business.name %></b>
                     </p>
                     <p>
                         <%= business.address %>

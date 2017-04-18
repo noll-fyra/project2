@@ -1,3 +1,7 @@
+<nav>
+    <span class="nav-header">Service</span>
+</nav>
+
 <aside class="left-aside">
     <ul>
         <li>
@@ -10,51 +14,80 @@
             <button type="button" class="aside-button" id="completedOrdersButton">Completed</button>
         </li>
     </ul>
-    <h6>Sort</h6>
-    <h6>Filter</h6>
 </aside>
 
 <main>
     <section class="allOrders">
-        <h3>All Orders</h3>
-        <% orders.filter((order) => { return order.completed === false}).forEach((order) => { %>
-            <article class="order-item">
-                <div class="order-date">
-                    <%= formatDate(order.orderedAt)[1] %>
-                </div>
-                <div class="order-customer">
-                    <%= order.customer.name %>
-                </div>
-                <div class="order-name">
-                    <%= order.menuItem.name %>
-                </div>
-                <div class="order-button">
-                    <button type="button" class="done-button" value="<%- order.id %>">Done</button>
-                </div>
-            </article>
-        <% }) %>
+        <table>
+            <thead>
+                <tr>
+                    <th>TIME</th>
+                    <th>CUSTOMER</th>
+                    <th>ITEM</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody class="allOrdersBody">
+                <% orders.filter((order) => { return order.completed === false}).forEach((order) => { %>
+                    <tr>
+                        <td>
+                            <%= formatDate(order.orderedAt)[1] %>
+                        </td>
+                        <td>
+                            <%= order.customer.name %>
+                        </td>
+                        <td>
+                            <%= order.menuItem.name %>
+                        </td>
+                        <td>
+                            <button type="button" class="done-button" value="<%- order.id %>">Done</button>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
     </section>
 
     <section class="serviceRequests">
-        <h3>Service Requests</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>TIME</th>
+                    <th>CUSTOMER</th>
+                    <th>REQUEST</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody class="serviceRequestsBody"></tbody>
+        </table>
     </section>
 
     <section class="completedOrders">
-        <h3>Completed Orders</h3>
-        <% orders.filter((order) => { return order.completed === true}).sort((a,b) => {return b.completedAt - a.completedAt}).forEach((order) => { %>
-            <article class="order-item">
-                <div class="order-date">
-                    <% var completedDate = order.completedAt ? formatDate(order.completedAt)[1] : "" %>
-                    <%= completedDate %>
-                </div>
-                <div class="order-customer">
-                    <%= order.customer.name %>
-                </div>
-                <div class="order-item">
-                    <%= order.menuItem.name %>
-                </div>
-            </article>
-        <% }) %>
+        <table>
+            <thead>
+                <tr>
+                    <th>TIME</th>
+                    <th>CUSTOMER</th>
+                    <th>ITEM</th>
+                </tr>
+            </thead>
+            <tbody class="completedOrdersBody">
+                <% orders.filter((order) => { return order.completed === true}).sort((a,b) => {return b.completedAt - a.completedAt}).forEach((order) => { %>
+                    <tr>
+                        <td>
+                            <% var completedDate = order.completedAt ? formatDate(order.completedAt)[1] : "" %>
+                            <%= completedDate %>
+                        </td>
+                        <td>
+                            <%= order.customer.name %>
+                        </td>
+                        <td>
+                            <%= order.menuItem.name %>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
     </section>
 </main>
 
@@ -70,16 +103,16 @@
     // add the new menu order to the orders section
     socket.on('order', function(data) {
         console.log('receiving new order')
-        var newArticle = document.createElement('article')
-        newArticle.innerHTML = "<article class='order-item'><div class='order-date'>" + data.date + "</div><div class='order-customer'>" + data.customer + "</div><div class='order-name'>" + data.menuItem + "</div><div class='order-item'><button type='button' class='done-button' value=" + data.orderId + ">DONE</button></div></article>"
-        document.querySelector('.allOrders').appendChild(newArticle)
+        var newRow = document.createElement('tr')
+        newRow.innerHTML = "<td>" + data.date + "</td><td>" + data.customer + "</td><td>" + data.menuItem + "</td><td><button type='button' class='done-button' value=" + data.orderId + ">DONE</button></td>"
+        document.querySelector('.allOrdersBody').appendChild(newRow)
     })
     // add the new service order to the service section
     socket.on('serviceRequest', function(data) {
         console.log('receiving new service request')
-        var newArticle = document.createElement('article')
-        newArticle.innerHTML = "<article class='order-item'><div class='order-date'>" + data.date + "</div><div class='order-customer'>" + data.customer + "</div><div class='order-name'>" + data.serviceItem + "</div><div class='order-item'><button type='button' class='done-button'>DONE</button></div></article>"
-        document.querySelector('.serviceRequests').appendChild(newArticle)
+        var newRow = document.createElement('tr')
+        newRow.innerHTML = "<td>" + data.date + "</td><td>" + data.customer + "</td><td>" + data.serviceItem + "</td><td><button type='button' class='done-button'>DONE</button></td>"
+        document.querySelector('.serviceRequestsBody').appendChild(newRow)
     })
     // move the completed order to the completed orders table and change the status of the order to completed
     document.querySelector('.allOrders').addEventListener('click', function(event) {
@@ -91,12 +124,11 @@
         if (clickedElement.className === 'done-button') {
             var orderId = clickedElement.value
             // remove the DONE button before moving it to completed
-            var article = clickedElement.parentNode.parentNode
-            console.log(article)
+            var tr = clickedElement.parentNode.parentNode
             clickedElement.parentNode.parentNode.removeChild(clickedElement.parentNode)
             // change completed date !!!!
-            var completedOrders = document.querySelector('.completedOrders')
-            completedOrders.insertBefore(article, completedOrders.childNodes[2])
+            var completedOrders = document.querySelector('.completedOrdersBody')
+            completedOrders.insertBefore(tr, completedOrders.childNodes[2])
             send(orderId)
         }
     })
@@ -104,23 +136,29 @@
     document.querySelector('.serviceRequests').addEventListener('click', function(event) {
         var clickedElement = event.target
         if (clickedElement.className === 'done-button') {
-            clickedElement.parentNode.parentNode.parentNode.parentNode.removeChild(clickedElement.parentNode.parentNode.parentNode)
+            clickedElement.parentNode.parentNode.parentNode.removeChild(clickedElement.parentNode.parentNode)
         }
     })
 
     // show and hide the sections
-    var orderButtons = [document.getElementById('allOrdersButton'), document.getElementById('serviceRequestsButton'), document.getElementById('completedOrdersButton')]
-    var orderDivs = [document.querySelector('.allOrders'), document.querySelector('.serviceRequests'), document.querySelector('.completedOrders')]
-    orderButtons.forEach((button, index) => {
+    var buttons = [document.getElementById('allOrdersButton'), document.getElementById('serviceRequestsButton'), document.getElementById('completedOrdersButton')]
+    var sections = [document.querySelector('.allOrders'), document.querySelector('.serviceRequests'), document.querySelector('.completedOrders')]
+
+    buttons.forEach((button, index) => {
         button.addEventListener('click', () => {
-            orderDivs.forEach((div) => {
-                div.style.display = 'none'
+            buttons.forEach((button) => {
+                button.style.backgroundColor = 'rgba(50,50,50,0.1)'
             })
-            orderDivs[index].style.display = 'block'
+            sections.forEach((section) => {
+                section.style.display = 'none'
+            })
+            sections[index].style.display = 'block'
+            buttons[index].style.backgroundColor = 'rgba(50,150,200,0.3)'
         })
     })
-    orderDivs.forEach((div) => {
-        div.style.display = 'none'
+    sections.forEach((section) => {
+        section.style.display = 'none'
     })
     document.querySelector('.allOrders').style.display = 'block'
+    document.getElementById('allOrdersButton').style.backgroundColor = 'rgba(50,150,200,0.3)'
 </script>

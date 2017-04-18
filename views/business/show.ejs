@@ -5,38 +5,106 @@
 <aside class="left-aside">
     <ul class="aside-nav">
         <li>
-            <button type="button" class="aside-button" id="profile">About</button>
+            <button type="button" class="aside-button" id="about">About</button>
         </li>
         <li>
-            <button type="button" class="aside-button" id="password">Menu</button>
+            <button type="button" class="aside-button" id="menu">Menu</button>
         </li>
         <li>
-            <button type="button" class="aside-button" id="creditCards">Reviews</button>
+            <button type="button" class="aside-button" id="photos">Photos</button>
         </li>
         <li>
-            <button type="button" class="aside-button" id="history">Photos</button>
+            <% var dashName = business.name.toLowerCase().split(' ').join('-') %>
+            <a href="/business/find/<%- dashName %>/<%- business.id%>/order">
+                <button id="eat-here-button">Eat Here</button>
+            </a>
         </li>
     </ul>
 </aside>
 
 <main>
-    <p>Address:
-        <%= business.address %></p>
-    <p>Email:
-        <%= business.email %></p>
-    <p>Phone:
-        <%= business.phone %></p>
-    <p>Opening Hours:
-        <%= business.hours %></p>
-    <p>Menu:
-        <%= business.menu %></p>
+    <section class="about">
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        Cuisine:
+                    </td>
+                    <td>
+                        <%= business.cuisine %>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Address:
+                    </td>
+                    <td>
+                        <%= business.address %>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Description:
+                    </td>
+                    <td>
+                        <%= business.description %>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Email:
+                    </td>
+                    <td>
+                        <%= business.email %>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Phone:
+                    </td>
+                    <td>
+                        <%= business.phone %>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Website:
+                    </td>
+                    <td>
+                        <%= business.website %>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <% var dashName = business.name.toLowerCase().split(' ').join('-') %>
+    </section>
 
-    <% var dashName = business.name.toLowerCase().split(' ').join('-') %>
+    <section class="menu">
+        <% business.menu.forEach((item) => { %>
+            <article class="menu-item">
+                <div class="placeholder-image"></div>
+                <div class="menu-main">
+                    <p>
+                        <b><%= item.name %></b>
+                    </p>
+                    <p>
+                        <%= item.description %>
+                    </p>
+                    <p>
+                        <%= item.price.toFixed(2) %>
+                    </p>
+                </div>
+            </article>
+        <% }) %>
+    </section>
 
+    <section class="photos">
+        Photos
+    </section>
 </main>
 
-<aside class="right-aside">
-    <h3>
-        <a href="/business/find/<%- dashName %>/<%- business.id%>/order">Eat Here</a>
-    </h3>
+<aside class="left-aside">
+    <ul></ul>
 </aside>
+
+<script src="/scripts/business/show.js" charset="utf-8"></script>

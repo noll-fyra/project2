@@ -18,11 +18,6 @@
 
 <main class="order-main">
     <section class="orderMenu">
-        <aside class="left-aside">
-            <h6>Course</h6>
-            <h6>Sort</h6>
-            <h6>Filter</h6>
-        </aside>
         <section>
             <% menu.forEach((item) => { %>
                 <article class="menu-item">
@@ -35,7 +30,7 @@
                             <%= item.description %>
                         </p>
                         <p>
-                            <%= item.price %>
+                            <%= item.price.toFixed(2) %>
                         </p>
                     </div>
                     <div class="order-buttons">
@@ -89,7 +84,7 @@
                             <%= item.menuItem.name %>
                         </td>
                         <td>
-                            <%= item.menuItem.price %>
+                            <%= item.menuItem.price.toFixed(2) %>
                         </td>
 
                     </tr>
@@ -117,9 +112,12 @@
     </section>
 </main>
 
-<aside class="right-aside pending-orders">
-    <h4>Your Order</h4>
-    <button class="order-submit" type="button">Submit your order</button>
+<aside class="left-aside pending-orders">
+    <ul>
+        <li>
+            <button class="order-submit" type="button">Submit your order</button>
+        </li>
+    </ul>
 </aside>
 
 <script src="/socket.io/socket.io.js"></script>
@@ -175,7 +173,7 @@
             var menuPrice = clickedElement.value.split('/')[2]
             var newArticle = document.createElement('article')
             newArticle.className = 'new-order-item'
-            newArticle.innerHTML = "<div class='new-order-name'>" + menuName + "</div><div class='new-order-price'>" + menuPrice + "</div><div><button type='button' class='remove-button' value=" + clickedElement.value + ">RMV</button></div>"
+            newArticle.innerHTML = "<div class='new-order-name'>" + menuName + "</div><div class='new-order-price'>" + menuPrice + "</div><div><button type='button' class='remove-button' value=" + clickedElement.value + ">X</button></div>"
             document.querySelector('.pending-orders').appendChild(newArticle)
         }
     })
@@ -238,16 +236,23 @@
     // hide and show sections
     var buttons = [document.getElementById('orderMenuButton'), document.getElementById('orderServiceButton'), document.getElementById('orderBillButton')]
     var sections = [document.querySelector('.orderMenu'), document.querySelector('.orderService'), document.querySelector('.orderBill')]
+
     buttons.forEach((button, index) => {
         button.addEventListener('click', () => {
+            buttons.forEach((button) => {
+                button.style.backgroundColor = 'rgba(50,50,50,0.1)'
+            })
             sections.forEach((section) => {
                 section.style.display = 'none'
             })
             sections[index].style.display = 'block'
+            buttons[index].style.backgroundColor = 'rgba(50,150,200,0.3)'
         })
     })
     sections.forEach((section) => {
         section.style.display = 'none'
     })
     document.querySelector('.orderMenu').style.display = 'block'
+    document.getElementById('orderMenuButton').style.backgroundColor = 'rgba(50,150,200,0.3)'
+    document.querySelector('.order-submit').style.backgroundColor = 'rgba(200,50,50,0.3)'
 </script>

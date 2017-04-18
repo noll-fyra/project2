@@ -41,7 +41,8 @@ router.route('/')
     email: req.body.email,
     phone: req.body.phone,
     website: req.body.website,
-    description: req.body.description
+    description: req.body.description,
+    cuisine: req.body.cuisine
   }
   console.log(update)
   Business.findByIdAndUpdate(req.user.business, update, (err, data) => {
@@ -74,6 +75,7 @@ router.route('/')
 // find specific business
 router.get('/find/:name/:id', (req, res) => {
   Business.findById(req.params.id).populate('menu').exec((err, data) => {
+    console.log(data)
     if (err) {
       req.flash('error', 'There was an error fetching the business. Please try again.')
       return res.redirect('back')
@@ -181,6 +183,7 @@ router.route('/register')
       newBusiness.phone = req.body.phone
       newBusiness.website = req.body.website
       newBusiness.description = req.body.description
+      newBusiness.cuisine = req.body.cuisine
       newBusiness.users.push(req.body.userId)
       newBusiness.save((err) => {
         if (err) {
@@ -221,15 +224,6 @@ router.get('/dashboard', (req, res) => {
 
 // view the menu
 router.route('/menu')
-.get((req, res) => {
-  Business.findById(req.user.business).populate('menu').exec((err, data) => {
-    if (err) {
-      req.flash('error', 'There was an error fetching your menu. Please try again.')
-      return res.redirect('back')
-    }
-    res.render('business/menu', {menu: data.menu, name: data.name})
-  })
-})
 // create menu items
 .post((req, res) => {
   Business.findById(req.user.business, (err, data) => {
@@ -255,9 +249,37 @@ router.route('/menu')
           req.flash('error', 'There was an error adding your menu item. Please try again.')
           return res.redirect('back')
         }
-        res.redirect('/business/menu')
+        res.redirect('/business/dashboard')
       })
     })
+  })
+})
+// update the menu item
+.put((req, res) => {
+  console.log(req.body)
+  var update = {
+    name: req.body.name,
+    description: req.body.description,
+    price: req.body.price
+  }
+  MenuItem.findByIdAndUpdate(req.body.id, update, (err, item) => {
+    if (err) {
+      req.flash('error', 'There was an error updating the menu item. Please try again.')
+      return res.redirect('back')
+    }
+    req.flash('success', 'Your menu item was successfully updated.')
+    res.redirect('/business/dashboard')
+  })
+})
+// delete the menu item
+.delete((req, res) => {
+  Business.findByIdAndUpdate(req.user.business, {$pull: {menu: req.body.id}}, (err, data) => {
+    if (err) {
+      req.flash('error', 'There was an error finding your business. Please try again.')
+      return res.redirect('back')
+    }
+    req.flash('success', 'Your menu item was successfully removed.')
+    res.redirect('/business/dashboard')
   })
 })
 
@@ -268,7 +290,7 @@ router.get('/menu/new', (req, res) => {
       req.flash('error', 'There was an error fetching your business. Please try again.')
       return res.redirect('back')
     }
-    res.render('business/newMenu', {name: data.name})
+    res.redirect('business/dashboard')
   })
 })
 

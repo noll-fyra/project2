@@ -43,27 +43,71 @@
                 <div class="placeholder-image"></div>
                 <div class="menu-main">
                     <p>
-                        <%= item.name %>
+                        <b><%= item.name %></b>
                     </p>
                     <p>
                         <%= item.description %>
                     </p>
                     <p>
-                        <%= item.price %>
+                        <%= item.price.toFixed(2) %>
                     </p>
                 </div>
                 <div class="menu-buttons">
                     <ul>
                         <li>
-                            <button type="button" name="update-menu">Update</button>
+                            <button type="button" class="update-menu-button" name="id" value='<%- item.name %>/<%- item.description %>/<%- item.price %>/<%- item.id %>'>Update</button>
                         </li>
                         <li>
-                            <button type="button" name="remove-menu">Remove</button>
+                            <form action="/business/menu?_method=DELETE" method="POST">
+                                <input type="hidden" name="id" value=<%- item.id %>>
+                                <button type="button" class="remove-menu-button" name="id" value=<%- item.id %>>Remove</button>
+                            </form>
                         </li>
                     </ul>
                 </div>
             </article>
         <% }) %>
+    </section>
+
+    <section class="add-menu-item">
+        <span class="nav-header">Add Menu Item</span>
+        <form class="menuItem-form" action="/business/menu" method="POST">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" name="name" placeholder="chicken a la láme">
+            </div>
+            <div class="form-group">
+                <label for="name">Description:</label>
+                <input type="text" name="description" placeholder="sous vide chicken on pureed potato with confit rutabaga and crispy sesame tuile">
+            </div>
+            <div class="form-group">
+                <label for="price">Price:</label>
+                <input type="text" name="price" placeholder="18.90">
+            </div>
+            <button type="submit">Add Menu Item</button>
+            <button class="menu-cancel" type="button">Cancel</button>
+        </form>
+    </section>
+
+    <section class="update-menu-item">
+        <span class="nav-header">Update Menu Item</span>
+        <form class="menuItem-form" action="/business/menu?_method=PUT" method="POST">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input id="update-menu-name" type="text" name="name">
+            </div>
+            <div class="form-group">
+                <label for="name">Description:</label>
+                <input id="update-menu-description" type="text" name="description">
+            </div>
+            <div class="form-group">
+                <label for="price">Price:</label>
+                <input id="update-menu-price" type="text" name="price">
+            </div>
+            <input id="update-menu-id" type="hidden" name="id">
+            <button type="submit">Update Menu Item</button>
+            <button class="menu-cancel" type="button">Cancel</button>
+        </form>
     </section>
 
     <section class="transactions">
@@ -100,7 +144,8 @@
                                 <% }) %>
                             </td>
                             <td>
-                                <%= transaction.total %>
+                                <% var total = transaction.total ? transaction.total : 0 %>
+                                <%= total.toFixed(2) %>
                             </td>
                         </tr>
                     <% }) %>
@@ -157,6 +202,14 @@
                 <input type="text" name="name" value="<%- business.name %>" placeholder="name">
             </div>
             <div class="form-group">
+                <label for="cuisine">Cuisine:</label>
+                <input type="text" name="cuisine" value="<%- business.cuisine %>" placeholder="cuisine">
+            </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <input type="text" name="description" value="<%- business.description %>" placeholder="description">
+            </div>
+            <div class="form-group">
                 <label for="address">Address:</label>
                 <input type="text" name="address" value="<%- business.address %>" placeholder="address">
             </div>
@@ -172,11 +225,7 @@
                 <label for="website">Website:</label>
                 <input type="text" name="website" value="<%- business.website %>" placeholder="website">
             </div>
-            <div class="form-group">
-                <label for="website">Description:</label>
-                <input type="text" name="description" value="<%- business.description %>" placeholder="description">
-            </div>
-            <button type="submit">Save Changes</button>
+            <button type="submit">Update Profile</button>
         </form>
     </section>
 
@@ -200,12 +249,6 @@
     <ul>
         <li>
             <button type="button" class="aside-button" id="add-menu-item-button">Add Menu Item</button>
-        </li>
-        <li>
-            Sort
-        </li>
-        <li>
-            Filter
         </li>
     </ul>
 </aside>

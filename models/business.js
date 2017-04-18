@@ -32,7 +32,8 @@ var BusinessSchema = new mongoose.Schema({
   transactions: [{
     type: mongoose.Schema.ObjectId,
     ref: 'Transaction'
-  }]
+  }],
+  cuisine: String
 })
 
 module.exports = mongoose.model('Business', BusinessSchema)
