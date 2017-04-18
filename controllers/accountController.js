@@ -14,7 +14,7 @@ router.use(isLoggedIn)
 // display the user's account
 router.route('/')
 .get((req, res) => {
-  Transaction.find({customer: req.user}).populate('business').exec((err, allTransactions) => {
+  Transaction.find({customer: req.user}).populate('business').populate({path: 'orderedItems', populate: {path: 'menuItem', model: 'MenuItem'}}).exec((err, allTransactions) => {
     if (err) {
       req.flash('error', 'There was an error finding your account. Please try again.')
       return res.redirect('back')

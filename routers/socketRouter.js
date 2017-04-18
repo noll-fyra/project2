@@ -40,6 +40,7 @@ module.exports = function (socket) {
           transaction.business = data.room
           transaction.orderedItems.push(newOrderData.id)
           transaction.isActive = true
+          transaction.total = data.total
           // save the transaction and update the user model as well
           transaction.save((err, newTransactionData) => {
             console.log(newTransactionData)
@@ -54,6 +55,17 @@ module.exports = function (socket) {
             if (err) return console.log('There was an error updating the transaction. Please try again')
           })
         }
+      })
+    })
+  })
+
+// update the transaction total
+  socket.on('orderTotal', (data) => {
+    console.log('updating the transaction total')
+    User.findById(data.customer, (err, user) => {
+      if (err) return console.log('There was an error finding the customer. Please try again')
+      Transaction.findByIdAndUpdate(user.transaction, {total: data.total}, (err, transaction) => {
+        if (err) return console.log('There was an error updating the transaction total. Please try again')
       })
     })
   })

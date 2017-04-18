@@ -4,6 +4,7 @@
 
 <aside class="left-aside">
     <ul>
+
         <li>
             <button type="button" class="aside-button" id="menu">Menu</button>
         </li>
@@ -15,6 +16,11 @@
         </li>
         <li>
             <button type="button" class="aside-button" id="advanced">Advanced</button>
+        </li>
+        <li>
+            <a href="/business/service">
+                <button type="button" class="aside-button" id="service">Service</button>
+            </a>
         </li>
     </ul>
 </aside>
@@ -52,9 +58,6 @@
                             <button type="button" name="update-menu">Update</button>
                         </li>
                         <li>
-                            <button type="button" name="archive-menu">Archive</button>
-                        </li>
-                        <li>
                             <button type="button" name="remove-menu">Remove</button>
                         </li>
                     </ul>
@@ -75,18 +78,26 @@
                             CUSTOMER
                         </th>
                         <th>
+                            ITEMS
+                        </th>
+                        <th>
                             TOTAL
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <% transactions.filter((item) => {return item.isActive === true}).forEach((transaction) => { %>
+                    <% transactions.filter((item) => {return item.isActive === true}).sort((a, b) => {return a.dateFrom - b.dateFrom}).forEach((transaction) => { %>
                         <tr>
                             <td>
                                 <%= formatDate(transaction.dateFrom)[0] %>
                             </td>
                             <td>
                                 <%= transaction.customer.name %>
+                            </td>
+                            <td>
+                                <% transaction.orderedItems.forEach((item) => { %>
+                                    <%= item.menuItem.name %><br>
+                                <% }) %>
                             </td>
                             <td>
                                 <%= transaction.total %>
@@ -108,18 +119,26 @@
                             CUSTOMER
                         </th>
                         <th>
+                            ITEMS
+                        </th>
+                        <th>
                             TOTAL
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <% transactions.filter((item) => {return item.isActive === false}).sort((a, b) => {return b.date - a.date}).forEach((transaction) => { %>
+                    <% transactions.filter((item) => {return item.isActive === false}).sort((a, b) => {return b.dateTo - a.dateTo}).forEach((transaction) => { %>
                         <tr>
                             <td>
                                 <%= formatDate(transaction.dateTo)[0] %>
                             </td>
                             <td>
                                 <%= transaction.customer.name %>
+                            </td>
+                            <td>
+                                <% transaction.orderedItems.forEach((item) => { %>
+                                    <%= item.menuItem.name %><br>
+                                <% }) %>
                             </td>
                             <td>
                                 <%= transaction.total %>
@@ -177,7 +196,7 @@
     </section>
 </main>
 
-<aside class="left-aside">
+<aside class="left-aside menu-options">
     <ul>
         <li>
             <button type="button" class="aside-button" id="add-menu-item-button">Add Menu Item</button>

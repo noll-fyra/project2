@@ -209,7 +209,7 @@ router.get('/dashboard', (req, res) => {
       req.flash('error', 'There was an error fetching your business dashboard. Please try again.')
       return res.redirect('back')
     }
-    Transaction.find({business: req.user.business}).populate('customer').exec((err, transactions) => {
+    Transaction.find({business: req.user.business}).populate('customer').populate({path: 'orderedItems', populate: {path: 'menuItem', model: 'MenuItem'}}).exec((err, transactions) => {
       if (err) {
         req.flash('error', 'There was an error finding your business. Please try again')
         res.redirect('back')

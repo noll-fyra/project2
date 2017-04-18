@@ -53,18 +53,26 @@
                         BUSINESS
                     </th>
                     <th>
+                        ITEMS
+                    </th>
+                    <th>
                         TOTAL
                     </th>
                 </tr>
             </thead>
             <tbody>
-                <% transactions.forEach((transaction) => { %>
+                <% transactions.sort((a, b) => {return b.dateTo - a.dateTo}).forEach((transaction) => { %>
                     <tr>
                         <td>
                             <%= formatDate(transaction.dateTo)[0] %>
                         </td>
                         <td>
                             <%= transaction.business.name %>
+                        </td>
+                        <td>
+                            <% transaction.orderedItems.forEach((item) => { %>
+                                <%= item.menuItem.name %><br>
+                            <% }) %>
                         </td>
                         <td>
                             <%= transaction.total %>

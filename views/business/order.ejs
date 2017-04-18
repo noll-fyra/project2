@@ -1,9 +1,8 @@
 <nav>
-    <h3><%= name %></h3>
+    <span class="nav-header"><%= name %></span>
 </nav>
 
 <aside class="left-aside">
-    <h4>Service</h4>
     <ul>
         <li>
             <button type="button" class="aside-button" id="orderMenuButton">Menu</button>
@@ -69,20 +68,50 @@
     </section>
 
     <section class="orderBill">
-        <h4>Your Bill</h4>
-        <div class="bill-list">
-            <% var transaction = transaction ? transaction : {orderedItems: []} %>
-            <% transaction.orderedItems.forEach((item) => { %>
-                <div class="bill-item">
-                    <%= item.menuItem.name %>
-                </div>
-                <div class="bill-price">
-                    <%= item.menuItem.price %>
-                </div>
-            <% }) %>
-        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        ITEM
+                    </th>
+                    <th>
+                        PRICE
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="bill-list">
+                <% var transaction = transaction ? transaction : {orderedItems: []} %>
+                <% var total = 0 %>
+                <% transaction.orderedItems.forEach((item) => { %>
+                    <% total += item.menuItem.price %>
+                    <tr>
+                        <td>
+                            <%= item.menuItem.name %>
+                        </td>
+                        <td>
+                            <%= item.menuItem.price %>
+                        </td>
+
+                    </tr>
+                <% }) %>
+            </tbody>
+            <tbody>
+
+                <tr>
+                    <td>
+                        <b>TOTAL</b>
+                    </td>
+                    <Td>
+                        <b>
+                            <span class='bill-total'><%= total.toFixed(2) %></span>
+                        </b>
+                    </Td>
+                </tr>
+            </tbody>
+        </table>
         <button class="order-ask-bill" type="button" value="Ask for bill">Ask for bill</button>
         <form action="/business/bill" method="POST">
+            <input type="hidden" name="total" value=<%-total%>>
             <button class="order-pay-bill" name="id" type="submit" value="<%- currentUser.id %>">Pay bill</button>
         </form>
     </section>
@@ -104,6 +133,7 @@
     })
 
     var orderArray = []
+    var newTotal = parseFloat('<%= total %>')
 
     // send service request
     function sendServiceRequest(serviceItem) {
@@ -122,6 +152,16 @@
             room: room,
             menuId: menuId,
             menuName: menuName,
+            customer: "<%- currentUser.id %>"
+        })
+    }
+
+    // send total
+    function sendTotal(total) {
+        console.log('submitting menu order')
+        socket.emit('orderTotal', {
+            room: room,
+            total: total,
             customer: "<%- currentUser.id %>"
         })
     }
@@ -154,12 +194,16 @@
 
             // submit each order and create a new article in the orderBill section
             orderArray.forEach((order) => {
+
+                newTotal += parseFloat(order.split('/')[2])
                 sendOrder(order.split('/')[0], order.split('/')[1])
-                var newArticle = document.createElement('article')
-                newArticle.className = 'ordered-item'
-                newArticle.innerHTML = "<div class='new-order-name'>" + order.split('/')[1] + "</div><div class='new-order-price'>" + order.split('/')[2] + "</div>"
-                document.querySelector('.bill-list').appendChild(newArticle)
+
+                var newRow = document.createElement('tr')
+                newRow.innerHTML = "<tr><td>" + order.split('/')[1] + "</td><td>" + order.split('/')[2] + "</td></tr>"
+                document.querySelector('.bill-list').appendChild(newRow)
             })
+            sendTotal(newTotal.toFixed(2))
+            document.querySelector('.bill-total').textContent = newTotal.toFixed(2)
             orderArray = []
             // remove all articles from the pending-orders aside
             var allArticles = document.querySelectorAll('.new-order-item')

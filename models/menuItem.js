@@ -13,33 +13,15 @@ var MenuItemSchema = new mongoose.Schema({
   description: {
     type: String
   },
-  price: {
-    type: Number
-  },
-  tag: [{
-    type: String
-  }],
-  course: [{
-    type: String
-  }],
-  ingredients: [{
-    type: String
-  }],
-  recipe: [{
-    type: String
-  }],
-  active: {
-    type: Boolean
-  },
-  special: {
-    type: Boolean
-  },
-  image: {
-    type: String
-  },
-  index: {
-    type: Number
-  }
+  price: Number,
+  tag: [{String}],
+  course: [{String}],
+  ingredients: [{String}],
+  recipe: [{String}],
+  isActive: Boolean,
+  isSpecial: Boolean,
+  image: String,
+  index: Number
 })
 
 module.exports = mongoose.model('MenuItem', MenuItemSchema)
