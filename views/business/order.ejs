@@ -70,14 +70,14 @@
                     <tr>
 
                         <td>
-                            <input type="text" name="specialRequest" placeholder="Enter your special request">
+                            <input class="order-special-request-input" type="text" name="specialRequest" placeholder="Enter your special request">
                         </td>
 
                     </tr>
                     <tr>
 
                         <td>
-                            <button class="order-special-request" type="button">Submit special request</button>
+                            <button class="order-special-request-button" type="button">Submit special request</button>
                         </td>
 
                     </tr>
@@ -257,8 +257,8 @@
             var serviceItem = clickedElement.value
             sendServiceRequest(serviceItem)
         }
-        if (clickedElement.className === 'order-special-request') {
-            var serviceItem = 'Special request: ' + clickedElement.parentNode.childNodes[1].value
+        if (clickedElement.className === 'order-special-request-button') {
+            var serviceItem = document.querySelector('.order-special-request-input').value
             sendServiceRequest(serviceItem)
         }
     })
