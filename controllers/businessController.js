@@ -29,7 +29,7 @@ router.route('/')
   var search = new RegExp('^((.*?)(' + req.body.search + ')(.*?))$', 'i')
   Business.find().or([{name: { $regex: search }}, {description: { $regex: search }}, {cuisine: { $regex: search }}]).exec((err, data) => {
     if (err) {
-      req.flash('error', 'There was an error fetching the businesses. Please try again.')
+      // req.flash('error', 'There was an error fetching the businesses. Please try again.')
       return res.redirect('/business')
     }
     res.render('business/index', {allBusinesses: data})
@@ -77,7 +77,7 @@ router.route('/')
 router.get('/find/:name/:id', (req, res) => {
   Business.findById(req.params.id).populate('menu').exec((err, data) => {
     if (err) {
-      req.flash('error', 'There was an error fetching the business. Please try again.')
+      // req.flash('error', 'There was an error fetching the business. Please try again.')
       return res.redirect('back')
     }
     res.render('business/show', {business: data})
@@ -91,12 +91,12 @@ router.use(isLoggedIn)
 router.get('/find/:name/:id/order', (req, res) => {
   Business.findById(req.params.id).populate('menu').exec((err, business) => {
     if (err) {
-      req.flash('error', 'There was an error fetching the business. Please try again.')
+      // req.flash('error', 'There was an error fetching the business. Please try again.')
       return res.redirect('back')
     }
     User.findById(req.user).populate({path: 'transaction', populate: {path: 'orderedItems', populate: {path: 'menuItem', model: 'MenuItem'}}}).exec((err, user) => {
       if (err) {
-        req.flash('error', 'There was an error fetching your details. Please try again.')
+        // req.flash('error', 'There was an error fetching your details. Please try again.')
         return res.redirect('back')
       }
       // if the user has no active transaction, create one
@@ -141,7 +141,7 @@ router.get('/find/:name/:id/order', (req, res) => {
 router.post('/bill', (req, res) => {
   User.findById(req.body.id).populate('transaction').exec((err, user) => {
     if (err) {
-      req.flash('error', 'There was an error fetching the user. Please try again.')
+      // req.flash('error', 'There was an error fetching the user. Please try again.')
       return res.redirect('back')
     }
     Transaction.findByIdAndUpdate(user.transaction, {$set: {isActive: false, dateTo: new Date()}}, (err, transaction) => {
@@ -209,12 +209,12 @@ router.use(hasRegisteredBusiness)
 router.get('/dashboard', (req, res) => {
   Business.findById(req.user.business).populate('menu').exec((err, business) => {
     if (err) {
-      req.flash('error', 'There was an error fetching your business dashboard. Please try again.')
+      // req.flash('error', 'There was an error fetching your business dashboard. Please try again.')
       return res.redirect('back')
     }
     Transaction.find({business: req.user.business}).populate('customer').populate({path: 'orderedItems', populate: {path: 'menuItem', model: 'MenuItem'}}).exec((err, transactions) => {
       if (err) {
-        req.flash('error', 'There was an error finding your business. Please try again')
+        // req.flash('error', 'There was an error finding your business. Please try again')
         res.redirect('back')
       }
       res.render('business/dashboard', {business: business, transactions: transactions, formatDate: formatDate})
@@ -256,12 +256,14 @@ router.route('/menu')
 })
 // update the menu item
 .put((req, res) => {
+  console.log(req.body)
   var update = {
     name: req.body.name,
     description: req.body.description,
-    price: req.body.price
+    price: parseFloat(req.body.price)
   }
   MenuItem.findByIdAndUpdate(req.body.id, update, (err, item) => {
+    console.log(item)
     if (err) {
       req.flash('error', 'There was an error updating the menu item. Please try again.')
       return res.redirect('back')
@@ -291,7 +293,7 @@ router.get('/service', (req, res) => {
     }
     Order.find({business: business.id}).populate('menuItem').populate('customer').populate('business').sort({date: 'asc'}).exec((err, orders) => {
       if (err) {
-        req.flash('error', 'There was an error finding your orders. Please try again')
+        // req.flash('error', 'There was an error finding your orders. Please try again')
         res.redirect('back')
       }
       res.render('business/service', {chat: business.id, name: business.name, orders: orders, formatDate: formatDate})

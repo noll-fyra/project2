@@ -259,6 +259,7 @@
         }
         if (clickedElement.className === 'order-special-request-button') {
             var serviceItem = document.querySelector('.order-special-request-input').value
+            document.querySelector('.order-special-request-input').value = ''
             sendServiceRequest(serviceItem)
         }
     })
