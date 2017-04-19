@@ -3,6 +3,12 @@ const router = express.Router()
 const formatDate = require('../config/formatDate')
 const multer = require('multer')
 const upload = multer({dest: './uploads/'})
+const cloudinary = require('cloudinary')
+cloudinary.config({
+  cloud_name: 'noll-fyra',
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+})
 // checks
 const isLoggedIn = require('../middleware/isLoggedIn')
 const hasRegisteredBusiness = require('../middleware/hasRegisteredBusiness')
@@ -217,7 +223,7 @@ router.get('/dashboard', (req, res) => {
         // req.flash('error', 'There was an error finding your business. Please try again')
         res.redirect('back')
       }
-      res.render('business/dashboard', {business: business, transactions: transactions, formatDate: formatDate})
+      res.render('business/dashboard', {business: business, transactions: transactions, formatDate: formatDate, cloud: cloudinary.image})
     })
   })
 })
@@ -310,12 +316,21 @@ router.route('/menu/:id/image')
       req.flash('error', 'There was an error finding your menu item. Please try again')
       res.redirect('back')
     }
-    res.render('business/image', {item: item})
+    res.render('business/image', {item: item, cloud: cloudinary.image})
   })
 })
 // add images
-.post(upload.single('image'), (req, res) => {
-  res.send(req.file)
+.put(upload.single('image'), (req, res) => {
+  console.log('5', req.file.path)
+  cloudinary.uploader.upload(req.file.path, (result) => {
+    MenuItem.findByIdAndUpdate(req.params.id, {image: result.secure_url}, (err, item) => {
+      if (err) {
+        req.flash('error', 'There was an error finding your menu item. Please try again')
+        res.redirect('back')
+      }
+      res.redirect('/business/dashboard')
+    })
+  })
 })
 
 module.exports = router
