@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const formatDate = require('../config/formatDate')
+const multer = require('multer')
+const upload = multer({dest: './uploads/'})
 // checks
 const isLoggedIn = require('../middleware/isLoggedIn')
 const hasRegisteredBusiness = require('../middleware/hasRegisteredBusiness')
@@ -24,7 +26,7 @@ router.route('/')
 })
 // search for businesses with a specific term
 .post((req, res) => {
-  var search = new RegExp('^(.*(' + req.body.search + ').*)$', 'i')
+  var search = new RegExp('^((.*?)(' + req.body.search + ')(.*?))$', 'i')
   Business.find().or([{name: { $regex: search }}, {description: { $regex: search }}, {cuisine: { $regex: search }}]).exec((err, data) => {
     if (err) {
       req.flash('error', 'There was an error fetching the businesses. Please try again.')
@@ -297,7 +299,10 @@ router.get('/service', (req, res) => {
   })
 })
 
-router.get('/menu/:id/image', (req, res) => {
+// add menu images
+router.route('/menu/:id/image')
+// add image template
+.get((req, res) => {
   MenuItem.findById(req.params.id, (err, item) => {
     if (err) {
       req.flash('error', 'There was an error finding your menu item. Please try again')
@@ -305,6 +310,10 @@ router.get('/menu/:id/image', (req, res) => {
     }
     res.render('business/image', {item: item})
   })
+})
+// add images
+.post(upload.single('image'), (req, res) => {
+  res.send(req.file)
 })
 
 module.exports = router

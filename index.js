@@ -69,6 +69,7 @@ app.use('/', require('./controllers/homeController'))
 app.use('/auth', require('./controllers/authController'))
 app.use('/account', require('./controllers/accountController'))
 app.use('/business', require('./controllers/businessController'))
+app.use('/search', require('./controllers/searchController'))
 
 // send all failing routes to 404
 app.use((req, res) => {

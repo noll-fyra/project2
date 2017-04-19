@@ -10,10 +10,12 @@ var MenuItemSchema = new mongoose.Schema({
     required: true
   },
   subname: String,
-  description: {
-    type: String
+  description: String,
+  price: {
+    type: Number,
+    required: true,
+    default: 0
   },
-  price: Number,
   tag: [{String}],
   course: [{String}],
   ingredients: [{String}],
