@@ -14,9 +14,13 @@ buttons.forEach((button, index) => {
     buttons[index].style.backgroundColor = 'rgba(50,150,200,0.3)'
   })
 })
+
+// hide everything to start
 sections.forEach((section) => {
   section.style.display = 'none'
 })
+
+// show the starting views
 document.querySelector('.profile').style.display = 'block'
 document.getElementById('profile').style.backgroundColor = 'rgba(50,150,200,0.3)'
 

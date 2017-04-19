@@ -19,7 +19,6 @@ router.route('/')
       req.flash('error', 'There was an error finding your account. Please try again.')
       return res.redirect('back')
     }
-    console.log(allTransactions)
     res.render('account/account', {currentUser: req.user, transactions: allTransactions, formatDate: formatDate})
   })
 })

@@ -18,7 +18,6 @@ module.exports = function (socket) {
       if (err) return console.log('There was an error finding the customer. Please try again')
       // create the order
       var newOrder = new Order({
-        section: data.type,
         business: data.room,
         menuItem: data.menuId,
         customer: data.customer,
@@ -27,10 +26,9 @@ module.exports = function (socket) {
       })
       // save the order
       newOrder.save((err, newOrderData) => {
-        console.log(newOrderData)
         if (err) return console.log('There was an error creating the order. Please try again')
         // send the order to the business
-        io.sockets.in(data.room).emit('order', {section: data.section, menuItem: data.menuName, customer: user.name, date: formatDate(newOrder.orderedAt)[1], orderId: newOrder.id})
+        io.sockets.in(data.room).emit('order', {menuItem: data.menuName, customer: user.name, restrictions: user.restrictions, date: formatDate(newOrder.orderedAt)[1], orderId: newOrder.id})
         console.log(' message is: ' + data.menuName + ' ' + data.customer + ' ' + newOrder.orderedAt)
         // create transaction if it's the first order
         if (!user.transaction) {
@@ -43,7 +41,6 @@ module.exports = function (socket) {
           transaction.total = data.total
           // save the transaction and update the user model as well
           transaction.save((err, newTransactionData) => {
-            console.log(newTransactionData)
             if (err) return console.log('There was an error creating the transaction. Please try again')
             User.findByIdAndUpdate(user.id, {transaction: transaction.id}, (err, data) => {
               if (err) return console.log('There was an error updating the customer\'s transaction. Please try again')
@@ -72,12 +69,10 @@ module.exports = function (socket) {
 
   // redirect service orders to the socket of the relevant business
   socket.on('service', (data) => {
-    console.log('asking for service by: ' + data.room)
-        // send the service request to the business
     User.findById(data.customer, (err, customer) => {
       if (err) return console.log('There was an error finding the customer. Please try again')
       io.sockets.in(data.room).emit('serviceRequest', {section: data.section, serviceItem: data.serviceItem, customer: customer.name, date: formatDate(new Date())[1]})
-      console.log(' message is: ' + formatDate(new Date())[1] + ' ' + customer.name + ' ' + data.serviceItem)
+      console.log(' service message is: ' + formatDate(new Date())[1] + ' ' + customer.name + ' ' + data.serviceItem)
     })
   })
 

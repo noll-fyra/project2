@@ -24,7 +24,7 @@
                     <div class="placeholder-image"></div>
                     <div class="menu-main">
                         <p>
-                            <%= item.name %>
+                            <b><%= item.name %></b>
                         </p>
                         <p>
                             <%= item.description %>
@@ -34,7 +34,7 @@
                         </p>
                     </div>
                     <div class="order-buttons">
-                        <button class="add-to-order-button" type="button" value="<%- item.id %>/<%- item.name%>/<%- item.price %>">Add to Order</button>
+                        <button class="add-to-order-button" type="button" value="<%- item.id %>/<%- item.name%>/<%- item.price.toFixed(2) %>">Add to Order</button>
                     </div>
                 </article>
             <% }) %>
@@ -42,24 +42,48 @@
     </section>
 
     <section class="orderService">
-        <div class="order-buttons">
-            <button class="order-service-button" type="button" value="Water">Ask for water</button>
-        </div>
-        <div class="order-buttons">
-            <button class="order-service-button" type="button" value="Clear the table">Clear the table</button>
-        </div>
-        <div class="order-buttons">
-            <button class="order-service-button" type="button" value="Cutlery/crockery">Cutlery/crockery</button>
-        </div>
-        <div class="order-buttons">
-            <button class="order-service-button" type="button" value="Ask for assistance">Ask for assistance</button>
-        </div>
-        <div class="order-buttons">
-            <form class="form-group" method="" action="POST">
-                <input type="text" name="specialRequest" placeholder="Ask for a special request">
-                <button class="order-special-request" type="button">Special request</button>
-            </form>
-        </div>
+        <table>
+            <tbody>
+                <tr>
+                    <td colspan="2">
+                        <input class="order-service-button" type="button" value="Ask for water">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input class="order-service-button" type="button" value="Clear the table">
+                    </td>
+
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input class="order-service-button" type="button" value="Cutlery/crockery">
+                    </td>
+
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input class="order-service-button" type="button" value="Ask for assistance">
+                    </td>
+                </tr>
+                <form class="form-group" method="" action="POST">
+                    <tr>
+
+                        <td>
+                            <input type="text" name="specialRequest" placeholder="Enter your special request">
+                        </td>
+
+                    </tr>
+                    <tr>
+
+                        <td>
+                            <input class="order-special-request" type="button" value="Submit special request">
+                        </td>
+
+                    </tr>
+                </form>
+            </tbody>
+        </table>
     </section>
 
     <section class="orderBill">
@@ -96,19 +120,31 @@
                     <td>
                         <b>TOTAL</b>
                     </td>
-                    <Td>
+                    <td>
                         <b>
                             <span class='bill-total'><%= total.toFixed(2) %></span>
                         </b>
-                    </Td>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input class="order-ask-bill" type="button" value="Ask for bill">
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <form action="/business/bill" method="POST">
+                            <input type="hidden" name="total" value=<%-total%>>
+                            <input type="hidden" name="id" value=<%-currentUser.id%>>
+                            <input class="order-pay-bill" type="submit" value="Pay bill">
+                        </form>
+                    </td>
                 </tr>
             </tbody>
         </table>
-        <button class="order-ask-bill" type="button" value="Ask for bill">Ask for bill</button>
-        <form action="/business/bill" method="POST">
-            <input type="hidden" name="total" value=<%-total%>>
-            <button class="order-pay-bill" name="id" type="submit" value="<%- currentUser.id %>">Pay bill</button>
-        </form>
+
     </section>
 </main>
 
@@ -118,6 +154,9 @@
             <button class="order-submit" type="button">Submit your order</button>
         </li>
     </ul>
+    <table>
+        <tbody class="pending-orders-body"></tbody>
+    </table>
 </aside>
 
 <script src="/socket.io/socket.io.js"></script>
@@ -156,7 +195,7 @@
 
     // send total
     function sendTotal(total) {
-        console.log('submitting menu order')
+        console.log('submitting menu total')
         socket.emit('orderTotal', {
             room: room,
             total: total,
@@ -171,10 +210,10 @@
             orderArray.push(clickedElement.value)
             var menuName = clickedElement.value.split('/')[1]
             var menuPrice = clickedElement.value.split('/')[2]
-            var newArticle = document.createElement('article')
-            newArticle.className = 'new-order-item'
-            newArticle.innerHTML = "<div class='new-order-name'>" + menuName + "</div><div class='new-order-price'>" + menuPrice + "</div><div><button type='button' class='remove-button' value=" + clickedElement.value + ">X</button></div>"
-            document.querySelector('.pending-orders').appendChild(newArticle)
+            var newRow = document.createElement('tr')
+            newRow.className = 'new-order-item'
+            newRow.innerHTML = "<td>" + menuName + "</td><td><button type='button' class='remove-button' value=" + clickedElement.value + ">X</button></td>"
+            document.querySelector('.pending-orders-body').appendChild(newRow)
         }
     })
     // remove or submit orders
@@ -184,8 +223,8 @@
         if (clickedElement.className === 'remove-button') {
             var index = orderArray.indexOf(clickedElement.value)
             orderArray.splice(index, 1)
-            var article = clickedElement.parentNode.parentNode
-            article.parentNode.removeChild(article)
+            var tr = clickedElement.parentNode.parentNode
+            tr.parentNode.removeChild(tr)
         }
         // submit order if order-submit button clicked
         if (clickedElement.className === 'order-submit') {
@@ -204,9 +243,9 @@
             document.querySelector('.bill-total').textContent = newTotal.toFixed(2)
             orderArray = []
             // remove all articles from the pending-orders aside
-            var allArticles = document.querySelectorAll('.new-order-item')
-            Array.prototype.forEach.call(allArticles, function(article) {
-                article.parentNode.removeChild(article)
+            var allRows = document.querySelectorAll('.new-order-item')
+            Array.prototype.forEach.call(allRows, function(row) {
+                row.parentNode.removeChild(row)
             })
         }
     })

@@ -27,7 +27,7 @@ router.route('/signup')
   })
 })
 
-// send the user to the login page
+// log the user in
 router.route('/login')
 .get((req, res) => {
   if (req.isAuthenticated()) {

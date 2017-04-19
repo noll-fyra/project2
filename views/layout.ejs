@@ -17,30 +17,30 @@
                 </div>
                 <div class="word">
                     <a href="/">
-                        <span class="header-name">LOCAVORUS</span>
+                        <span class="header-name">locavorus</span>
                     </a>
                 </div>
-
             </div>
             <div class="header-search">
-                <div></div>
-                <form class="search-form" action="/business" method="POST">
-                    <input type="text" name="search" placeholder="Find a restaurant">
-                    <button type="submit">Search</button>
+                <form class="header-search-form" action="/business" method="POST">
+                    <input id="header-search-input" type="text" name="search" placeholder="Find a restaurant">
+                    <input id="header-search-button" type="submit" value="Search">
                 </form>
-                <div></div>
             </div>
             <div class="header-nav">
                 <% if (!currentUser) { %>
                     <% include partials/login %>
                 <% } else if (!currentUser.business) { %>
                     <% include partials/account %>
+                    <% include partials/logout %>
                 <% } else { %>
                     <% include partials/dashboard %>
                     <% include partials/account %>
+                    <% include partials/logout %>
                 <% } %>
             </div>
         </header>
+        <div class="headerbg"></div>
         <div class="content">
             <% include partials/alerts %>
 

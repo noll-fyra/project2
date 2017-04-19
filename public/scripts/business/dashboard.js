@@ -46,6 +46,7 @@ document.querySelectorAll('.menu-cancel').forEach((button) => {
     document.querySelector('.update-menu-item').style.display = 'none'
   })
 })
+
 // hide everything to start
 sections.forEach((section) => {
   section.style.display = 'none'
@@ -62,8 +63,6 @@ document.getElementById('active-transactions-button').style.backgroundColor = 'r
 document.querySelector('.active-transactions').style.display = 'block'
 document.querySelector('.menu').style.display = 'block'
 document.getElementById('menu').style.backgroundColor = 'rgba(50,150,200,0.3)'
-
-// menu/service colour
 document.getElementById('add-menu-item-button').style.backgroundColor = 'rgba(200,50,50,0.3)'
 document.getElementById('service').style.backgroundColor = 'rgba(200,50,50,0.3)'
 

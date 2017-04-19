@@ -1,6 +1,7 @@
 <nav>
-    <span class="nav-header">Sign Up</span>
+    <span class="nav-header">Login</span>
 </nav>
+
 <aside class="left-aside">
     <ul></ul>
 </aside>
@@ -8,7 +9,7 @@
 <main>
     <section>
         <table>
-            <form action="/auth/signup" method="POST">
+            <form action="/auth/login" method="POST">
                 <tbody>
                     <tr>
                         <td>
@@ -20,24 +21,16 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="name">NAME</label>
-                        </td>
-                        <td>
-                            <input type="text" name="name" placeholder="Rex">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
                             <label for="password">PASSWORD</label>
                         </td>
                         <td>
-                            <input type="password" name="password" placeholder="minimum 8 characters">
+                            <input type="password" name="password" placeholder="pa55w0rd">
                         </td>
                     </tr>
                     <tr>
                         <td></td>
                         <td>
-                            <input class="button" type="submit" value="Sign Up">
+                            <input class="button" type="submit" value="Login">
                         </td>
                     </tr>
                 </tbody>

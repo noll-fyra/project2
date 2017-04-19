@@ -1,0 +1,35 @@
+<nav>
+    <span class="nav-header"><%- item.name %></span>
+</nav>
+
+<aside class="left-aside">
+    <ul></ul>
+</aside>
+<main>
+
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <label>CURRENT IMAGE</label>
+                </td>
+                <td>
+                    <img src="item.image" alt=<%- item.name %>>
+                    <% if (!item.image) {%>
+                        <label>NO IMAGE YET</label>
+                    <% } %>
+                </td>
+            </tr>
+            <tr>
+                <form enctype="multipart/form-data" action="/business/menu?_method=PUT" method="POST">
+                    <td>
+                        <input type="file" name="image">
+                    </td>
+                    <td>
+                        <button type="submit" class="add-image-button">Add Image</button>
+                    </td>
+                </form>
+            </tr>
+        </tbody>
+    </table>
+</main>

@@ -25,7 +25,7 @@ router.route('/')
 // search for businesses with a specific term
 .post((req, res) => {
   var search = new RegExp('^(.*(' + req.body.search + ').*)$', 'i')
-  Business.find().or([{name: { $regex: search }}, {description: { $regex: search }}]).exec((err, data) => {
+  Business.find().or([{name: { $regex: search }}, {description: { $regex: search }}, {cuisine: { $regex: search }}]).exec((err, data) => {
     if (err) {
       req.flash('error', 'There was an error fetching the businesses. Please try again.')
       return res.redirect('/business')
@@ -44,7 +44,6 @@ router.route('/')
     description: req.body.description,
     cuisine: req.body.cuisine
   }
-  console.log(update)
   Business.findByIdAndUpdate(req.user.business, update, (err, data) => {
     if (err) {
       req.flash('error', 'There was an error updating your business\' profile. Please try again.')
@@ -75,7 +74,6 @@ router.route('/')
 // find specific business
 router.get('/find/:name/:id', (req, res) => {
   Business.findById(req.params.id).populate('menu').exec((err, data) => {
-    console.log(data)
     if (err) {
       req.flash('error', 'There was an error fetching the business. Please try again.')
       return res.redirect('back')
@@ -109,12 +107,12 @@ router.get('/find/:name/:id/order', (req, res) => {
         // save the transaction and update the user model as well
         transaction.save((err, newTransactionData) => {
           if (err) {
-            req.flash('error', 'ThThere was an error creating the transaction. Please try again.')
+            req.flash('error', 'There was an error creating the transaction. Please try again.')
             return res.redirect('back')
           }
           User.findByIdAndUpdate(user.id, {transaction: transaction.id}, (err, data) => {
             if (err) {
-              req.flash('error', 'ThThere was an error updating the customer\'s transaction. Please try again.')
+              req.flash('error', 'There was an error updating the customer\'s transaction. Please try again.')
               return res.redirect('back')
             }
             res.render('business/order', {chat: req.params.id, name: business.name, menu: business.menu, transaction: newTransactionData})
@@ -124,7 +122,7 @@ router.get('/find/:name/:id/order', (req, res) => {
       } else if (user.transaction.business.toString() !== req.params.id) {
         Transaction.findByIdAndUpdate(user.transaction, {$set: {business: req.params.id, orderedItems: []}}, (err, changedTransaction) => {
           if (err) {
-            req.flash('error', 'ThThere was an error updating the transaction. Please try again.')
+            req.flash('error', 'There was an error updating the transaction. Please try again.')
             return res.redirect('back')
           }
           res.render('business/order', {chat: req.params.id, name: business.name, menu: business.menu, transaction: transaction})
@@ -256,7 +254,6 @@ router.route('/menu')
 })
 // update the menu item
 .put((req, res) => {
-  console.log(req.body)
   var update = {
     name: req.body.name,
     description: req.body.description,
@@ -283,17 +280,6 @@ router.route('/menu')
   })
 })
 
-// form to create new menu items
-router.get('/menu/new', (req, res) => {
-  Business.findById(req.user.business).exec((err, data) => {
-    if (err) {
-      req.flash('error', 'There was an error fetching your business. Please try again.')
-      return res.redirect('back')
-    }
-    res.redirect('business/dashboard')
-  })
-})
-
 // businesses receive orders here
 router.get('/service', (req, res) => {
   Business.findById(req.user.business, (err, business) => {
@@ -301,13 +287,23 @@ router.get('/service', (req, res) => {
       req.flash('error', 'There was an error finding your business. Please try again')
       res.redirect('back')
     }
-    Order.find({business: business.id}).populate('menuItem').populate('customer').populate('business').sort({date: 'asc'}).exec((err, data) => {
+    Order.find({business: business.id}).populate('menuItem').populate('customer').populate('business').sort({date: 'asc'}).exec((err, orders) => {
       if (err) {
         req.flash('error', 'There was an error finding your orders. Please try again')
         res.redirect('back')
       }
-      res.render('business/service', {chat: business.id, name: business.name, orders: data, formatDate: formatDate})
+      res.render('business/service', {chat: business.id, name: business.name, orders: orders, formatDate: formatDate})
     })
+  })
+})
+
+router.get('/menu/:id/image', (req, res) => {
+  MenuItem.findById(req.params.id, (err, item) => {
+    if (err) {
+      req.flash('error', 'There was an error finding your menu item. Please try again')
+      res.redirect('back')
+    }
+    res.render('business/image', {item: item})
   })
 })
 

@@ -24,6 +24,7 @@
                     <th>TIME</th>
                     <th>CUSTOMER</th>
                     <th>ITEM</th>
+                    <th>RESTRICTIONS</th>
                     <th></th>
                 </tr>
             </thead>
@@ -38,6 +39,9 @@
                         </td>
                         <td>
                             <%= order.menuItem.name %>
+                        </td>
+                        <td>
+                            <%= order.customer.restrictions %>
                         </td>
                         <td>
                             <button type="button" class="done-button" value="<%- order.id %>">Done</button>
@@ -69,10 +73,11 @@
                     <th>TIME</th>
                     <th>CUSTOMER</th>
                     <th>ITEM</th>
+                    <th>RESTRICTIONS</th>
                 </tr>
             </thead>
             <tbody class="completedOrdersBody">
-                <% orders.filter((order) => { return order.completed === true}).sort((a,b) => {return b.completedAt - a.completedAt}).forEach((order) => { %>
+                <% orders.filter((order) => { return order.completed === true}).filter((order) => { var d = new Date; d.setDate(d.getDate() - 1); return order.orderedAt > d}).sort((a,b) => {return b.completedAt - a.completedAt}).forEach((order) => { %>
                     <tr>
                         <td>
                             <% var completedDate = order.completedAt ? formatDate(order.completedAt)[1] : "" %>
@@ -83,6 +88,9 @@
                         </td>
                         <td>
                             <%= order.menuItem.name %>
+                        </td>
+                        <td>
+                            <%= order.customer.restrictions %>
                         </td>
                     </tr>
                 <% }) %>
@@ -104,7 +112,7 @@
     socket.on('order', function(data) {
         console.log('receiving new order')
         var newRow = document.createElement('tr')
-        newRow.innerHTML = "<td>" + data.date + "</td><td>" + data.customer + "</td><td>" + data.menuItem + "</td><td><button type='button' class='done-button' value=" + data.orderId + ">DONE</button></td>"
+        newRow.innerHTML = "<td>" + data.date + "</td><td>" + data.customer + "</td><td>" + data.menuItem + "</td><td>" + data.restrictions + "</td><td><button type='button' class='done-button' value=" + data.orderId + ">DONE</button></td>"
         document.querySelector('.allOrdersBody').appendChild(newRow)
     })
     // add the new service order to the service section

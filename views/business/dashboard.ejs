@@ -40,7 +40,9 @@
     <section class="menu">
         <% business.menu.forEach((item) => { %>
             <article class="menu-item">
-                <div class="placeholder-image"></div>
+                <a href="/business/menu/<%- item.id %>/image">
+                    <div class="placeholder-image"></div>
+                </a>
                 <div class="menu-main">
                     <p>
                         <b><%= item.name %></b>
@@ -55,12 +57,12 @@
                 <div class="menu-buttons">
                     <ul>
                         <li>
-                            <button type="button" class="update-menu-button" name="id" value='<%- item.name %>/<%- item.description %>/<%- item.price %>/<%- item.id %>'>Update</button>
+                            <button type="button" class="update-menu-button" value='<%- item.name %>/<%- item.description %>/<%- item.price.toFixed(2) %>/<%- item.id %>'>Update</button>
                         </li>
                         <li>
                             <form action="/business/menu?_method=DELETE" method="POST">
                                 <input type="hidden" name="id" value=<%- item.id %>>
-                                <button type="button" class="remove-menu-button" name="id" value=<%- item.id %>>Remove</button>
+                                <button type="button" class="remove-menu-button">Remove</button>
                             </form>
                         </li>
                     </ul>
@@ -72,41 +74,84 @@
     <section class="add-menu-item">
         <span class="nav-header">Add Menu Item</span>
         <form class="menuItem-form" action="/business/menu" method="POST">
-            <div class="form-group">
-                <label for="name">Name:</label>
-                <input type="text" name="name" placeholder="chicken a la láme">
-            </div>
-            <div class="form-group">
-                <label for="name">Description:</label>
-                <input type="text" name="description" placeholder="sous vide chicken on pureed potato with confit rutabaga and crispy sesame tuile">
-            </div>
-            <div class="form-group">
-                <label for="price">Price:</label>
-                <input type="text" name="price" placeholder="18.90">
-            </div>
-            <button type="submit">Add Menu Item</button>
-            <button class="menu-cancel" type="button">Cancel</button>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <label for="name">NAME</label>
+                        </td>
+                        <td>
+                            <input type="text" name="name" placeholder="chicken a la láme">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="description">DESCRIPTION</label>
+                        </td>
+                        <td>
+                            <input type="text" name="description" placeholder="sous vide chicken on pureed potato with confit rutabaga and crispy sesame tuile">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="price">PRICE</label>
+                        </td>
+                        <td>
+                            <input type="text" name="price" placeholder="18.90">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input class="menu-cancel" type="button" value="Cancel">
+                        </td>
+                        <td>
+                            <input class="button" type="submit" value="Add Menu Item">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </form>
     </section>
 
     <section class="update-menu-item">
         <span class="nav-header">Update Menu Item</span>
         <form class="menuItem-form" action="/business/menu?_method=PUT" method="POST">
-            <div class="form-group">
-                <label for="name">Name:</label>
-                <input id="update-menu-name" type="text" name="name">
-            </div>
-            <div class="form-group">
-                <label for="name">Description:</label>
-                <input id="update-menu-description" type="text" name="description">
-            </div>
-            <div class="form-group">
-                <label for="price">Price:</label>
-                <input id="update-menu-price" type="text" name="price">
-            </div>
-            <input id="update-menu-id" type="hidden" name="id">
-            <button type="submit">Update Menu Item</button>
-            <button class="menu-cancel" type="button">Cancel</button>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <label for="name">NAME</label>
+                        </td>
+                        <td>
+                            <input id="update-menu-name" type="text" name="name">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="description">DESCRIPTION</label>
+                        </td>
+                        <td>
+                            <input id="update-menu-description" type="text" name="description">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="price">PRICE</label>
+                        </td>
+                        <td>
+                            <input id="update-menu-price" type="text" name="price">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input class="menu-cancel" type="button" value="Cancel">
+                        </td>
+                        <td>
+                            <input class="button" type="submit" value="Update Menu Item">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </form>
     </section>
 
@@ -197,44 +242,84 @@
 
     <section class="profile">
         <form class="profile-form" action="/business?_method=PUT" method="POST">
-            <div class="form-group">
-                <label for="name">Name:</label>
-                <input type="text" name="name" value="<%- business.name %>" placeholder="name">
-            </div>
-            <div class="form-group">
-                <label for="cuisine">Cuisine:</label>
-                <input type="text" name="cuisine" value="<%- business.cuisine %>" placeholder="cuisine">
-            </div>
-            <div class="form-group">
-                <label for="description">Description:</label>
-                <input type="text" name="description" value="<%- business.description %>" placeholder="description">
-            </div>
-            <div class="form-group">
-                <label for="address">Address:</label>
-                <input type="text" name="address" value="<%- business.address %>" placeholder="address">
-            </div>
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="text" name="email" value="<%- business.email %>" placeholder="email">
-            </div>
-            <div class="form-group">
-                <label for="phone">Phone:</label>
-                <input type="text" name="phone" value="<%- business.phone %>" placeholder="phone">
-            </div>
-            <div class="form-group">
-                <label for="website">Website:</label>
-                <input type="text" name="website" value="<%- business.website %>" placeholder="website">
-            </div>
-            <button type="submit">Update Profile</button>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <label for="name">NAME</label>
+                        </td>
+                        <td>
+                            <input type="text" name="name" value="<%- business.name %>" placeholder="name">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="cuisine">CUISINE</label>
+                        </td>
+                        <td>
+                            <input type="text" name="cuisine" value="<%- business.cuisine %>" placeholder="cuisine">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="description">DESCRIPTION</label>
+                        </td>
+                        <td>
+                            <input type="text" name="description" value="<%- business.description %>" placeholder="description">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="address">ADDRESS</label>
+                        </td>
+                        <td>
+                            <input type="text" name="address" value="<%- business.address %>" placeholder="address">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="email">EMAIL</label>
+                        </td>
+                        <td>
+                            <input type="text" name="email" value="<%- business.email %>" placeholder="email">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="phone">PHONE</label>
+                        </td>
+                        <td>
+                            <input type="text" name="phone" value="<%- business.phone %>" placeholder="phone">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="website">WEBSITE</label>
+                        </td>
+                        <td>
+                            <input type="text" name="website" value="<%- business.website %>" placeholder="website">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input class="button" type="submit" value="Update Profile">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </form>
     </section>
 
     <section class="advanced">
         <button type="button" class="deregister-business-button">Deregister your business</button>
+        <br>
+        <br>
         <div class="deregister-business-confirm">
             <div>
                 Are you sure you want to deregister your business?
             </div>
+            <br>
             <div>
                 <form class="deregister-business-form" action="/business?_method=DELETE" method="POST">
                     <button type="submit" class="deregister-business-yes">Yes</button>

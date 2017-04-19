@@ -11,9 +11,6 @@
             <button type="button" class="aside-button" id="menu">Menu</button>
         </li>
         <li>
-            <button type="button" class="aside-button" id="photos">Photos</button>
-        </li>
-        <li>
             <% var dashName = business.name.toLowerCase().split(' ').join('-') %>
             <a href="/business/find/<%- dashName %>/<%- business.id%>/order">
                 <button id="eat-here-button">Eat Here</button>
@@ -28,50 +25,54 @@
             <tbody>
                 <tr>
                     <td>
-                        Cuisine:
+                        <label>CUISINE</label>
                     </td>
                     <td>
-                        <%= business.cuisine %>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Address:
-                    </td>
-                    <td>
-                        <%= business.address %>
+                        <label><%= business.cuisine %></label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        Description:
+                        <label>ADDRESS</label>
                     </td>
                     <td>
-                        <%= business.description %>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Email:
-                    </td>
-                    <td>
-                        <%= business.email %>
+                        <label><%= business.address %></label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        Phone:
+                        <label>DESCRIPTION</label>
                     </td>
                     <td>
-                        <%= business.phone %>
+                        <label><%= business.description %></label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        Website:
+                        <label>EMAIL</label>
                     </td>
                     <td>
-                        <%= business.website %>
+                        <label>
+                            <a href="mailto:<%= business.email %>"><%= business.email %></a>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>PHONE</label>
+                    </td>
+                    <td>
+                        <label><%= business.phone %></label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>WEBSITE</label>
+                    </td>
+                    <td>
+                        <label>
+                            <a href="http://<%= business.website %>"><%= business.website %></a>
+                        </label>
                     </td>
                 </tr>
             </tbody>
@@ -96,10 +97,6 @@
                 </div>
             </article>
         <% }) %>
-    </section>
-
-    <section class="photos">
-        Photos
     </section>
 </main>
 

@@ -8,36 +8,73 @@
 
 <main>
     <form action="/business/register" method="POST">
-        <input type="hidden" name="userId" value="<%- currentUserId %>">
-        <div class="signup-group">
-            <label for="name">Name:</label>
-            <input type="text" name="name" placeholder="French Bistro">
-        </div>
-        <div class="signup-group">
-            <label for="cuisine">Cuisine:</label>
-            <input type="text" name="cuisine" placeholder="french">
-        </div>
-        <div class="signup-group">
-            <label for="description">Description:</label>
-            <input type="text" name="description" placeholder="bistro, amazing, voila">
-        </div>
-        <div class="signup-group">
-            <label for="address">Address:</label>
-            <input type="text" name="address" placeholder="1 Eiffel Tower Lane">
-        </div>
-        <div class="signup-group">
-            <label for="email">Email:</label>
-            <input type="email" name="email" placeholder="contact@frenchbistro.com">
-        </div>
-        <div class="signup-group">
-            <label for="phone">Phone:</label>
-            <input type="text" name="phone" placeholder="63830223">
-        </div>
-        <div class="signup-group">
-            <label for="website">Website:</label>
-            <input type="text" name="website" placeholder="www.frenchbistro.com">
-        </div>
-
-        <input class="button" type="submit">
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <label for="name">NAME</label>
+                    </td>
+                    <td>
+                        <input type="text" name="name" placeholder="French Bistro">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="cuisine">CUISINE</label>
+                    </td>
+                    <td>
+                        <input type="text" name="cuisine" placeholder="french">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="description">DESCRIPTION</label>
+                    </td>
+                    <td>
+                        <input type="text" name="description" placeholder="bistro, amazing, voila">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="address">ADDRESS</label>
+                    </td>
+                    <td>
+                        <input type="text" name="address" placeholder="1 Eiffel Tower Lane">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="email">EMAIL</label>
+                    </td>
+                    <td>
+                        <input type="email" name="email" placeholder="contact@frenchbistro.com">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="phone">PHONE</label>
+                    </td>
+                    <td>
+                        <input type="text" name="phone" placeholder="63830223">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="website">WEBSITE</label>
+                    </td>
+                    <td>
+                        <input type="text" name="website" placeholder="www.frenchbistro.com">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="hidden" name="userId" value="<%- currentUserId %>">
+                    </td>
+                    <td>
+                        <input class="button" type="submit" value="Register">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </form>
 </main>
