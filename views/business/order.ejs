@@ -23,9 +23,7 @@
                 <% menu.forEach((item) => { %>
                     <article class="menu-item">
                         <div class="menu-image">
-                            <a href="/business/menu/<%- item.id %>/image">
-                                <%- cloud(item.image, { width: 192, height: 144, gravity: "auto", crop: "fill" }) %>
-                            </a>
+                            <%- cloud(item.image, { width: 192, height: 144, gravity: "auto", crop: "fill" }) %>
                         </div>
                         <div class="menu-main">
                             <label class="menu-name">
