@@ -83,19 +83,21 @@
     <section class="menu">
         <% business.menu.forEach((item) => { %>
             <article class="menu-item">
-            <div>
-                <%- cloud(item.image, { width: 192, height: 144, crop: "fill" }) %>
-            </div>
+                <div class="menu-image">
+                    <a href="/business/menu/<%- item.id %>/image">
+                        <%- cloud(item.image, { width: 192, height: 144, gravity: "auto", crop: "fill" }) %>
+                    </a>
+                </div>
                 <div class="menu-main">
-                    <p>
+                    <label class="menu-name">
                         <b><%= item.name %></b>
-                    </p>
-                    <p>
+                    </label>
+                    <label class="menu-description">
                         <%= item.description %>
-                    </p>
-                    <p>
+                    </label>
+                    <label class="menu-price">
                         <%= item.price.toFixed(2) %>
-                    </p>
+                    </label>
                 </div>
             </article>
         <% }) %>

@@ -123,7 +123,7 @@ router.get('/find/:name/:id/order', (req, res) => {
               req.flash('error', 'There was an error updating the customer\'s transaction. Please try again.')
               return res.redirect('back')
             }
-            res.render('business/order', {chat: req.params.id, name: business.name, menu: business.menu, transaction: newTransactionData})
+            res.render('business/order', {chat: req.params.id, name: business.name, menu: business.menu, transaction: newTransactionData, cloud: cloudinary.image})
           })
         })
         // if the user has an active transaction with another business, change the business and remove all ordered items
@@ -133,11 +133,11 @@ router.get('/find/:name/:id/order', (req, res) => {
             req.flash('error', 'There was an error updating the transaction. Please try again.')
             return res.redirect('back')
           }
-          res.render('business/order', {chat: req.params.id, name: business.name, menu: business.menu, transaction: transaction})
+          res.render('business/order', {chat: req.params.id, name: business.name, menu: business.menu, transaction: transaction, cloud: cloudinary.image})
         })
       } else {
         // render the active transaction
-        res.render('business/order', {chat: req.params.id, name: business.name, menu: business.menu, transaction: user.transaction})
+        res.render('business/order', {chat: req.params.id, name: business.name, menu: business.menu, transaction: user.transaction, cloud: cloudinary.image})
       }
     })
   })

@@ -21,20 +21,21 @@
         <section>
             <% menu.forEach((item) => { %>
                 <article class="menu-item">
-                    <div class="placeholder-image"></div>
-                    <div class="menu-main">
-                        <p>
-                            <b><%= item.name %></b>
-                        </p>
-                        <p>
-                            <%= item.description %>
-                        </p>
-                        <p>
-                            <%= item.price.toFixed(2) %>
-                        </p>
+                    <div class="menu-image">
+                        <a href="/business/menu/<%- item.id %>/image">
+                            <%- cloud(item.image, { width: 192, height: 144, gravity: "auto", crop: "fill" }) %>
+                        </a>
                     </div>
-                    <div class="order-buttons">
-                        <button class="add-to-order-button" type="button" value="<%- item.id %>/<%- item.name%>/<%- item.price.toFixed(2) %>">Add to Order</button>
+                    <div class="menu-main">
+                        <label class="menu-name">
+                            <b><%= item.name %></b>
+                        </label>
+                        <label class="menu-description">
+                            <%= item.description %>
+                        </label>
+                        <label class="menu-price">
+                            <%= item.price.toFixed(2) %>
+                        </label>
                     </div>
                 </article>
             <% }) %>
@@ -68,18 +69,14 @@
                 </tr>
                 <form method="" action="POST">
                     <tr>
-
                         <td>
                             <input class="order-special-request-input" type="text" name="specialRequest" placeholder="Enter your special request">
                         </td>
-
                     </tr>
                     <tr>
-
                         <td>
-                            <button class="order-special-request-button" type="button">Submit special request</button>
+                            <input class="order-special-request-button" type="button" value="Submit special request">
                         </td>
-
                     </tr>
                 </form>
             </tbody>
@@ -110,7 +107,6 @@
                         <td>
                             <%= item.menuItem.price.toFixed(2) %>
                         </td>
-
                     </tr>
                 <% }) %>
             </tbody>
@@ -126,14 +122,20 @@
                         </b>
                     </td>
                 </tr>
+            </tbody>
+        </table>
+        <table>
+
+            <tbody>
                 <tr>
-                    <td></td>
+
                     <td>
                         <input class="order-ask-bill" type="button" value="Ask for bill">
                     </td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <td></td>
+
                     <td>
                         <form action="/business/bill" method="POST">
                             <input type="hidden" name="total" value=<%-total%>>
@@ -151,7 +153,7 @@
 <aside class="left-aside pending-orders">
     <ul>
         <li>
-            <button class="order-submit" type="button">Submit your order</button>
+            <button class="order-submit" type="button">Submit order</button>
         </li>
     </ul>
     <table>
