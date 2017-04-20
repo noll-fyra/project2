@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const formatDate = require('../config/formatDate')
+// handle images
 const multer = require('multer')
 const upload = multer({dest: './uploads/'})
 const cloudinary = require('cloudinary')
