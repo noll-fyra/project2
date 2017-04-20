@@ -2,7 +2,7 @@
     <span class="nav-header"><%- item.name %></span>
 </nav>
 
-<aside class="left-aside">
+<aside>
     <ul></ul>
 </aside>
 <main>
@@ -14,7 +14,7 @@
                     <label>CURRENT IMAGE</label>
                 </td>
                 <td>
-                    <%- cloud(item.image, { width: 192, height: 144, crop: "fill" }) %>
+                    <%- cloud(item.image, { width: 192, height: 144, gravity: "auto", crop: "fill" }) %>
                     <% if (!item.image) {%>
                         <label>NO IMAGE YET</label>
                     <% } %>

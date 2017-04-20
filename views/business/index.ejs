@@ -2,36 +2,28 @@
     <span class="nav-header">Businesses</span>
 </nav>
 
-<aside class=left-aside>
-    <ul></ul>
-</aside>
+<section class="business-index">
 
-<main>
-    <section class="business-index">
-
-        <% if (!allBusinesses.length) { %>
-            <h3>There were no businesses matching your search.</h3>
-        <% } %>
-        <% allBusinesses.forEach((business) => { %>
-            <% var dashName = business.name.toLowerCase().split(' ').join('-') %>
-            <a href="/business/find/<%- dashName %>/<%- business.id %>">
-                <article class="business-listing">
-                    <div class="placeholder-image"></div>
-                    <div class="business-main">
-                        <div class="business-name">
-                            <b><%= business.name %></b>
-                        </div>
-                        <div class="business-address">
-                            <%= business.address %>
-                        </div>
-                        <div class="business-cuisine">
-                            <%= business.cuisine %>
-                        </div>
+    <% if (!allBusinesses.length) { %>
+        <h3>There were no businesses matching your search.</h3>
+    <% } %>
+    <% allBusinesses.forEach((business) => { %>
+        <% var dashName = business.name.toLowerCase().split(' ').join('-') %>
+        <a href="/business/find/<%- dashName %>/<%- business.id %>">
+            <article class="business-listing">
+                <div class="placeholder-image"></div>
+                <div class="business-main">
+                    <div class="business-name">
+                        <b><%= business.name %></b>
                     </div>
-                </article>
-            </a>
-        <% }) %>
-    </section>
-</main>
-
-<aside class="right-aside"></aside>
+                    <div class="business-address">
+                        <%= business.address %>
+                    </div>
+                    <div class="business-cuisine">
+                        <%= business.cuisine %>
+                    </div>
+                </div>
+            </article>
+        </a>
+    <% }) %>
+</section>

@@ -23,7 +23,6 @@ const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const passport = require('./config/passport')
 const flash = require('connect-flash')
-
 // connect to the database
 if (!mongoose.connection.db) mongoose.connect(dbURI)
 var db = mongoose.connection

@@ -2,7 +2,7 @@
     <span class="nav-header"><%= business.name %></span>
 </nav>
 
-<aside class="left-aside">
+<aside>
     <ul class="aside-nav">
         <li>
             <button type="button" class="aside-button" id="about">About</button>
@@ -83,7 +83,9 @@
     <section class="menu">
         <% business.menu.forEach((item) => { %>
             <article class="menu-item">
-                <div class="placeholder-image"></div>
+            <div>
+                <%- cloud(item.image, { width: 192, height: 144, crop: "fill" }) %>
+            </div>
                 <div class="menu-main">
                     <p>
                         <b><%= item.name %></b>
@@ -100,7 +102,7 @@
     </section>
 </main>
 
-<aside class="left-aside">
+<aside>
     <ul></ul>
 </aside>
 

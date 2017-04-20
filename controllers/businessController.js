@@ -86,7 +86,7 @@ router.get('/find/:name/:id', (req, res) => {
       // req.flash('error', 'There was an error fetching the business. Please try again.')
       return res.redirect('back')
     }
-    res.render('business/show', {business: data})
+    res.render('business/show', {business: data, cloud: cloudinary.image})
   })
 })
 
@@ -323,7 +323,7 @@ router.route('/menu/:id/image')
 .put(upload.single('image'), (req, res) => {
   console.log('5', req.file.path)
   cloudinary.uploader.upload(req.file.path, (result) => {
-    MenuItem.findByIdAndUpdate(req.params.id, {image: result.secure_url}, (err, item) => {
+    MenuItem.findByIdAndUpdate(req.params.id, {image: result.url}, (err, item) => {
       if (err) {
         req.flash('error', 'There was an error finding your menu item. Please try again')
         res.redirect('back')
