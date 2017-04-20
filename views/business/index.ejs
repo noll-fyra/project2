@@ -1,29 +1,31 @@
-<nav>
-    <span class="nav-header">Businesses</span>
-</nav>
+<div class="content">
+    <nav>
+        <span class="nav-header">Businesses</span>
+    </nav>
 
-<section class="business-index">
+    <section class="business-index">
 
-    <% if (!allBusinesses.length) { %>
-        <h3>There were no businesses matching your search.</h3>
-    <% } %>
-    <% allBusinesses.forEach((business) => { %>
-        <% var dashName = business.name.toLowerCase().split(' ').join('-') %>
-        <a href="/business/find/<%- dashName %>/<%- business.id %>">
-            <article class="business-listing">
-                <div class="placeholder-image"></div>
-                <div class="business-main">
-                    <div class="business-name">
-                        <b><%= business.name %></b>
+        <% if (!allBusinesses.length) { %>
+            <h3>There were no businesses matching your search.</h3>
+        <% } %>
+        <% allBusinesses.forEach((business) => { %>
+            <% var dashName = business.name.toLowerCase().split(' ').join('-') %>
+            <a href="/business/find/<%- dashName %>/<%- business.id %>">
+                <article class="business-listing" style="background-image: url(<%- business.image%>)">
+                    <div class="business-image"></div>
+                    <div class="business-main">
+                        <div class="business-name">
+                            <b><%= business.name %></b>
+                        </div>
+                        <div class="business-address">
+                            <%= business.address %>
+                        </div>
+                        <div class="business-cuisine">
+                            <%= business.cuisine %>
+                        </div>
                     </div>
-                    <div class="business-address">
-                        <%= business.address %>
-                    </div>
-                    <div class="business-cuisine">
-                        <%= business.cuisine %>
-                    </div>
-                </div>
-            </article>
-        </a>
-    <% }) %>
-</section>
+                </article>
+            </a>
+        <% }) %>
+    </section>
+</div>

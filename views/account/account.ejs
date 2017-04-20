@@ -1,141 +1,143 @@
-<nav>
-    <span class="nav-header">Account</span>
-</nav>
+<div class="content">
+    <nav>
+        <span class="nav-header">Account</span>
+    </nav>
 
-<aside>
-    <ul>
-        <li>
-            <button type="button" class="aside-button" id="profile">Profile</button>
-        </li>
-        <li>
-            <button type="button" class="aside-button" id="history">History</button>
-        </li>
-        <li>
-            <button type="button" class="aside-button" id="advanced">Advanced</button>
-        </li>
-    </ul>
-</aside>
+    <aside>
+        <ul>
+            <li>
+                <button type="button" class="aside-button" id="profile">Profile</button>
+            </li>
+            <li>
+                <button type="button" class="aside-button" id="history">History</button>
+            </li>
+            <li>
+                <button type="button" class="aside-button" id="advanced">Advanced</button>
+            </li>
+        </ul>
+    </aside>
 
-<main class="account-options">
-    <section class="profile">
-        <form class="profile-form" action="/account?_method=PUT" method="POST">
+    <main class="account-options">
+        <section class="profile">
+            <form class="profile-form" action="/account?_method=PUT" method="POST">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label for="name">NAME*</label>
+                            </td>
+                            <td>
+                                <input type="text" name="name" value="<%- currentUser.name %>" placeholder="name">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="email">EMAIL*</label>
+                            </td>
+                            <td>
+                                <input type="text" name="email" value="<%- currentUser.email %>" placeholder="email">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="phone">PHONE</label>
+                            </td>
+                            <td>
+                                <input type="text" name="phone" value="<%- currentUser.phone %>" placeholder="phone">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="restrictions">RESTRICTIONS</label>
+                            </td>
+                            <td>
+                                <input type="text" name="restrictions" value="<%- currentUser.restrictions %>" placeholder="dietary restrictions">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input class="button" type="submit" value="Update Profile">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </section>
+
+        <section class="history">
             <table>
+                <thead>
+                    <tr>
+                        <th>
+                            DATE
+                        </th>
+                        <th>
+                            BUSINESS
+                        </th>
+                        <th>
+                            ITEMS
+                        </th>
+                        <th>
+                            TOTAL
+                        </th>
+                    </tr>
+                </thead>
                 <tbody>
-                    <tr>
-                        <td>
-                            <label for="name">NAME*</label>
-                        </td>
-                        <td>
-                            <input type="text" name="name" value="<%- currentUser.name %>" placeholder="name">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="email">EMAIL*</label>
-                        </td>
-                        <td>
-                            <input type="text" name="email" value="<%- currentUser.email %>" placeholder="email">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="phone">PHONE</label>
-                        </td>
-                        <td>
-                            <input type="text" name="phone" value="<%- currentUser.phone %>" placeholder="phone">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="restrictions">RESTRICTIONS</label>
-                        </td>
-                        <td>
-                            <input type="text" name="restrictions" value="<%- currentUser.restrictions %>" placeholder="dietary restrictions">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>
-                            <input class="button" type="submit" value="Update Profile">
-                        </td>
-                    </tr>
+                    <% transactions.filter((item) => {return item.isActive === false}).sort((a, b) => {return b.dateTo - a.dateTo}).forEach((transaction) => { %>
+                        <tr>
+                            <td>
+                                <%= formatDate(transaction.dateTo)[0] %>
+                            </td>
+                            <td>
+                                <%= transaction.business.name %>
+                            </td>
+                            <td>
+                                <% transaction.orderedItems.forEach((item) => { %>
+                                    <%= item.menuItem.name %><br>
+                                <% }) %>
+                            </td>
+                            <td>
+                                <% var total = transaction.total ? transaction.total : 0 %>
+                                <%= total.toFixed(2) %>
+                            </td>
+                        </tr>
+                    <% }) %>
                 </tbody>
             </table>
-        </form>
-    </section>
+        </section>
 
-    <section class="history">
-        <table>
-            <thead>
-                <tr>
-                    <th>
-                        DATE
-                    </th>
-                    <th>
-                        BUSINESS
-                    </th>
-                    <th>
-                        ITEMS
-                    </th>
-                    <th>
-                        TOTAL
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <% transactions.filter((item) => {return item.isActive === false}).sort((a, b) => {return b.dateTo - a.dateTo}).forEach((transaction) => { %>
-                    <tr>
-                        <td>
-                            <%= formatDate(transaction.dateTo)[0] %>
-                        </td>
-                        <td>
-                            <%= transaction.business.name %>
-                        </td>
-                        <td>
-                            <% transaction.orderedItems.forEach((item) => { %>
-                                <%= item.menuItem.name %><br>
-                            <% }) %>
-                        </td>
-                        <td>
-                            <% var total = transaction.total ? transaction.total : 0 %>
-                            <%= total.toFixed(2) %>
-                        </td>
-                    </tr>
-                <% }) %>
-            </tbody>
-        </table>
-    </section>
+        <% var register = currentUser.business ? 'none' : 'inline-block'  %>
+        <% var manage = currentUser.business ? 'inline-block' : 'none'  %>
 
-    <% var register = currentUser.business ? 'none' : 'inline-block'  %>
-    <% var manage = currentUser.business ? 'inline-block' : 'none'  %>
-
-    <section class="advanced">
-        <div>
-            <form class="registerBusiness" style="display: <%-register%>" action="/business/register" method="GET">
-                <button type="submit">Register a business</button>
-            </form>
-
-            <form class="manageBusiness" style="display: <%-manage%>" action="/business/dashboard" method="GET">
-                <button type="submit">Go to your business dashboard</button>
-            </form>
-        </div>
-        <div>
-            <button type="button" class="delete-account-button">Delete your account</button>
-        </div>
-        <br>
-        <div class="delete-account-confirm">
+        <section class="advanced">
             <div>
-                Are you sure you want to delete your account?
+                <form class="registerBusiness" style="display: <%-register%>" action="/business/register" method="GET">
+                    <button type="submit">Register a business</button>
+                </form>
+
+                <form class="manageBusiness" style="display: <%-manage%>" action="/business/dashboard" method="GET">
+                    <button type="submit">Go to your business dashboard</button>
+                </form>
+            </div>
+            <div>
+                <button type="button" class="delete-account-button">Delete your account</button>
             </div>
             <br>
-            <div>
-                <form class="delete-account-form" action="/account?_method=DELETE" method="POST">
-                    <button type="submit" class="delete-account-yes">Yes</button>
-                </form>
-                <button type="button" class="delete-account-cancel">Cancel</button>
+            <div class="delete-account-confirm">
+                <div>
+                    Are you sure you want to delete your account?
+                </div>
+                <br>
+                <div>
+                    <form class="delete-account-form" action="/account?_method=DELETE" method="POST">
+                        <button type="submit" class="delete-account-yes">Yes</button>
+                    </form>
+                    <button type="button" class="delete-account-cancel">Cancel</button>
+                </div>
             </div>
-        </div>
-    </section>
-</main>
+        </section>
+    </main>
+</div>
 
 <script src="/scripts/account/account.js" charset="utf-8"></script>

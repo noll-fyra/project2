@@ -1,344 +1,364 @@
-<nav>
-    <span class="nav-header">Dashboard</span>
-</nav>
-
-<aside>
-    <ul>
-
-        <li>
-            <button type="button" class="aside-button" id="menu">Menu</button>
-        </li>
-        <li>
-            <button type="button" class="aside-button" id="transactions">Transactions</button>
-        </li>
-        <li>
-            <button type="button" class="aside-button" id="profile">Profile</button>
-        </li>
-        <li>
-            <button type="button" class="aside-button" id="advanced">Advanced</button>
-        </li>
-        <li>
-            <a href="/business/service">
-                <button type="button" class="aside-button" id="service">Service</button>
-            </a>
-        </li>
-    </ul>
-</aside>
-
-<main>
-    <nav class="main-nav transactions-nav">
-        <ul>
-            <li>
-                <button type="button" class="aside-button" id="active-transactions-button">Active</button>
-            </li>
-            <li>
-                <button type="button" class="aside-button" id="completed-transactions-button">Completed</button>
-            </li>
-        </ul>
+<div class="content">
+    <nav>
+        <span class="nav-header">Dashboard</span>
     </nav>
 
-    <section class="menu">
-        <% business.menu.forEach((item) => { %>
-            <article class="menu-item">
-                <div class="menu-image">
-                    <a href="/business/menu/<%- item.id %>/image">
-                        <%- cloud(item.image, { width: 192, height: 144, gravity: "auto", crop: "fill" }) %>
-                    </a>
-                </div>
-                <div class="menu-main">
-                    <label class="menu-name">
-                        <b><%= item.name %></b>
-                    </label>
-                    <label class="menu-description">
-                        <%= item.description %>
-                    </label>
-                    <label class="menu-price">
-                        <%= item.price.toFixed(2) %>
-                    </label>
-                </div>
-                <div class="menu-buttons">
-                    <ul>
-                        <li>
-                            <button type="button" class="update-menu-button" value='<%- item.name %>/<%- item.description %>/<%- item.price.toFixed(2) %>/<%- item.id %>'>Update</button>
-                        </li>
-                        <li>
-                            <form action="/business/menu?_method=DELETE" method="POST">
-                                <input type="hidden" name="id" value=<%- item.id %>>
-                                <button type="button" class="remove-menu-button">Remove</button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
-            </article>
-        <% }) %>
-    </section>
+    <aside>
+        <ul>
 
-    <section class="add-menu-item">
-        <span class="nav-header">Add Menu Item</span>
-        <form class="menuItem-form" action="/business/menu" method="POST">
-            <table>
-                <tbody>
-                    <tr>
-                        <td>
-                            <label for="name">NAME*</label>
-                        </td>
-                        <td>
-                            <input type="text" name="name" placeholder="chicken a la láme">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="description">DESCRIPTION</label>
-                        </td>
-                        <td>
-                            <input type="text" name="description" placeholder="sous vide chicken on pureed potato with confit rutabaga and crispy sesame tuile">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="price">PRICE*</label>
-                        </td>
-                        <td>
-                            <input type="text" name="price" placeholder="18.90">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input class="menu-cancel" type="button" value="Cancel">
-                        </td>
-                        <td>
-                            <input class="button" type="submit" value="Add Menu Item">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </form>
-    </section>
+            <li>
+                <button type="button" class="aside-button" id="menu">Menu</button>
+            </li>
+            <li>
+                <button type="button" class="aside-button" id="transactions">Transactions</button>
+            </li>
+            <li>
+                <button type="button" class="aside-button" id="profile">Profile</button>
+            </li>
+            <li>
+                <button type="button" class="aside-button" id="advanced">Advanced</button>
+            </li>
+            <li>
+                <a href="/business/service">
+                    <button type="button" class="aside-button" id="service">Service</button>
+                </a>
+            </li>
+        </ul>
+    </aside>
 
-    <section class="update-menu-item">
-        <span class="nav-header">Update Menu Item</span>
-        <form class="menuItem-form" action="/business/menu?_method=PUT" method="POST">
-            <table>
-                <tbody>
-                    <tr>
-                        <td>
-                            <label for="name">NAME*</label>
-                        </td>
-                        <td>
-                            <input id="update-menu-name" type="text" name="name">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="description">DESCRIPTION</label>
-                        </td>
-                        <td>
-                            <input id="update-menu-description" type="text" name="description">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="price">PRICE*</label>
-                        </td>
-                        <td>
-                            <input id="update-menu-price" type="text" name="price">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input class="menu-cancel" type="button" value="Cancel">
-                        </td>
-                        <td>
-                            <input id="update-menu-id" type="hidden" name="id">
-                            <input class="button" type="submit" value="Update Menu Item">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </form>
-    </section>
+    <main>
+        <nav class="main-nav transactions-nav">
+            <ul>
+                <li>
+                    <button type="button" class="aside-button" id="active-transactions-button">Active</button>
+                </li>
+                <li>
+                    <button type="button" class="aside-button" id="completed-transactions-button">Completed</button>
+                </li>
+            </ul>
+        </nav>
 
-    <section class="transactions">
-        <section class="active-transactions">
-            <table>
-                <thead>
-                    <tr>
-                        <th>
-                            DATE
-                        </th>
-                        <th>
-                            CUSTOMER
-                        </th>
-                        <th>
-                            ITEMS
-                        </th>
-                        <th>
-                            TOTAL
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% transactions.filter((item) => {return item.isActive === true}).sort((a, b) => {return a.dateFrom - b.dateFrom}).forEach((transaction) => { %>
-                        <tr>
-                            <td>
-                                <%= formatDate(transaction.dateFrom)[0] %>
-                            </td>
-                            <td>
-                                <%= transaction.customer.name %>
-                            </td>
-                            <td>
-                                <% transaction.orderedItems.forEach((item) => { %>
-                                    <%= item.menuItem.name %><br>
-                                <% }) %>
-                            </td>
-                            <td>
-                                <% var total = transaction.total ? transaction.total : 0 %>
-                                <%= total.toFixed(2) %>
-                            </td>
-                        </tr>
-                    <% }) %>
-                </tbody>
-            </table>
+        <section class="menu">
+            <% business.menu.forEach((item) => { %>
+                <article class="menu-item">
+                    <div class="menu-image">
+                        <a href="/business/image/menu/<%- item.id %>">
+                            <%- cloud(item.image, { width: 192, height: 144, gravity: "auto", crop: "fill" }) %>
+                        </a>
+                    </div>
+                    <div class="menu-main">
+                        <label class="menu-name">
+                            <b><%= item.name %></b>
+                        </label>
+                        <label class="menu-description">
+                            <%= item.description %>
+                        </label>
+                        <label class="menu-price">
+                            <%= item.price.toFixed(2) %>
+                        </label>
+                    </div>
+                    <div class="menu-buttons">
+                        <ul>
+                            <li>
+                                <button type="button" class="update-menu-button" value='<%- item.name %>/<%- item.description %>/<%- item.price.toFixed(2) %>/<%- item.id %>'>Update</button>
+                            </li>
+                            <li>
+                                <form action="/business/menu?_method=DELETE" method="POST">
+                                    <input type="hidden" name="id" value=<%- item.id %>>
+                                    <button type="button" class="remove-menu-button">Remove</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </article>
+            <% }) %>
         </section>
 
-        <section class="completed-transactions">
-            <table>
-                <thead>
-                    <tr>
-                        <th>
-                            DATE
-                        </th>
-                        <th>
-                            CUSTOMER
-                        </th>
-                        <th>
-                            ITEMS
-                        </th>
-                        <th>
-                            TOTAL
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% transactions.filter((item) => {return item.isActive === false}).sort((a, b) => {return b.dateTo - a.dateTo}).forEach((transaction) => { %>
+        <section class="add-menu-item">
+            <span class="nav-header">Add Menu Item</span>
+            <form class="menuItem-form" action="/business/menu" method="POST">
+                <table>
+                    <tbody>
                         <tr>
                             <td>
-                                <%= formatDate(transaction.dateTo)[0] %>
+                                <label for="name">NAME*</label>
                             </td>
                             <td>
-                                <%= transaction.customer.name %>
-                            </td>
-                            <td>
-                                <% transaction.orderedItems.forEach((item) => { %>
-                                    <%= item.menuItem.name %><br>
-                                <% }) %>
-                            </td>
-                            <td>
-                                <%= transaction.total %>
+                                <input type="text" name="name" placeholder="chicken a la láme">
                             </td>
                         </tr>
-                    <% }) %>
-                </tbody>
-            </table>
+                        <tr>
+                            <td>
+                                <label for="description">DESCRIPTION</label>
+                            </td>
+                            <td>
+                                <input type="text" name="description" placeholder="sous vide chicken on pureed potato with confit rutabaga and crispy sesame tuile">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="price">PRICE*</label>
+                            </td>
+                            <td>
+                                <input type="text" name="price" placeholder="18.90">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input class="menu-cancel" type="button" value="Cancel">
+                            </td>
+                            <td>
+                                <input class="button" type="submit" value="Add Menu Item">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
         </section>
-    </section>
 
-    <section class="profile">
-        <form class="profile-form" action="/business?_method=PUT" method="POST">
+        <section class="update-menu-item">
+            <span class="nav-header">Update Menu Item</span>
+            <form class="menuItem-form" action="/business/menu?_method=PUT" method="POST">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label for="name">NAME*</label>
+                            </td>
+                            <td>
+                                <input id="update-menu-name" type="text" name="name">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="description">DESCRIPTION</label>
+                            </td>
+                            <td>
+                                <input id="update-menu-description" type="text" name="description">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="price">PRICE*</label>
+                            </td>
+                            <td>
+                                <input id="update-menu-price" type="text" name="price">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input class="menu-cancel" type="button" value="Cancel">
+                            </td>
+                            <td>
+                                <input id="update-menu-id" type="hidden" name="id">
+                                <input class="button" type="submit" value="Update Menu Item">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </section>
+
+        <section class="transactions">
+            <section class="active-transactions">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                DATE
+                            </th>
+                            <th>
+                                CUSTOMER
+                            </th>
+                            <th>
+                                ITEMS
+                            </th>
+                            <th>
+                                TOTAL
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% transactions.filter((item) => {return item.isActive === true}).sort((a, b) => {return a.dateFrom - b.dateFrom}).forEach((transaction) => { %>
+                            <tr>
+                                <td>
+                                    <%= formatDate(transaction.dateFrom)[0] %>
+                                </td>
+                                <td>
+                                    <%= transaction.customer.name %>
+                                </td>
+                                <td>
+                                    <% transaction.orderedItems.forEach((item) => { %>
+                                        <%= item.menuItem.name %><br>
+                                    <% }) %>
+                                </td>
+                                <td>
+                                    <% var total = transaction.total ? transaction.total : 0 %>
+                                    <%= total.toFixed(2) %>
+                                </td>
+                                <td>
+                                    <form method="POST" action="/business/transaction/<%- transaction.id %>?_method=PUT">
+                                        <input type="hidden" name="id" value="<%- transaction.id %>">
+                                        <button type="submit">X</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="completed-transactions">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                DATE
+                            </th>
+                            <th>
+                                CUSTOMER
+                            </th>
+                            <th>
+                                ITEMS
+                            </th>
+                            <th>
+                                TOTAL
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% transactions.filter((item) => {return item.isActive === false}).sort((a, b) => {return b.dateTo - a.dateTo}).forEach((transaction) => { %>
+                            <tr>
+                                <td>
+                                    <%= formatDate(transaction.dateTo)[0] %>
+                                </td>
+                                <td>
+                                    <%= transaction.customer.name %>
+                                </td>
+                                <td>
+                                    <% transaction.orderedItems.forEach((item) => { %>
+                                        <%= item.menuItem.name %><br>
+                                    <% }) %>
+                                </td>
+                                <td>
+                                    <%= transaction.total.toFixed(2) %>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </section>
+        </section>
+
+        <section class="profile">
             <table>
                 <tbody>
                     <tr>
                         <td>
-                            <label for="name">NAME*</label>
+                            <label for="image">IMAGE</label>
                         </td>
                         <td>
-                            <input type="text" name="name" value="<%- business.name %>" placeholder="name">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="cuisine">CUISINE</label>
-                        </td>
-                        <td>
-                            <input type="text" name="cuisine" value="<%- business.cuisine %>" placeholder="cuisine">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="description">DESCRIPTION</label>
-                        </td>
-                        <td>
-                            <input type="text" name="description" value="<%- business.description %>" placeholder="description">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="address">ADDRESS</label>
-                        </td>
-                        <td>
-                            <input type="text" name="address" value="<%- business.address %>" placeholder="address">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="email">EMAIL</label>
-                        </td>
-                        <td>
-                            <input type="text" name="email" value="<%- business.email %>" placeholder="email">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="phone">PHONE</label>
-                        </td>
-                        <td>
-                            <input type="text" name="phone" value="<%- business.phone %>" placeholder="phone">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="website">WEBSITE</label>
-                        </td>
-                        <td>
-                            <input type="text" name="website" value="<%- business.website %>" placeholder="website">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>
-                            <input class="button" type="submit" value="Update Profile">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </form>
-    </section>
 
-    <section class="advanced">
-        <button type="button" class="deregister-business-button">Deregister your business</button>
-        <br>
-        <br>
-        <div class="deregister-business-confirm">
-            <div>
-                Are you sure you want to deregister your business?
-            </div>
+                            <a href="/business/image/business/<%- business.id %>">
+                                <div class="dashboard-business-image" style='background-image: url(<%- business.image %>)'></div>
+                            </a>
+                        </td>
+                    </tr>
+                    <form class="profile-form" action="/business?_method=PUT" method="POST">
+                        <tr>
+                            <td>
+                                <label for="name">NAME*</label>
+                            </td>
+                            <td>
+                                <input type="text" name="name" value="<%- business.name %>" placeholder="name">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="cuisine">CUISINE</label>
+                            </td>
+                            <td>
+                                <input type="text" name="cuisine" value="<%- business.cuisine %>" placeholder="cuisine">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="description">DESCRIPTION</label>
+                            </td>
+                            <td>
+                                <input type="text" name="description" value="<%- business.description %>" placeholder="description">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="address">ADDRESS</label>
+                            </td>
+                            <td>
+                                <input type="text" name="address" value="<%- business.address %>" placeholder="address">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="email">EMAIL</label>
+                            </td>
+                            <td>
+                                <input type="text" name="email" value="<%- business.email %>" placeholder="email">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="phone">PHONE</label>
+                            </td>
+                            <td>
+                                <input type="text" name="phone" value="<%- business.phone %>" placeholder="phone">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="website">WEBSITE</label>
+                            </td>
+                            <td>
+                                <input type="text" name="website" value="<%- business.website %>" placeholder="website">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input class="button" type="submit" value="Update Profile">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </section>
+
+        <section class="advanced">
+            <button type="button" class="deregister-business-button">Deregister your business</button>
             <br>
-            <div>
-                <form class="deregister-business-form" action="/business?_method=DELETE" method="POST">
-                    <button type="submit" class="deregister-business-yes">Yes</button>
-                </form>
-                <button type="button" class="deregister-business-cancel">Cancel</button>
+            <br>
+            <div class="deregister-business-confirm">
+                <div>
+                    Are you sure you want to deregister your business?
+                </div>
+                <br>
+                <div>
+                    <form class="deregister-business-form" action="/business?_method=DELETE" method="POST">
+                        <button type="submit" class="deregister-business-yes">Yes</button>
+                    </form>
+                    <button type="button" class="deregister-business-cancel">Cancel</button>
+                </div>
             </div>
-        </div>
-    </section>
-</main>
+        </section>
+    </main>
 
-<aside class="menu-options">
-    <ul>
-        <li>
-            <button type="button" class="aside-button" id="add-menu-item-button">Add Menu Item</button>
-        </li>
-    </ul>
-</aside>
+    <aside class="menu-options">
+        <ul>
+            <li>
+                <button type="button" class="aside-button" id="add-menu-item-button">Add Menu Item</button>
+            </li>
+        </ul>
+    </aside>
+</div>
 
 <script src="/scripts/business/dashboard.js" charset="utf-8"></script>

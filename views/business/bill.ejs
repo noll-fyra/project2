@@ -1,20 +1,17 @@
-<nav>
-    <span></span>
-</nav>
-<aside>
-    <ul></ul>
-</aside>
-<main class="bill-main">
-    <div>
-        <h2>Thank you for coming. We hope you had a lovely time. Always stay
-            <i>locavor-acious!</i>
-        </h2>
+<div class="content">
+    <nav></nav>
+    <div class="bill-main">
+        <div>
+            <div class="hero-headline">Thank you for coming. We hope you had a lovely time.
+            </div>
+        </div>
+        <div>
+            <h5>A copy of the invoice has been sent to
+                <b><%= user.email %></b>.</h5>
+        </div>
+        <div>
+            <img src="/images/locavorus-large.png" alt="locavorus-large.png">
+        </div>
     </div>
-    <div>
-        <h5>A copy of the invoice has been sent to
-            <%= user.email %>.</h5>
-    </div>
-    <div>
-        <img src="/images/locavorus-large.png" alt="locavorus-large.png">
-    </div>
-</main>
+
+</div>

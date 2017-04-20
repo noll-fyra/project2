@@ -228,6 +228,17 @@ router.get('/dashboard', (req, res) => {
   })
 })
 
+router.put('/transaction/:id', (req, res) => {
+  console.log(req.params.id)
+  Transaction.findByIdAndUpdate(req.params.id, {isActive: false}, (err, data) => {
+    if (err) {
+      // req.flash('error', 'There was an error finding your transaction. Please try again.')
+      return res.redirect('back')
+    }
+    res.redirect('/business/dashboard')
+  })
+})
+
 // view the menu
 router.route('/menu')
 // create menu items
@@ -308,7 +319,7 @@ router.get('/service', (req, res) => {
 })
 
 // add menu images
-router.route('/menu/:id/image')
+router.route('/image/menu/:id')
 // add image template
 .get((req, res) => {
   MenuItem.findById(req.params.id, (err, item) => {
@@ -316,7 +327,7 @@ router.route('/menu/:id/image')
       req.flash('error', 'There was an error finding your menu item. Please try again')
       res.redirect('back')
     }
-    res.render('business/image', {item: item, cloud: cloudinary.image})
+    res.render('business/menuImage', {item: item, cloud: cloudinary.image})
   })
 })
 // add images
@@ -324,6 +335,32 @@ router.route('/menu/:id/image')
   console.log('5', req.file.path)
   cloudinary.uploader.upload(req.file.path, (result) => {
     MenuItem.findByIdAndUpdate(req.params.id, {image: result.url}, (err, item) => {
+      if (err) {
+        req.flash('error', 'There was an error finding your menu item. Please try again')
+        res.redirect('back')
+      }
+      res.redirect('/business/dashboard')
+    })
+  })
+})
+
+// add menu images
+router.route('/image/business/:id')
+// add image template
+.get((req, res) => {
+  Business.findById(req.params.id, (err, item) => {
+    if (err) {
+      req.flash('error', 'There was an error finding your menu item. Please try again')
+      res.redirect('back')
+    }
+    res.render('business/businessImage', {item: item, cloud: cloudinary.image})
+  })
+})
+// add images
+.put(upload.single('image'), (req, res) => {
+  console.log('5', req.file.path)
+  cloudinary.uploader.upload(req.file.path, (result) => {
+    Business.findByIdAndUpdate(req.params.id, {image: result.url}, (err, item) => {
       if (err) {
         req.flash('error', 'There was an error finding your menu item. Please try again')
         res.redirect('back')

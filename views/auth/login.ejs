@@ -1,40 +1,42 @@
-<nav>
-    <span class="nav-header">Login</span>
-</nav>
+<div class="content">
+    <nav>
+        <span class="nav-header">Login</span>
+    </nav>
 
-<aside>
-    <ul></ul>
-</aside>
+    <aside>
+        <input type="hidden" value="5">
+    </aside>
 
-<main>
-    <section>
-        <table>
-            <form action="/auth/login" method="POST">
-                <tbody>
-                    <tr>
-                        <td>
-                            <label for="email">EMAIL</label>
-                        </td>
-                        <td>
-                            <input type="email" name="email" placeholder="email@locavorus.com">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="password">PASSWORD</label>
-                        </td>
-                        <td>
-                            <input type="password" name="password" placeholder="pa55w0rd">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>
-                            <input class="button" type="submit" value="Login">
-                        </td>
-                    </tr>
-                </tbody>
-            </form>
-        </table>
-    </section>
-</main>
+    <main>
+        <section>
+            <table>
+                <form action="/auth/login" method="POST">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label for="email">EMAIL</label>
+                            </td>
+                            <td>
+                                <input type="email" name="email" placeholder="email@locavorus.com">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="password">PASSWORD</label>
+                            </td>
+                            <td>
+                                <input type="password" name="password" placeholder="pa55w0rd">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input class="button" type="submit" value="Login">
+                            </td>
+                        </tr>
+                    </tbody>
+                </form>
+            </table>
+        </section>
+    </main>
+</div>

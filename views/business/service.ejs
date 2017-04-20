@@ -1,104 +1,105 @@
-<nav>
-    <span class="nav-header">Service</span>
-</nav>
+<div class="content">
+    <nav>
+        <span class="nav-header">Service</span>
+    </nav>
 
-<aside>
-    <ul>
-        <li>
-            <button type="button" class="aside-button" id="allOrdersButton">Orders</button>
-        </li>
-        <li>
-            <button type="button" class="aside-button" id="serviceRequestsButton">Service Requests</button>
-        </li>
-        <li>
-            <button type="button" class="aside-button" id="completedOrdersButton">Completed</button>
-        </li>
-    </ul>
-</aside>
+    <aside>
+        <ul>
+            <li>
+                <button type="button" class="aside-button" id="allOrdersButton">Orders</button>
+            </li>
+            <li>
+                <button type="button" class="aside-button" id="serviceRequestsButton">Service Requests</button>
+            </li>
+            <li>
+                <button type="button" class="aside-button" id="completedOrdersButton">Completed</button>
+            </li>
+        </ul>
+    </aside>
 
-<main>
-    <section class="allOrders">
-        <table>
-            <thead>
-                <tr>
-                    <th>TIME</th>
-                    <th>CUSTOMER</th>
-                    <th>ITEM</th>
-                    <th>RESTRICTIONS</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody class="allOrdersBody">
-                <% orders.filter((order) => { return order.completed === false}).forEach((order) => { %>
+    <main>
+        <section class="allOrders">
+            <table>
+                <thead>
                     <tr>
-                        <td>
-                            <%= formatDate(order.orderedAt)[1] %>
-                        </td>
-                        <td>
-                            <%= order.customer.name %>
-                        </td>
-                        <td>
-                            <%= order.menuItem.name %>
-                        </td>
-                        <td>
-                            <%= order.customer.restrictions %>
-                        </td>
-                        <td>
-                            <button type="button" class="done-button" value="<%- order.id %>">Done</button>
-                        </td>
+                        <th>TIME</th>
+                        <th>CUSTOMER</th>
+                        <th>ITEM</th>
+                        <th>RESTRICTIONS</th>
+                        <th></th>
                     </tr>
-                <% }) %>
-            </tbody>
-        </table>
-    </section>
+                </thead>
+                <tbody class="allOrdersBody">
+                    <% orders.filter((order) => { return order.completed === false}).forEach((order) => { %>
+                        <tr>
+                            <td>
+                                <%= formatDate(order.orderedAt)[1] %>
+                            </td>
+                            <td>
+                                <%= order.customer.name %>
+                            </td>
+                            <td>
+                                <%= order.menuItem.name %>
+                            </td>
+                            <td>
+                                <%= order.customer.restrictions %>
+                            </td>
+                            <td>
+                                <button type="button" class="done-button" value="<%- order.id %>">Done</button>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </section>
 
-    <section class="serviceRequests">
-        <table>
-            <thead>
-                <tr>
-                    <th>TIME</th>
-                    <th>CUSTOMER</th>
-                    <th>REQUEST</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody class="serviceRequestsBody"></tbody>
-        </table>
-    </section>
-
-    <section class="completedOrders">
-        <table>
-            <thead>
-                <tr>
-                    <th>TIME</th>
-                    <th>CUSTOMER</th>
-                    <th>ITEM</th>
-                    <th>RESTRICTIONS</th>
-                </tr>
-            </thead>
-            <tbody class="completedOrdersBody">
-                <% orders.filter((order) => { return order.completed === true}).filter((order) => { var d = new Date; d.setDate(d.getDate() - 1); return order.orderedAt > d}).sort((a,b) => {return b.completedAt - a.completedAt}).forEach((order) => { %>
+        <section class="serviceRequests">
+            <table>
+                <thead>
                     <tr>
-                        <td>
-                            <% var completedDate = order.completedAt ? formatDate(order.completedAt)[1] : "" %>
-                            <%= completedDate %>
-                        </td>
-                        <td>
-                            <%= order.customer.name %>
-                        </td>
-                        <td>
-                            <%= order.menuItem.name %>
-                        </td>
-                        <td>
-                            <%= order.customer.restrictions %>
-                        </td>
+                        <th>TIME</th>
+                        <th>CUSTOMER</th>
+                        <th>REQUEST</th>
+                        <th></th>
                     </tr>
-                <% }) %>
-            </tbody>
-        </table>
-    </section>
-</main>
+                </thead>
+                <tbody class="serviceRequestsBody"></tbody>
+            </table>
+        </section>
 
+        <section class="completedOrders">
+            <table>
+                <thead>
+                    <tr>
+                        <th>TIME</th>
+                        <th>CUSTOMER</th>
+                        <th>ITEM</th>
+                        <th>RESTRICTIONS</th>
+                    </tr>
+                </thead>
+                <tbody class="completedOrdersBody">
+                    <% orders.filter((order) => { return order.completed === true}).filter((order) => { var d = new Date; d.setDate(d.getDate() - 1); return order.orderedAt > d}).sort((a,b) => {return b.completedAt - a.completedAt}).forEach((order) => { %>
+                        <tr>
+                            <td>
+                                <% var completedDate = order.completedAt ? formatDate(order.completedAt)[1] : "" %>
+                                <%= completedDate %>
+                            </td>
+                            <td>
+                                <%= order.customer.name %>
+                            </td>
+                            <td>
+                                <%= order.menuItem.name %>
+                            </td>
+                            <td>
+                                <%= order.customer.restrictions %>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</div>
 <script src="/socket.io/socket.io.js"></script>
 <script>
     // connect to the business' room
