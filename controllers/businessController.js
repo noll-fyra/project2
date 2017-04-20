@@ -3,7 +3,12 @@ const router = express.Router()
 const formatDate = require('../config/formatDate')
 // handle images
 const multer = require('multer')
-const upload = multer({dest: './uploads/'})
+const upload = multer({
+  dest: './uploads/',
+  onError: function (err, next) {
+    if (err) console.log(err)
+    next(require('../middleware/hasUploadedFile'))
+  }})
 const cloudinary = require('cloudinary')
 cloudinary.config({
   cloud_name: 'noll-fyra',
@@ -13,6 +18,7 @@ cloudinary.config({
 // checks
 const isLoggedIn = require('../middleware/isLoggedIn')
 const hasRegisteredBusiness = require('../middleware/hasRegisteredBusiness')
+const hasUploadedFile = require('../middleware/hasUploadedFile')
 // models
 const Business = require('../models/business')
 const User = require('../models/user')
@@ -332,7 +338,7 @@ router.route('/image/menu/:id')
   })
 })
 // add images
-.put(upload.single('image'), (req, res) => {
+.put(upload.single('image'), hasUploadedFile, (req, res) => {
   console.log('5', req.file.path)
   cloudinary.uploader.upload(req.file.path, (result) => {
     MenuItem.findByIdAndUpdate(req.params.id, {image: result.url}, (err, item) => {
@@ -345,7 +351,7 @@ router.route('/image/menu/:id')
   })
 })
 
-// add menu images
+// add business images
 router.route('/image/business/:id')
 // add image template
 .get((req, res) => {
@@ -358,8 +364,7 @@ router.route('/image/business/:id')
   })
 })
 // add images
-.put(upload.single('image'), (req, res) => {
-  console.log('5', req.file.path)
+.put(upload.single('image'), hasUploadedFile, (req, res) => {
   cloudinary.uploader.upload(req.file.path, (result) => {
     Business.findByIdAndUpdate(req.params.id, {image: result.url}, (err, item) => {
       if (err) {

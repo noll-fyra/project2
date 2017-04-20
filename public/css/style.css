@@ -605,3 +605,20 @@ article {
 .error404 {
   text-align: center;
 }
+
+footer {
+  height: 20vh;
+  background-color: rgba(0, 0, 0, 0.8)
+}
+
+footer div {
+  height: 100%;
+  margin-left: 48px;
+}
+
+footer a {
+  color: white;
+  display: flex;
+  align-items: center;
+  text-align: left;
+}
