@@ -10,7 +10,10 @@ var MenuItemSchema = new mongoose.Schema({
     required: true
   },
   subname: String,
-  description: String,
+  description: {
+    type: String,
+    default: 'yum'
+  },
   price: {
     type: Number,
     required: true,

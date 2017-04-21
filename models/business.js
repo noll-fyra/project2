@@ -11,7 +11,10 @@ var BusinessSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  address: String,
+  address: {
+    type: String,
+    default: 'no address listed'
+  },
   menu: [{
     type: mongoose.Schema.ObjectId,
     ref: 'MenuItem'
@@ -27,13 +30,19 @@ var BusinessSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'Day'
   }],
-  description: String,
+  description: {
+    type: String,
+    default: 'business'
+  },
   image: String,
   transactions: [{
     type: mongoose.Schema.ObjectId,
     ref: 'Transaction'
   }],
-  cuisine: String
+  cuisine: {
+    type: String,
+    default: 'food'
+  }
 })
 
 module.exports = mongoose.model('Business', BusinessSchema)

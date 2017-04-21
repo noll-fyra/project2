@@ -75,7 +75,7 @@ router.route('/')
       req.flash('error', 'There was an error deregistering your business. Please try again.')
       return res.redirect('back')
     }
-    User.findByIdAndUpdate(req.user, {business: null}, (err, data) => {
+    req.user.update({business: null}, (err, data) => {
       if (err) {
         req.flash('error', 'There was an error deregistering your business. Please try again.')
         return res.redirect('back')
@@ -125,7 +125,7 @@ router.get('/find/:name/:id/order', (req, res) => {
             req.flash('error', 'There was an error creating the transaction. Please try again.')
             return res.redirect('back')
           }
-          User.findByIdAndUpdate(user.id, {transaction: transaction.id}, (err, data) => {
+          req.user.update({transaction: transaction.id}, (err, data) => {
             if (err) {
               req.flash('error', 'There was an error updating the customer\'s transaction. Please try again.')
               return res.redirect('back')
@@ -152,7 +152,7 @@ router.get('/find/:name/:id/order', (req, res) => {
 
 // thank you screen for paying the bill
 router.post('/bill', (req, res) => {
-  User.findById(req.body.id).populate('transaction').exec((err, user) => {
+  User.findById(req.user).populate('transaction').exec((err, user) => {
     if (err) {
       // req.flash('error', 'There was an error fetching the user. Please try again.')
       return res.redirect('back')
@@ -162,7 +162,7 @@ router.post('/bill', (req, res) => {
         req.flash('error', 'There was an error fetching the transaction. Please try again.')
         return res.redirect('back')
       }
-      User.findByIdAndUpdate(user.id, {transaction: null}, (err, user) => {
+      req.user.update({transaction: null}, (err, user) => {
         if (err) {
           req.flash('error', 'There was an error fetching the user. Please try again.')
           return res.redirect('back')
@@ -203,7 +203,7 @@ router.route('/register')
           req.flash('error', 'There was an error registering your business. Please try again.')
           return res.redirect('back')
         }
-        User.findByIdAndUpdate(req.body.userId, {business: newBusiness.id}, (err, data) => {
+        req.user.update({business: newBusiness.id}, (err, data) => {
           if (err) {
             req.flash('error', 'There was an error registering your business. Please try again.')
             return res.redirect('back')

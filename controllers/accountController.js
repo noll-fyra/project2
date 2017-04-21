@@ -30,7 +30,7 @@ router.route('/')
     phone: req.body.phone,
     restrictions: req.body.restrictions
   }
-  User.findByIdAndUpdate(req.user, update, (err, data) => {
+  req.user.update(update, (err, data) => {
     if (err) {
       req.flash('error', 'There was an error updating your profile. Please try again.')
       return res.redirect('back')
@@ -41,7 +41,7 @@ router.route('/')
 })
 // delete the user's account
 .delete((req, res) => {
-  User.findByIdAndRemove(req.user, (err, data) => {
+  req.user.remove((err, data) => {
     if (err) {
       req.flash('error', 'There was an error updating your profile. Please try again.')
       return res.redirect('back')
