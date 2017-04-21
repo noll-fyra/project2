@@ -150,6 +150,16 @@ I began with using jQuery, but removed it halfway through because of loading per
 #### Working Search Bar
 I used RegEx to create a simple (but working!) search bar and it feels great to do searches. It initially crashed if you entered a special character like **{** but that has since been fixed.
 
+```javascript
+router.post('/search',(req, res) => {
+  var search = new RegExp('^((.*?)(' + req.body.search + ')(.*?))$', 'i')
+  Business.find().or([{name: { $regex: search }}, {description: { $regex: search }}, {cuisine: { $regex: search }}]).exec((err, data) => {
+    if (err) { throw error }
+    res.render('business/index', {allBusinesses: data})
+  })
+})
+```
+
 ![Search](http://i.imgur.com/VzoQBJc.png)
 
 #### Flat Design

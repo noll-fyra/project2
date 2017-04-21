@@ -5,7 +5,7 @@ var formatDate = require('../config/formatDate')
 // check
 var isLoggedIn = require('../middleware/isLoggedIn')
 // models
-var User = require('../models/user')
+// var User = require('../models/user')
 var Transaction = require('../models/transaction')
 
 // check that the user is logged in to access their account
