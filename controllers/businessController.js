@@ -162,12 +162,12 @@ router.post('/bill', (req, res) => {
         req.flash('error', 'There was an error fetching the transaction. Please try again.')
         return res.redirect('back')
       }
-      req.user.update({transaction: null}, (err, user) => {
+      user.update({transaction: null}, (err) => {
         if (err) {
           req.flash('error', 'There was an error fetching the user. Please try again.')
           return res.redirect('back')
         }
-        res.render('business/bill', {user: user})
+        res.render('business/bill', {user: req.user})
       })
     })
   })
