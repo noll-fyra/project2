@@ -186,6 +186,7 @@ This is a live project; all code contributions are welcome.
 - Kenneth Goh
 - Cara Chew
 - Lee Shue Ze
+- Jerel Lim
 
 ### Image credits:
 - Hero images: Unsplash
